@@ -1,4 +1,9 @@
 {
+	"name": "root",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
 	"devDependencies": {
 		"lerna": "^2.7.1"
 	}
