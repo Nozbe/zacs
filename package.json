@@ -1,10 +1,49 @@
 {
-	"name": "root",
-	"private": true,
-	"workspaces": [
-		"packages/*"
-	],
-	"devDependencies": {
-		"lerna": "^2.7.1"
-	}
+  "name": "@nozbe/zacs",
+  "version": "0.0.1",
+  "description": "Zero Abstraction Cost Styling (for React DOM and React Native)",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "flow": "flow check",
+    "eslint": "eslint ./src -c ./.eslintrc.yml --cache --cache-location ./.cache/.eslintcache",
+    "prettier": "prettier-eslint --config ./.prettierrc --write \"./src/**/*.js\"",
+    "ci:check": "concurrently 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nozbe/zacs.git"
+  },
+  "keywords": [
+    "babel",
+    "babel plugin",
+    "styled components",
+    "react",
+    "react native",
+    "css",
+    "styles",
+    "styling",
+    "zero runtime"
+  ],
+  "author": {
+    "name": "Radek Pietruszewski",
+    "email": "this.is@radex.io",
+    "url": "https://radex.io"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nozbe/zacs/issues"
+  },
+  "homepage": "https://github.com/Nozbe/zacs#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.2",
+    "eslint": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "flow-bin": "^0.106.3",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2"
+  }
 }
