@@ -152,7 +152,9 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
 
       if (jsxAttributes) {
         const attr = jsxAttributes.find(a => a.name && a.name.name === propName)
-        if (!attr) return
+        if (!attr) {
+          return
+        }
 
         const flag = inferJsxAttrTruthiness(t, attr)
 
@@ -176,7 +178,9 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
 
       if (jsxAttributes) {
         const attr = jsxAttributes.find(a => a.name && a.name.name === propName)
-        if (!attr) return
+        if (!attr) {
+          return
+        }
 
         const styleValue = jsxAttrValue(t, attr)
         addedStyles.push([styleAttr, styleValue])
@@ -192,9 +196,9 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
   // TODO: Validate inherited props value
   const inheritedPropsAttr = jsxAttributes && findZacsInherited(t, jsxAttributes)
   const hasInheritedProps = inheritedPropsAttr || passedProps.includes('zacs:inherit')
-  const inheritedProps = hasInheritedProps ?
-    (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props') :
-    null
+  const inheritedProps = hasInheritedProps
+    ? (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props')
+    : null
 
   return [
     styles,
@@ -255,13 +259,13 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps]) {
   const classNamesExpr = classNames.reduce((expr, [className, condition]) => {
     const isFirstExpr = !expr
 
-    const classNameSpace = isFirstExpr ?
-      className :
-      t.binaryExpression('+', t.stringLiteral(' '), className)
+    const classNameSpace = isFirstExpr
+      ? className
+      : t.binaryExpression('+', t.stringLiteral(' '), className)
 
-    const classNameExpr = condition ?
-      t.conditionalExpression(condition, classNameSpace, t.stringLiteral('')) :
-      classNameSpace
+    const classNameExpr = condition
+      ? t.conditionalExpression(condition, classNameSpace, t.stringLiteral(''))
+      : classNameSpace
 
     return isFirstExpr ? classNameExpr : t.binaryExpression('+', expr, classNameExpr)
   }, null)
@@ -297,15 +301,15 @@ function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps]) {
 
   // [originalStyles].concat(props.styles || [])
   // TODO: Skip originalStyles if empty, only pass inheritedProps
-  const exprWithInherited = inheritedProps ?
-    t.callExpression(t.memberExpression(t.arrayExpression(styles), t.identifier('concat')), [
+  const exprWithInherited = inheritedProps
+    ? t.callExpression(t.memberExpression(t.arrayExpression(styles), t.identifier('concat')), [
         t.logicalExpression(
           '||',
           t.memberExpression(inheritedProps, t.identifier('style')),
           t.arrayExpression([]),
         ),
-      ]) :
-    stylesExpr
+      ])
+    : stylesExpr
   return [jsxAttr(t, 'style', exprWithInherited)]
 }
 
@@ -523,9 +527,9 @@ function validateZacsDeclaration(t, path) {
   }
 
   const [, conditionalStyles, addedStyles] =
-    zacsMethod === 'styled' || zacsMethod === 'createStyled' ?
-      init.arguments.slice(1) :
-      init.arguments
+    zacsMethod === 'styled' || zacsMethod === 'createStyled'
+      ? init.arguments.slice(1)
+      : init.arguments
 
   if (
     conditionalStyles &&
