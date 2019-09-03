@@ -45,5 +45,9 @@
     "flow-bin": "^0.106.3",
     "jest": "^24.9.0",
     "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-syntax-jsx": "^7.2.0"
   }
 }
