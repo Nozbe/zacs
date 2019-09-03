@@ -20,4 +20,14 @@
   </a>
 </p>
 
-TODO
+## Why `zacs`?
+
+## Usage
+
+## Contributing
+
+## Author and license
+
+**ZACS** was created by [@Nozbe](https://github.com/Nozbe). Main author and maintainer is [Radek Pietruszewski](https://github.com/radex).
+
+**ZACS** is available under the MIT license. See the [LICENSE file](./LICENSE) for more info.
