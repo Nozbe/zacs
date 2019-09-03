@@ -1,0 +1,21 @@
+[ignore]
+<PROJECT_ROOT>/.cache
+<PROJECT_ROOT>/src/__tests__
+<PROJECT_ROOT>/dist
+<PROJECT_ROOT>/dev
+<PROJECT_ROOT>/examples
+.*/node_modules/react\-native/.*
+
+[include]
+
+[libs]
+; flow-typed/
+
+[options]
+esproposal.optional_chaining=enable
+emoji=true
+module.ignore_non_literal_requires=true
+module.file_ext=.js
+
+[version]
+>=0.106.0
