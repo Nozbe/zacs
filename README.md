@@ -3,7 +3,7 @@
 </p>
 
 <h4 align="center">
-  Component styling with no performance penalty for React and React Native ⚡️
+  👨‍🎨 Component styling with no performance penalty for React and React Native ⚡️
 </h4>
 
 <p align="center">
@@ -51,15 +51,38 @@ const rendered = <View style={[style.box, style.highlighted]} />
 
 **ZACS** (Zero Abstraction Cost Styling) is a super-fast component styling library for cross-platform React web and React Native apps.
 
-"Super-fast" as in: there is no difference between using ZACS and writing `<div className>` and `<View style>` manually. That's because **the library doesn't actually _exist_** at runtime, it's entirely implemented as a [Babel](https://babeljs.io) plugin, which compiles the "styled components" syntax down to bare metal.
+**Super-fast** as in: there is no difference between using ZACS and writing `<div className>` and `<View style>` manually. That's because **the library doesn't actually _exist_** at runtime, it's entirely implemented as a [Babel](https://babeljs.io) plugin, which compiles the "styled components" syntax down to bare metal.
 
 And because **ZACS** hides the API difference between web (DOM) and React Native, you can build a web and RN app with shared codebase without [`react-native-web`](https://github.com/necolas/react-native-web).
 
 ## Installation
 
-TODO
+```sh
+npm install @nozbe/zacs
+```
 
-## API
+or
+
+```sh
+yarn add @nozbe/zacs
+```
+
+Then add ZACS to your Babel config (`.babelrc` or `babel.config.js`):
+
+```diff
+{
+  "plugins": [
++   ["@nozbe/zacs/babel", {
++     "platform": "web", // or "native"
++     "production": true // pass `false` to enable debug attributes
++   }]
+  ]
+}
+```
+
+
+
+## Using `zacs`
 
 ### Unstyled view or text
 
@@ -306,9 +329,6 @@ Unfortunately, this means that you can only use those components in the same fil
 In that case, use `zacs.createView/Text/Styled`, which actually creates a real component:
 
 ```js
-import zacs from 'zacs'
-import styles from './styles'
-
 export const Box = zacs.createView(styles.box)
 export const Label = zacs.createText(styles.label, {
   isBold: style.labelBold,
@@ -341,8 +361,6 @@ You must declare (in the last argument) all non-zacs props you want to be able t
   **Web:**
 
   ```js
-  import styles from './styles'
-
   export const Box = (props) => {
     return <div className={styles.box}>{props.children}</div>
   }
@@ -366,7 +384,6 @@ You must declare (in the last argument) all non-zacs props you want to be able t
 
   ```js
   import { View, Text } from 'react-native'
-  import styles from './styles'
 
   export const Box = (props) => {
     return <Text style={styles.box}>{props.children}</Text>
@@ -390,9 +407,19 @@ You must declare (in the last argument) all non-zacs props you want to be able t
 
 ## Troubleshooting
 
-WIP
+WIP - Please contribute!
 
 ## Contributing
+
+<img src="https://github.com/Nozbe/zacs/raw/master/assets/needyou.jpg" alt="We need you" width="220" />
+
+**ZACS is an open-source project and it needs your help to thrive!**
+
+If there's a missing feature, a bug, poor documentation, or other improvement you'd like, don't ask what we can do to help you, **ask what you can do to help the community**. Feel free to open an issue to get some guidance, and then please send a pull request addressing your issue!
+
+If you make a non-trivial contribution, email me, and I'll send you a nice ZACS sticker!
+
+If you make an app using ZACS, please let us know!
 
 ## Author and license
 
