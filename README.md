@@ -25,7 +25,7 @@
 **ZACS** turns React components that look like this:
 
 ```js
-import zacs from 'zacs'
+import zacs from '@nozbe/zacs'
 import style from './style'
 
 const Box = zacs.view(style.box, { isHighlighted: style.highlighted })
@@ -85,7 +85,7 @@ Then add ZACS to your Babel config (`.babelrc` or `babel.config.js`):
 ### Unstyled view or text
 
 ```js
-import zacs from 'zacs'
+import zacs from '@nozbe/zacs'
 
 const Box = zacs.view() // or zacs.view(null)
 const Label = zacs.text()
@@ -406,7 +406,7 @@ You must declare (in the last argument) all non-zacs props you want to be able t
 ## Defining styles
 
 Unlike popular "CSS-in-JS" libraries, `zacs` only provides the "component styling" part, but styles
-themselves are defined in a separate file.
+themselves are defined in a separate file. Here is how you define them.
 
 **React Native**
 
@@ -424,6 +424,8 @@ export default StyleSheet.create({
   },
 })
 ```
+
+See [React Native documentation](https://facebook.github.io/react-native/docs/stylesheet) for more details.
 
 **Web**
 
