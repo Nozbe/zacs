@@ -80,6 +80,27 @@ Then add ZACS to your Babel config (`.babelrc` or `babel.config.js`):
 }
 ```
 
+For web support, you need a temporary workaround in your Webpack config, because zacs releases are not compiled yet. Sorry - this is a temporary inconvenience:
+
+```js
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.js$/,
+        exclude: {
+          and: [/(node_modules)/, { not: [/zacs/] }],
+        },
+        use: {
+          loader: 'babel-loader',
+          // ...
+        },
+      },
+    },
+    ...
+  }
+```
+
 ## Using `zacs`
 
 ### Unstyled view or text
