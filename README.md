@@ -93,6 +93,8 @@ const rendered = <Box><Label>Hello</Label></Box>
 ### Simple styled view or text
 
 ```js
+import styles from './styles'
+
 const Box = zacs.view(styles.box) // or zacs.text
 
 const rendered = <Box />
@@ -104,8 +106,6 @@ const rendered = <Box />
   **Web:**
 
   ```js
-  import styles from './styles'
-
   const rendered = <div className={styles.box} />
   ```
 
@@ -113,7 +113,6 @@ const rendered = <Box />
 
   ```js
   import { View } from 'react-native'
-  import styles from './styles'
 
   const rendered = <View style={styles.box} />
   ```
@@ -139,8 +138,6 @@ passed to the component with a truthy value, the corresponsing style will be add
   **Web:**
 
   ```js
-  import styles from './styles'
-
   const rendered = <div className={styles.box
                                   + ' ' + styles.isVisible
                                   + (reactions > 0) ? (' ' + styles.isHighlighted) : ''} />
@@ -155,13 +152,245 @@ passed to the component with a truthy value, the corresponsing style will be add
 
   ```js
   import { View } from 'react-native'
-  import styles from './styles'
 
   const rendered = <View style={[styles.box,
                                 styles.isVisible,
                                 reactions > 0 && styles.isHighlighted]} />
   ```
 </details>
+
+### Adding style attributes
+
+```js
+const Box = zacs.view(styles.box, null, {
+  width: 'width',
+  color: 'backgroundColor',
+})
+
+const rendered = <Box width={100} color="#80EADC" />
+```
+
+Declare CSS / React Native `StyleSheet` attributes available as component properties with `{ [propName: string]: CSSOrRNStyleAttributeName }`.
+
+**Gotcha:** If you pass a style attribute at all, *it will override* the main and conditional styles, even if the value is `undefined`.
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  const rendered = <div className={styles.box} style={{ width: 100, backgroundColor: '#80EADC' }} />
+  ```
+
+  **React Native:**
+
+  ```js
+  import { View } from 'react-native'
+
+  const rendered = <View style={[styles.box, { width: 100, backgroundColor: '#80EADC' }]} />
+  ```
+</details>
+
+### Styling custom components
+
+```js
+import Touchable from 'components/Touchable'
+
+const Button = zacs.styled(Touchable, styles.button, null, {
+  width: 'width'
+})
+
+const rendered = <Button width={500} />
+```
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  import Touchable from 'components/Touchable'
+
+  const rendered = <Touchable className={styles.button} style={{ width: 500 }} />
+  ```
+
+  **React Native:**
+
+  ```js
+  import Touchable from 'components/Touchable'
+
+  const rendered = <Touchable style={[styles.button, { width: 500 }]} />
+  ```
+</details>
+
+### Making stylable components
+
+To define new components that you can style using `zacs.styled`, use the special `zacs:inherit` prop
+to let **ZACS** know you want styles from `props.style` / `props.className` added in.
+
+```js
+const Root = zacs.view(styles.root)
+
+export default const Touchable = props => {
+  return <Root zacs:inherit={props} />
+}
+```
+
+**TODO:** I don't love the `zacs:inherit` name — if you have a better suggestion, let us know!
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  export default const Touchable = props => {
+    return <div className={styles.root + ' ' + (props.className || '')} style={props.style} />
+  }
+  ```
+
+  **React Native:**
+
+  ```js
+  import { View } from 'react-native'
+
+  export default const Touchable = props => {
+    return <View style={[styles.root].concat(props.style || [])} />
+  }
+```
+</details>
+
+### Configuring output component/element types
+
+Sometimes you need to style a different component on `web` and `native`. To do this, use
+`zacs.styled` with `{ web: ComponentType, native: ComponentType }` instead of a direct component reference.
+
+```js
+const Paragraph = zacs.styled({ web: 'p', native: zacs.text }, styles.paragraph)
+
+const rendered = <Paragraph>Hello world!</Paragraph>
+```
+
+As parameters, you can pass:
+- built in element type (string - `p`, `div`, `form`)
+- a component reference
+- magic `zacs.text` or `zacs.view` (this is so you can easily fall back to RN View/Text without importing `react-native`)
+
+**TODO:** Passing `zacs.text/view` as parameter seems magic and gross. If you have a better idea for this API, let us know!
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  const rendered = <p className={styles.paragraph}>Hello world!</p>
+  ```
+
+  **React Native:**
+
+  ```js
+  import { Text } from 'react-native'
+
+  const rendered = <Text style={styles.paragraph}>Hello world!</Text>
+  ```
+</details>
+
+### Exporting ZACS components
+
+`zacs.view/text/styled` are special **declarations** for the compiler, not real components — that's the whole point of "zero abstraction cost styling".
+
+Unfortunately, this means that you can only use those components in the same file in which they're defined, and you can't export it. And this is how you should use `zacs` most of the time. But sometimes, to avoid repetitive code, you really need this.
+
+In that case, use `zacs.createView/Text/Styled`, which actually creates a real component:
+
+```js
+import zacs from 'zacs'
+import styles from './styles'
+
+export const Box = zacs.createView(styles.box)
+export const Label = zacs.createText(styles.label, {
+  isBold: style.labelBold,
+}, null, ['title', 'numberOfLines'])
+export const Wrapper = zacs.createView(styles.wrapper, null, null, ['ref'])
+```
+
+You must declare (in the last argument) all non-zacs props you want to be able to pass into the component you're styling (component props, DOM attributes, `ref`, and `zacs:inherit`).
+
+<details>
+  <summary>Hey, that's really annoying, why do I need to do this?</summary>
+
+  A distinction between `view` and `createView` is necessary because Babel is a single file compiler, and
+  it does not have visibility to imports, so an imported component can't be magically transformed into a `<div />` or `<View />`.
+
+  So we have to de-optimize and do the next best thing -- export an actual component. Not quite `zero abstraction cost`, but almost.
+
+  There is another limitation: because the declaration doesn't see the callsite, we don't know whether
+  someone wants to pass props (DOM attributes or View/Text RN props) to the underlying component,
+  and we can't use `{...props}`, because you can't pass arbitrary attributes to DOM elements in ReactDOM
+  (it will throw errors and can have unexpected side effects).
+
+  Honestly, needing to declare all used props is super annoying and I hate it. If you have a better idea on how to tackle this while staying as close as possible to the _zero abstraction cost_ ideal, **please let us know!**.
+</details>
+
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  import styles from './styles'
+
+  export const Box = (props) => {
+    return <div className={styles.box}>{props.children}</div>
+  }
+
+  export const Label = (props) => {
+    return (
+      // Note that `numberOfLines` is not passed on because it's not a DOM attribute
+      <span className={styles.label + (props.isBold ? ' ' + styles.labelBold : '')} title={props.title}>
+        {props.children}
+      </span>
+    )
+  }
+
+  // We add forwardRef if `ref` is an allowed attribute
+  export const Wrapper = React.forwardRef((props, ref) => {
+    return <div className={styles.wrapper} ref={ref}>{props.children}</div>
+  })
+  ```
+
+  **React Native:**
+
+  ```js
+  import { View, Text } from 'react-native'
+  import styles from './styles'
+
+  export const Box = (props) => {
+    return <Text style={styles.box}>{props.children}</Text>
+  }
+
+  export const Label = (props) => {
+    return (
+      <Text style={[styles.label, props.isBold && styles.labelBold]}
+            title={props.title}
+            numberOfLines={props.numberOfLines}>
+        {props.children}
+      </Text>
+    )
+  }
+
+  export const Wrapper = React.forwardRef((props, ref) => {
+    return <Text style={styles.wrapper} ref={ref}>{props.children}</Text>
+  })
+  ```
+</details>
+
+## Troubleshooting
+
+WIP
 
 ## Contributing
 
