@@ -80,8 +80,6 @@ Then add ZACS to your Babel config (`.babelrc` or `babel.config.js`):
 }
 ```
 
-
-
 ## Using `zacs`
 
 ### Unstyled view or text
@@ -405,6 +403,48 @@ You must declare (in the last argument) all non-zacs props you want to be able t
   ```
 </details>
 
+## Defining styles
+
+Unlike popular "CSS-in-JS" libraries, `zacs` only provides the "component styling" part, but styles
+themselves are defined in a separate file.
+
+**React Native**
+
+```js
+// style.native.js
+import { StyleSheet } from 'react-native'
+
+export default StyleSheet.create({
+  box: {
+    backgroundColor: "#80EADC",
+    width: 500,
+  },
+  highlighted: {
+    // ...
+  },
+})
+```
+
+**Web**
+
+We recommend using [PostCSS](https://postcss.org) in your Webpack config to make CSS styles importable from JS.
+
+```css
+/* style.web.css */
+.box {
+  background: #80EADC;
+  width: 500px;
+}
+
+.highlighted {
+  /* ... */
+}
+```
+
+**ZACS shared styles**
+
+We're thinking of extending ZACS to defining styles, so that you can declare styles once in CSS and have them compile to both CSS and React Native StyleSheet in a "zero abstraction cost" fashion. If you're interested in this project — please contact us!
+
 ## Troubleshooting
 
 WIP - Please contribute!
@@ -415,7 +455,7 @@ WIP - Please contribute!
 
 **ZACS is an open-source project and it needs your help to thrive!**
 
-If there's a missing feature, a bug, poor documentation, or other improvement you'd like, don't ask what we can do to help you, **ask what you can do to help the community**. Feel free to open an issue to get some guidance, and then please send a pull request addressing your issue!
+If there's a missing feature, a bug, poor documentation, or other improvement you'd like, don't ask what we can do to help you, **ask what you can do to help the community**. Feel free to open an issue to get some guidance, and then please [send a pull request](https://github.com/Nozbe/zacs/compare) addressing your issue!
 
 If you make a non-trivial contribution, email me, and I'll send you a nice ZACS sticker!
 
