@@ -30,13 +30,13 @@ import style from './style'
 
 const Box = zacs.view(style.box, { isHighlighted: style.highlighted })
 
-const rendered = <Box />
+const rendered = <Box isHighlighted />
 ```
 
 Into **optimized** code that looks like this (**web**):
 
 ```js
-const rendered = <div className={style.box} />
+const rendered = <div className={style.box + ' ' + style.highlighted} />
 ```
 
 Or this (**React Native**):
@@ -44,7 +44,7 @@ Or this (**React Native**):
 ```js
 import { View } from 'react-native'
 
-const rendered = <View style={style.box} />
+const rendered = <View style={[style.box, style.highlighted]} />
 ```
 
 ## Pitch
@@ -87,6 +87,79 @@ const rendered = <Box><Label>Hello</Label></Box>
   import { View, Text } from 'react-native'
 
   const rendered = <View><Text>Hello</Text></View>
+  ```
+</details>
+
+### Simple styled view or text
+
+```js
+const Box = zacs.view(styles.box) // or zacs.text
+
+const rendered = <Box />
+```
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  import styles from './styles'
+
+  const rendered = <div className={styles.box} />
+  ```
+
+  **React Native:**
+
+  ```js
+  import { View } from 'react-native'
+  import styles from './styles'
+
+  const rendered = <View style={styles.box} />
+  ```
+</details>
+
+### Conditional styles
+
+```js
+const Box = zacs.view(styles.box, {
+  isHighlighted: styles.isHighlighted,
+  isVisible: styles.isVisible,
+})
+
+const rendered = <Box isHighlighted={reactions > 0} isVisible />
+```
+
+Declare conditional styles as `{ [propName: string]: RNStyleOrClassName }`. If a specified prop is
+passed to the component with a truthy value, the corresponsing style will be added.
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  import styles from './styles'
+
+  const rendered = <div className={styles.box
+                                  + ' ' + styles.isVisible
+                                  + (reactions > 0) ? (' ' + styles.isHighlighted) : ''} />
+  ```
+
+  Please note:
+
+  - conditions are inlined whenever possible (when a constant is passed to a styling prop)
+  - styling props are removed from the compiled output
+
+  **React Native:**
+
+  ```js
+  import { View } from 'react-native'
+  import styles from './styles'
+
+  const rendered = <View style={[styles.box,
+                                styles.isVisible,
+                                reactions > 0 && styles.isHighlighted]} />
   ```
 </details>
 
