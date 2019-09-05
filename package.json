@@ -10,6 +10,13 @@
     "prettier": "prettier-eslint --config ./.prettierrc --write \"./src/**/*.js\"",
     "ci:check": "concurrently 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail"
   },
+  "files": [
+    "src",
+    "babel.js",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Nozbe/zacs.git"
@@ -36,7 +43,8 @@
   },
   "homepage": "https://github.com/Nozbe/zacs#readme",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
