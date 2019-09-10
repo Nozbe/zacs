@@ -172,7 +172,7 @@ const rendered = <Box isHighlighted={reactions > 0} isVisible />
 ```
 
 Declare conditional styles as `{ [propName: string]: RNStyleOrClassName }`. If a specified prop is
-passed to the component with a truthy value, the corresponsing style will be added.
+passed to the component with a truthy value, the corresponding style will be added.
 
 <details>
   <summary>See compiled output</summary>
