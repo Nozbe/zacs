@@ -10,11 +10,12 @@
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License">
   </a>
-  <!--
-  <a href="https://travis-ci.com/Nozbe/WatermelonDB">
-    <img src="https://api.travis-ci.com/Nozbe/WatermelonDB.svg?branch=master" alt="CI Status">
-  </a>-->
-
+  <a href="https://travis-ci.com/Nozbe/zacs">
+    <img src="https://api.travis-ci.com/Nozbe/zacs.svg?branch=master" alt="CI Status">
+  </a>
+  <a href="https://coveralls.io/github/Nozbe/zacs?branch=master">
+    <img src="https://img.shields.io/coveralls/github/Nozbe/zacs.svg" alt="Coverage" />
+  </a>
   <a href="https://www.npmjs.com/package/@nozbe/zacs">
     <img src="https://img.shields.io/npm/v/@nozbe/zacs.svg" alt="npm">
   </a>
