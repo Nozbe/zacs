@@ -49,6 +49,7 @@
   "devDependencies": {
     "babel-eslint": "^10.0.3",
     "concurrently": "^4.1.2",
+    "coveralls": "^3.0.6",
     "eslint": "^6.3.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.1.0",

@@ -1,0 +1,13 @@
+
+dist: trusty
+language: node_js
+node_js:
+  - "10"
+sudo: false
+branches:
+  only:
+    - master
+cache: yarn
+script:
+  - yarn ci:check
+  - cat coverage/lcov.info | node_modules/.bin/coveralls || echo "Coveralls upload failed"
