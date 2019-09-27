@@ -6,7 +6,7 @@ module.exports = {
   moduleDirectories: ['<rootDir>/node_modules'],
   restoreMocks: true,
   moduleFileExtensions: ['js'],
-  modulePathIgnorePatterns: ['<rootDir>/dist', '<rootDir>/dev', '__tests__/examples'],
+  modulePathIgnorePatterns: ['<rootDir>/dist', '<rootDir>/dev', '__tests__/examples', 'examples'],
   // collectCoverage: true,
   // collectCoverageFrom: ['!**/node_modules/**', 'src/**'],
   // coverageDirectory: 'coverage',
