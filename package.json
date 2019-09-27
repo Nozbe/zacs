@@ -12,6 +12,7 @@
   },
   "files": [
     "src/index.js",
+    "src/index.js.flow",
     "src/babel/index.js",
     "babel.js",
     "README.md",
