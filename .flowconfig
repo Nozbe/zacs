@@ -5,6 +5,7 @@
 <PROJECT_ROOT>/dev
 <PROJECT_ROOT>/examples
 .*/node_modules/react\-native/.*
+<PROJECT_ROOT>/src/legacy-runtime-styling/.*
 
 [include]
 
