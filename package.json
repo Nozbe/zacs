@@ -1,6 +1,6 @@
 {
   "name": "@nozbe/zacs",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Zero Abstraction Cost Styling (for React DOM and React Native)",
   "main": "src/index.js",
   "scripts": {
