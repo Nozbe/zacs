@@ -11,7 +11,8 @@
     "ci:check": "concurrently 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail"
   },
   "files": [
-    "src",
+    "src/index.js",
+    "src/babel/index.js",
     "babel.js",
     "README.md",
     "LICENSE",
