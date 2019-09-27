@@ -1,23 +1,26 @@
+import zacs from '@nozbe/zacs'
 import React from 'react';
 import './App.css';
 
+const AppRoot = zacs.view('App')
+const Header = zacs.styled('header', 'App-header')
+const Link = zacs.styled('a', 'App-link')
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <AppRoot>
+      <Header>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Hello to zacs demo - edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
+        <Link href="https://github.com/Nozbe/zacs"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Learn ZACS
+        </Link>
+      </Header>
+    </AppRoot>
   );
 }
 

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.6.0",
+    "@nozbe/zacs": "^0.9.1",
     "@svgr/webpack": "4.3.2",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
