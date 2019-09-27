@@ -37,6 +37,7 @@ type ComponentToStyle = ConcreteComponentToStyle | ComponentPlatformSelect
 type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | string>
 
 declare export default {
+  // TODO: Return components with the right prop types typed out (inherit prop types from component being styles + add conditionalStyles & style attributes)
   view: ZacsViewFunction,
 
   text: ZacsTextFunction,

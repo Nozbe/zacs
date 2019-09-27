@@ -63,7 +63,8 @@
     "flow-bin": "^0.106.3",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
-    "prettier-eslint-cli": "^5.0.0"
+    "prettier-eslint-cli": "^5.0.0",
+    "react": "^16.9.0"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
