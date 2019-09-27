@@ -20,3 +20,19 @@
 .App-link {
   color: #09d3ac;
 }
+
+.Button {
+  display: block;
+  width: 250px;
+  height: 56px;
+  background-color: #56C4C4;
+  border-width: 0;
+  border-radius: 12px;
+  margin-top: 10px;
+  font-size: 22px;
+  color: black;
+}
+
+.Button-toggled {
+  background-color: #FADB2D;
+}
