@@ -449,7 +449,7 @@ We're thinking of extending ZACS to defining styles, so that you can declare sty
 
 ## Troubleshooting
 
-WIP - Please contribute!
+- If you are facing `Error: zacs.viewmethod called directly (not transpiled).'` it might be caused by an incorrect import statement. Currently ZACS is limited to handle only lowercase name (`import zacs from '@nozbe/zacs'`).
 
 ## Contributing
 
