@@ -22,6 +22,10 @@
 
 ## What is `zacs`?
 
+| <a href="https://youtube.com/watch?v=ryMvNklnDjU"><img src="https://github.com/Nozbe/ZACS/raw/master/assets/youtube-thumbnail.jpg" alt="React Native EU: A Successful Web & React Native Sharing Strategy" width="300" /></a> |
+| ---- |
+| <p align="center"><a href="https://youtube.com/watch?v=ryMvNklnDjU">📺 <strong>A Successful Web & React Native Sharing Strategy</strong></p> |
+
 **ZACS** turns React components that look like this:
 
 ```js
