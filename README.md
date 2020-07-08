@@ -424,6 +424,18 @@ You must declare (in the last argument) all non-zacs props you want to be able t
   ```
 </details>
 
+### Style precedence
+
+From least important to most important:
+
+- main style (first argument to `zacs.xxx()`)
+- conditional styles (second argument to `zacs.xxx()`)
+- styles added via props (third argument to `zacs.xxx()`)
+- styles added via `zacs:style`
+- styles added via `zacs:inherit`
+
+For example, `width` passed via `zacs:inherit` will override `width` added via props.
+
 ## Defining styles
 
 Unlike popular "CSS-in-JS" libraries, `zacs` only provides the "component styling" part, but styles
