@@ -184,7 +184,7 @@ passed to the component with a truthy value, the corresponding style will be add
   ```
 </details>
 
-### Adding style attributes
+### Adding style attributes (via individual props)
 
 ```js
 const Box = zacs.view(styles.box, null, {
@@ -216,6 +216,17 @@ Declare CSS / React Native `StyleSheet` attributes available as component proper
   const rendered = <View style={[styles.box, { width: 100, backgroundColor: '#80EADC' }]} />
   ```
 </details>
+
+### Adding styles directly
+
+```js
+const Box = zacs.view(styles.box)
+
+const rendered = <Box zacs:style={{ width: 100, color: '#80EADC' }} />
+```
+
+This is equivalent to the example above, but instead of predefining list of props that turn into styles,
+we pass styles directly. Note that this only works on ZACS components.
 
 ### Styling custom components
 
@@ -302,6 +313,12 @@ As parameters, you can pass:
 - a component reference
 - magic `zacs.text` or `zacs.view` (this is so you can easily fall back to RN View/Text without importing `react-native`)
 
+If you're only building for one platform, you can also reference built-ins like this:
+
+```js
+const Paragraph = zacs.styled('p', styles.paragraph) // NOTE: No web/native, because this is web-only code
+```
+
 **TODO:** Passing `zacs.text/view` as parameter seems magic and gross. If you have a better idea for this API, let us know!
 
 <details>
@@ -338,7 +355,7 @@ export const Label = zacs.createText(styles.label, {
 export const Wrapper = zacs.createView(styles.wrapper, null, null, ['ref'])
 ```
 
-You must declare (in the last argument) all non-zacs props you want to be able to pass into the component you're styling (component props, DOM attributes, `ref`, and `zacs:inherit`).
+You must declare (in the last argument) all non-zacs props you want to be able to pass into the component you're styling (component props, DOM attributes, `ref`, and `zacs:inherit`, `zacs:style`).
 
 <details>
   <summary>Hey, that's really annoying, why do I need to do this?</summary>
