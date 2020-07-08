@@ -106,6 +106,12 @@ const added1_literals = <ZACS_RN_View style={{
 
 const AddedStylesNull = zacs.view(null, null, null);
 const addedNull = <ZACS_RN_View __zacs_original_name=\\"AddedStylesNull\\" onPress={onPress} />;
+/* === Added styles (directly with a prop) === */
+
+const addedViaProp = <ZACS_RN_View style={{
+  width: 100,
+  height: 50
+}} __zacs_original_name=\\"AddedStylesNull\\" />;
 /* === Added, conditional, main styles === */
 
 const Mix1 = zacs.view(styles.box, {
@@ -331,6 +337,12 @@ const added1_literals = <div style={{
 
 const AddedStylesNull = zacs.view(null, null, null);
 const addedNull = <div __zacs_original_name=\\"AddedStylesNull\\" />;
+/* === Added styles (directly with a prop) === */
+
+const addedViaProp = <div style={{
+  width: 100,
+  height: 50
+}} __zacs_original_name=\\"AddedStylesNull\\" />;
 /* === Added, conditional, main styles === */
 
 const Mix1 = zacs.view(styles.box, {

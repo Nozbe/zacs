@@ -130,10 +130,10 @@ function objectExpressionFromPairs(t, keyValuePairs) {
   )
 }
 
-function findZacsInherited(t, attributes) {
+function findNamespacedAttr(t, attributes, attrName) {
   return attributes.find(
     ({ name }) =>
-      t.isJSXNamespacedName(name) && name.namespace.name === 'zacs' && name.name.name === 'inherit',
+      t.isJSXNamespacedName(name) && name.namespace.name === 'zacs' && name.name.name === attrName,
   )
 }
 
@@ -193,8 +193,11 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
     })
   }
 
+  const zacsStyleAttribute = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'style')
+  const zacsStyle = zacsStyleAttribute ? zacsStyleAttribute.value.expression : null
+
   // TODO: Validate inherited props value
-  const inheritedPropsAttr = jsxAttributes && findZacsInherited(t, jsxAttributes)
+  const inheritedPropsAttr = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'inherit')
   const hasInheritedProps = inheritedPropsAttr || passedProps.includes('zacs:inherit')
   const inheritedProps = hasInheritedProps
     ? (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props')
@@ -204,6 +207,7 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
     styles,
     addedStyles.length ? objectExpressionFromPairs(t, addedStyles) : null,
     inheritedProps,
+    zacsStyle,
   ]
 }
 
@@ -232,28 +236,27 @@ function webClassNameExpr(t, classNamesExpr, inheritedProps) {
   return classNamesExpr
 }
 
-function webStyleExpr(t, styles, inheritedProps) {
-  if (inheritedProps) {
-    const inheritedStyles = t.memberExpression(inheritedProps, t.identifier('style'))
+function webStyleExpr(t, styles, inheritedProps, zacsStyle) {
+  const inheritedStyles = inheritedProps
+    ? t.memberExpression(inheritedProps, t.identifier('style'))
+    : null
+  const allStyles = [styles, inheritedStyles, zacsStyle].filter(Boolean)
 
-    if (styles) {
-      // Object.assign({styles:'values'}, props.style)
-      // TODO: Maybe we can use spread operator and babel will transpile it into ES5 if necessary?
-      return t.callExpression(t.memberExpression(t.identifier('Object'), t.identifier('assign')), [
-        styles,
-        inheritedStyles,
-      ])
-    }
-
-    // only inherited styles
-    return inheritedStyles
+  if (!allStyles.length) {
+    return null
+  } else if (allStyles.length === 1) {
+    return allStyles[0]
   }
 
-  // only defined styles
-  return styles
+  // Object.assign({styles:'values'}, props.style)
+  // TODO: Maybe we can use spread operator and babel will transpile it into ES5 if necessary?
+  return t.callExpression(
+    t.memberExpression(t.identifier('Object'), t.identifier('assign')),
+    allStyles,
+  )
 }
 
-function webStyleAttributes(t, [classNames, styles, inheritedProps]) {
+function webStyleAttributes(t, [classNames, styles, inheritedProps, zacsStyle]) {
   const attributes = []
 
   const classNamesExpr = classNames.reduce((expr, [className, condition]) => {
@@ -275,7 +278,7 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps]) {
     attributes.push(jsxAttr(t, 'className', classNamesValue))
   }
 
-  const stylesValue = webStyleExpr(t, styles, inheritedProps)
+  const stylesValue = webStyleExpr(t, styles, inheritedProps, zacsStyle)
   if (stylesValue) {
     attributes.push(jsxAttr(t, 'style', stylesValue))
   }
@@ -283,13 +286,17 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps]) {
   return attributes
 }
 
-function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps]) {
+function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps, zacsStyle]) {
   const styles = styleDefs.map(([styleName, condition]) =>
     condition ? t.logicalExpression('&&', condition, styleName) : styleName,
   )
 
   if (addedStyles) {
     styles.push(addedStyles)
+  }
+
+  if (zacsStyle) {
+    styles.push(zacsStyle)
   }
 
   if (!styles.length && !inheritedProps) {
@@ -572,7 +579,7 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
   const { node } = path
   const { openingElement } = node
 
-  const inheritedPropsAttr = findZacsInherited(t, openingElement.attributes)
+  const inheritedPropsAttr = findNamespacedAttr(t, openingElement.attributes, 'inherit')
   if (!inheritedPropsAttr) {
     return
   }

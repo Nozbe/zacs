@@ -1,7 +1,7 @@
 const babel = require('@babel/core')
 const path = require('path')
 const fs = require('fs')
-const plugin = require('../')
+const plugin = require('../index')
 
 function transform(input, platform, production = false) {
   const { code } = babel.transform(input, {

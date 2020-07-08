@@ -117,6 +117,10 @@ const AddedStylesNull = zacs.view(null, null, null)
 
 const addedNull = <AddedStylesNull onPress={onPress} />
 
+/* === Added styles (directly with a prop) === */
+
+const addedViaProp = <AddedStylesNull zacs:style={{ width: 100, height: 50 }} />
+
 /* === Added, conditional, main styles === */
 
 const Mix1 = zacs.view(
