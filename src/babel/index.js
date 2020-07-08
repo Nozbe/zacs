@@ -505,6 +505,12 @@ function validateZacsDeclaration(t, path) {
   const { init } = node
   const zacsMethod = init.callee.property.name
 
+  // Validate variable name
+
+  if (!t.isIdentifier(node.id)) {
+    throw path.buildCodeFrameError('Expected zacs declaration to be assigned to a simple variable')
+  }
+
   // Validate declaration
   if (
     !['text', 'view', 'styled', 'createText', 'createView', 'createStyled'].includes(zacsMethod)
@@ -619,6 +625,8 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
     .concat(addedAttrs)
 }
 
+const componentKey = name => `declaration_${name}`
+
 exports.default = function(babel) {
   const { types: t } = babel
 
@@ -638,23 +646,28 @@ exports.default = function(babel) {
 
         if (zacsMethod.startsWith('create')) {
           node.init = createZacsComponent(t, state, path)
+        } else {
+          const id = node.id.name
+          const stateKey = componentKey(id)
+          if (state.get(stateKey)) {
+            throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
+          }
+          state.set(stateKey, node)
+
+          if (!state.opts.keepDeclarations) {
+            path.remove()
+          }
         }
       },
       JSXElement(path, state) {
         const { node } = path
         const { openingElement } = node
         const { name } = openingElement.name
-
-        // check if element is referenced (i.e. not built-in element)
-        const binding = path.scope.getBinding(name)
-        if (!binding) {
-          return
-        }
+        const platform = getPlatform(state)
 
         // check if it's a ZACS element
-        const elementDeclarator = binding.path.node
-        const platform = getPlatform(state)
-        if (!isZacsDeclaration(t, elementDeclarator)) {
+        const declaration = state.get(componentKey(name))
+        if (!declaration) {
           transformZacsAttributesOnNonZacsElement(t, platform, path)
           return
         }
@@ -662,7 +675,7 @@ exports.default = function(babel) {
         validateElementHasNoIllegalAttributes(t, path)
 
         // get ZACS element info
-        const { id, init } = elementDeclarator
+        const { id, init } = declaration
         const originalName = id.name
         const zacsMethod = init.callee.property.name
         const elementName = getElementName(

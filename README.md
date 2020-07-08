@@ -78,7 +78,8 @@ Then add ZACS to your Babel config (`.babelrc` or `babel.config.js`):
   "plugins": [
 +   ["@nozbe/zacs/babel", {
 +     "platform": "web", // or "native"
-+     "production": true // pass `false` to enable debug attributes
++     "production": true, // pass `false` to enable debug attributes
++     "keepDeclarations": false // pass `true` to keep zacs.xxx variable declarations in output
 +   }]
   ]
 }

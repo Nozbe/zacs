@@ -3,10 +3,10 @@ const path = require('path')
 const fs = require('fs')
 const plugin = require('../index')
 
-function transform(input, platform, production = false) {
+function transform(input, platform, extra = {}) {
   const { code } = babel.transform(input, {
     configFile: false,
-    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, production }]],
+    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }]],
   })
   return code
 }
@@ -24,26 +24,41 @@ describe('zacs', () => {
   })
   it('className in components not allowed', () => {
     expect(() => transform(example('classNameNotAllowed'), 'web')).toThrow(
-      /not allowed to pass `className`/,
+      'not allowed to pass `className`',
     )
     expect(() => transform(example('classNameNotAllowed'), 'native')).toThrow(
-      /not allowed to pass `className`/,
+      'not allowed to pass `className`',
     )
   })
   it('style in components not allowed', () => {
     expect(() => transform(example('styleNotAllowed'), 'web')).toThrow(
-      /not allowed to pass `style`/,
+      'not allowed to pass `style`',
     )
     expect(() => transform(example('styleNotAllowed'), 'native')).toThrow(
-      /not allowed to pass `style`/,
+      'not allowed to pass `style`',
     )
   })
   it(`doesn't add __zacs_original_name in production`, () => {
-    expect(transform(example('production'), 'web', true)).toMatchSnapshot()
+    expect(transform(example('production'), 'web', { production: true })).toMatchSnapshot()
+  })
+  it(`preserves declarations if requested`, () => {
+    expect(
+      transform(example('production'), 'web', { production: true, keepDeclarations: true }),
+    ).toMatchSnapshot()
   })
   it(`exporting declarations not alowed`, () => {
     expect(() => transform(example('exportingDeclarationsNotAllowed'), 'web')).toThrow(
-      /not allowed to export zacs declarations/,
+      'not allowed to export zacs declarations',
+    )
+  })
+  it(`declarations must be assigned to a variable`, () => {
+    expect(() => transform(`const {Foo} = zacs.view()`, 'web')).toThrow(
+      'Expected zacs declaration to be assigned to a simple variable',
+    )
+  })
+  it(`complains about duplicate declaration names`, () => {
+    expect(() => transform(`const Foo = zacs.view(); { const Foo = zacs.text() }`, 'web')).toThrow(
+      'Duplicate ZACS declaration for name: Foo',
     )
   })
 })
