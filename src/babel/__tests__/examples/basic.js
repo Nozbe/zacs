@@ -244,6 +244,13 @@ export const ExportedStylable = zacs.createText(
   ['zacs:inherit'],
 )
 
+export const ExportedStylable2 = zacs.createText(
+  style.text,
+  { isBold: style.bold },
+  { color: 'color' },
+  ['zacs:inherit', 'zacs:style'],
+)
+
 export const ExportedCombo = zacs.createStyled(
   { native: NativeCombo, web: WebCombo },
   style.combo,
@@ -257,3 +264,12 @@ export const ExportedCombo = zacs.createStyled(
 const combo = <ExportedCombo />
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />
 const combo_styles = <ExportedCombo zacs:inherit={props} />
+const combo_styles2 = <ExportedCombo zacs:inherit={props} zacs:style={{ width: 500 }} />
+
+// Pretend we're using an exported component
+
+const ImportedComponent2 = require('ImportedComponent')
+const passZacsStyledWithoutDef = <ImportedComponent2 zacs:style={{ width: 199 }} />
+const passZacsStyledWithoutDefInherit = (
+  <ImportedComponent2 zacs:inherit={props} zacs:style={{ width: 199 }} />
+)

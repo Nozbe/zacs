@@ -257,6 +257,9 @@ export const ExportedWrapper = React.forwardRef((props, ref) => <ZACS_RN_View st
 export const ExportedStylable = props => <ZACS_RN_Text style={[style.text, props.isBold && style.bold, {
   color: props.color
 }].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
+export const ExportedStylable2 = props => <ZACS_RN_Text style={[style.text, props.isBold && style.bold, {
+  color: props.color
+}, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
 export const ExportedCombo = React.forwardRef((props, ref) => <NativeCombo style={[style.combo, props.isFoo && style.foo, props.isBar && style.bar, {
   color: props.color,
   height: props.height
@@ -264,7 +267,19 @@ export const ExportedCombo = React.forwardRef((props, ref) => <NativeCombo style
 
 const combo = <ExportedCombo />;
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
-const combo_styles = <ExportedCombo style={props.style} />;"
+const combo_styles = <ExportedCombo style={props.style} />;
+const combo_styles2 = <ExportedCombo style={props.style} __zacs_style={{
+  width: 500
+}} />; // Pretend we're using an exported component
+
+const ImportedComponent2 = require('ImportedComponent');
+
+const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
+  width: 199
+}} />;
+const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} __zacs_style={{
+  width: 199
+}} />;"
 `;
 
 exports[`zacs works with the basic example on web 1`] = `
@@ -476,9 +491,9 @@ const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.
 const stylableMain_color = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: \\"red\\"
 }, props.style)} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign(props.style, {
+const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: 'red'
-})} __zacs_original_name=\\"StylableMain\\" />;
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
 const stylableMain_all = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: \\"red\\"
 }, props.style)} __zacs_original_name=\\"StylableMain\\" />;
@@ -512,6 +527,9 @@ export const ExportedWrapper = React.forwardRef((props, ref) => <div className={
 export const ExportedStylable = props => <span className={style.text + (props.isBold ? \\" \\" + style.bold : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: props.color
 }, props.style)}>{props.children}</span>;
+export const ExportedStylable2 = props => <span className={style.text + (props.isBold ? \\" \\" + style.bold : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: props.color
+}, props.__zacs_style, props.style)}>{props.children}</span>;
 export const ExportedCombo = React.forwardRef((props, ref) => <WebCombo className={style.combo + (props.isFoo ? \\" \\" + style.foo : \\"\\") + (props.isBar ? \\" \\" + style.bar : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: props.color,
   height: props.height
@@ -519,5 +537,17 @@ export const ExportedCombo = React.forwardRef((props, ref) => <WebCombo classNam
 
 const combo = <ExportedCombo />;
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
-const combo_styles = <ExportedCombo style={props.style} className={props.className} />;"
+const combo_styles = <ExportedCombo style={props.style} className={props.className} />;
+const combo_styles2 = <ExportedCombo style={props.style} className={props.className} __zacs_style={{
+  width: 500
+}} />; // Pretend we're using an exported component
+
+const ImportedComponent2 = require('ImportedComponent');
+
+const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
+  width: 199
+}} />;
+const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} className={props.className} __zacs_style={{
+  width: 199
+}} />;"
 `;

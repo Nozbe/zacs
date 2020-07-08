@@ -197,7 +197,11 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
   // TODO: If the value is a simple object, we could merge them into addedStyles. OTOH, maybe another
   // optimizer Babel plugin can do it further down the line?
   const zacsStyleAttribute = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'style')
-  const zacsStyle = zacsStyleAttribute ? zacsStyleAttribute.value.expression : null
+  const hasZacsStyleAttr = zacsStyleAttribute || passedProps.includes('zacs:style')
+  const zacsStyle = hasZacsStyleAttr
+    ? (zacsStyleAttribute && zacsStyleAttribute.value.expression) ||
+      t.memberExpression(t.identifier('props'), t.identifier('__zacs_style'))
+    : null
 
   // TODO: Validate inherited props value
   const inheritedPropsAttr = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'inherit')
@@ -243,7 +247,7 @@ function webStyleExpr(t, styles, inheritedProps, zacsStyle) {
   const inheritedStyles = inheritedProps
     ? t.memberExpression(inheritedProps, t.identifier('style'))
     : null
-  const allStyles = [styles, inheritedStyles, zacsStyle].filter(Boolean)
+  const allStyles = [styles, zacsStyle, inheritedStyles].filter(Boolean)
 
   if (!allStyles.length) {
     return null
@@ -450,7 +454,7 @@ function createZacsComponent(t, state, path) {
   passedProps.forEach(prop => {
     const isAttrWebSafe =
       platform === 'web' && htmlElements.has(elementName) ? isAttributeWebSafe(prop) : true
-    if (prop !== 'zacs:inherit' && prop !== 'ref' && isAttrWebSafe) {
+    if (prop !== 'zacs:inherit' && prop !== 'zacs:style' && prop !== 'ref' && isAttrWebSafe) {
       jsxAttributes.push(
         jsxAttr(t, prop, t.memberExpression(t.identifier('props'), t.identifier(prop))),
       )
@@ -578,26 +582,40 @@ function validateElementHasNoIllegalAttributes(t, path) {
 
 function transformZacsAttributesOnNonZacsElement(t, platform, path) {
   // this is called on a JSXElement that doesn't (directly) reference a zacs declaration
-  // we need to spread zacs:inherit into separate props or it won't work
+  // we need to spread zacs:inherit and zacs:style into separate props or it won't work
   const { node } = path
   const { openingElement } = node
 
   const inheritedPropsAttr = findNamespacedAttr(t, openingElement.attributes, 'inherit')
-  if (!inheritedPropsAttr) {
+  const zacsStyleAttr = findNamespacedAttr(t, openingElement.attributes, 'style')
+  if (!inheritedPropsAttr && !zacsStyleAttr) {
     return
   }
 
-  const inheritedProps = inheritedPropsAttr.value.expression
-  const styleAttr = jsxAttr(t, 'style', t.memberExpression(inheritedProps, t.identifier('style')))
-  const classNameAttr = jsxAttr(
-    t,
-    'className',
-    t.memberExpression(inheritedProps, t.identifier('className')),
-  )
-  const addedAttrs = platform === 'web' ? [styleAttr, classNameAttr] : [styleAttr]
+  const addedAttrs = []
+
+  if (inheritedPropsAttr) {
+    const inheritedProps = inheritedPropsAttr.value.expression
+    const styleAttr = jsxAttr(t, 'style', t.memberExpression(inheritedProps, t.identifier('style')))
+    addedAttrs.push(styleAttr)
+
+    if (platform === 'web') {
+      const classNameAttr = jsxAttr(
+        t,
+        'className',
+        t.memberExpression(inheritedProps, t.identifier('className')),
+      )
+      addedAttrs.push(classNameAttr)
+    }
+  }
+
+  if (zacsStyleAttr) {
+    // rewrite zacs:style to __zacs_style, otherwise React babel plugin will have a problem
+    addedAttrs.push(jsxAttr(t, '__zacs_style', zacsStyleAttr.value.expression))
+  }
 
   openingElement.attributes = openingElement.attributes
-    .filter(attr => attr !== inheritedPropsAttr)
+    .filter(attr => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
     .concat(addedAttrs)
 }
 
