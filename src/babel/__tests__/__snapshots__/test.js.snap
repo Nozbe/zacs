@@ -112,6 +112,11 @@ const addedViaProp = <ZACS_RN_View style={{
   width: 100,
   height: 50
 }} __zacs_original_name=\\"AddedStylesNull\\" />;
+const stylesToAddViaProp = {
+  width: 100,
+  height: 50
+};
+const addedViaProp_2 = <ZACS_RN_View style={stylesToAddViaProp} __zacs_original_name=\\"AddedStylesNull\\" />;
 /* === Added, conditional, main styles === */
 
 const Mix1 = zacs.view(styles.box, {
@@ -139,6 +144,22 @@ const mix1_add_2 = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, styl
 const mix_splat = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
   width: 500
 }]} __zacs_original_name=\\"Mix1\\" {...props} />;
+const mix1_zacsStyle = <ZACS_RN_View style={[styles.box, {
+  width: 100
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle = <ZACS_RN_View style={[styles.box, {
+  width: 50
+}, {
+  width: 100
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_2 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+  width: 50
+}, {
+  width: 100
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_3 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+  width: 50
+}, stylesToAddViaProp]} __zacs_original_name=\\"Mix1\\" />;
 /* === styled(Component) === */
 
 const StyledBox = zacs.styled(Box);
@@ -199,6 +220,9 @@ const stylableMain = <ZACS_RN_Text style={[style.main].concat(props.style || [])
 const stylableMain_highlighted = <ZACS_RN_Text style={[style.main, style.highlighted].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
 const stylableMain_color = <ZACS_RN_Text style={[style.main, {
   color: \\"red\\"
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <ZACS_RN_Text style={[style.main, {
+  color: 'red'
 }].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
 const stylableMain_all = <ZACS_RN_Text style={[style.main, style.highlighted, {
   color: \\"red\\"
@@ -343,6 +367,11 @@ const addedViaProp = <div style={{
   width: 100,
   height: 50
 }} __zacs_original_name=\\"AddedStylesNull\\" />;
+const stylesToAddViaProp = {
+  width: 100,
+  height: 50
+};
+const addedViaProp_2 = <div style={stylesToAddViaProp} __zacs_original_name=\\"AddedStylesNull\\" />;
 /* === Added, conditional, main styles === */
 
 const Mix1 = zacs.view(styles.box, {
@@ -370,6 +399,22 @@ const mix1_add_2 = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo 
 const mix_splat = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\") + (\\" \\" + style.mixBar)} style={{
   width: 500
 }} __zacs_original_name=\\"Mix1\\" {...props} />;
+const mix1_zacsStyle = <div className={styles.box} style={{
+  width: 100
+}} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle = <div className={styles.box} style={Object.assign({
+  width: 50
+}, {
+  width: 100
+})} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_2 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
+  width: 50
+}, {
+  width: 100
+})} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_3 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
+  width: 50
+}, stylesToAddViaProp)} __zacs_original_name=\\"Mix1\\" />;
 /* === styled(Component) === */
 
 const StyledBox = zacs.styled(Box);
@@ -431,6 +476,9 @@ const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.
 const stylableMain_color = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: \\"red\\"
 }, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign(props.style, {
+  color: 'red'
+})} __zacs_original_name=\\"StylableMain\\" />;
 const stylableMain_all = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: \\"red\\"
 }, props.style)} __zacs_original_name=\\"StylableMain\\" />;

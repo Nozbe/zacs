@@ -193,6 +193,9 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
     })
   }
 
+  // TODO: Validate zacs:style value
+  // TODO: If the value is a simple object, we could merge them into addedStyles. OTOH, maybe another
+  // optimizer Babel plugin can do it further down the line?
   const zacsStyleAttribute = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'style')
   const zacsStyle = zacsStyleAttribute ? zacsStyleAttribute.value.expression : null
 

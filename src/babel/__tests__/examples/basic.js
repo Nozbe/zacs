@@ -120,6 +120,9 @@ const addedNull = <AddedStylesNull onPress={onPress} />
 /* === Added styles (directly with a prop) === */
 
 const addedViaProp = <AddedStylesNull zacs:style={{ width: 100, height: 50 }} />
+const stylesToAddViaProp = { width: 100, height: 50 }
+
+const addedViaProp_2 = <AddedStylesNull zacs:style={stylesToAddViaProp} />
 
 /* === Added, conditional, main styles === */
 
@@ -140,6 +143,12 @@ const mix1_add_1 = <Mix1 isFoo={isFoo} width={500} />
 const mix1_add_2 = <Mix1 isFoo={isFoo} isBar width={500} />
 
 const mix_splat = <Mix1 isFoo={isFoo} isBar width={500} {...props} />
+
+const mix1_zacsStyle = <Mix1 zacs:style={{ width: 100 }} />
+const mix1_add_zacsStyle = <Mix1 zacs:style={{ width: 100 }} width={50} />
+const mix1_add_zacsStyle_2 = <Mix1 zacs:style={{ width: 100 }} width={50} isFoo />
+
+const mix1_add_zacsStyle_3 = <Mix1 zacs:style={stylesToAddViaProp} width={50} isFoo />
 
 /* === styled(Component) === */
 
@@ -193,6 +202,7 @@ const StylableMain = zacs.text(style.main, { isHighlighted: style.highlighted },
 const stylableMain = <StylableMain zacs:inherit={props} />
 const stylableMain_highlighted = <StylableMain zacs:inherit={props} isHighlighted />
 const stylableMain_color = <StylableMain zacs:inherit={props} color="red" />
+const stylableMain_colorAlt = <StylableMain zacs:inherit={props} zacs:style={{ color: 'red' }} />
 const stylableMain_all = <StylableMain zacs:inherit={props} isHighlighted color="red" />
 
 const stylableMain_splat = <StylableMain zacs:inherit={props} {...props} /> // dangerous territory!
