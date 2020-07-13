@@ -130,10 +130,10 @@ function objectExpressionFromPairs(t, keyValuePairs) {
   )
 }
 
-function findZacsInherited(t, attributes) {
+function findNamespacedAttr(t, attributes, attrName) {
   return attributes.find(
     ({ name }) =>
-      t.isJSXNamespacedName(name) && name.namespace.name === 'zacs' && name.name.name === 'inherit',
+      t.isJSXNamespacedName(name) && name.namespace.name === 'zacs' && name.name.name === attrName,
   )
 }
 
@@ -193,8 +193,18 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
     })
   }
 
+  // TODO: Validate zacs:style value
+  // TODO: If the value is a simple object, we could merge them into addedStyles. OTOH, maybe another
+  // optimizer Babel plugin can do it further down the line?
+  const zacsStyleAttribute = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'style')
+  const hasZacsStyleAttr = zacsStyleAttribute || passedProps.includes('zacs:style')
+  const zacsStyle = hasZacsStyleAttr
+    ? (zacsStyleAttribute && zacsStyleAttribute.value.expression) ||
+      t.memberExpression(t.identifier('props'), t.identifier('__zacs_style'))
+    : null
+
   // TODO: Validate inherited props value
-  const inheritedPropsAttr = jsxAttributes && findZacsInherited(t, jsxAttributes)
+  const inheritedPropsAttr = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'inherit')
   const hasInheritedProps = inheritedPropsAttr || passedProps.includes('zacs:inherit')
   const inheritedProps = hasInheritedProps
     ? (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props')
@@ -204,6 +214,7 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
     styles,
     addedStyles.length ? objectExpressionFromPairs(t, addedStyles) : null,
     inheritedProps,
+    zacsStyle,
   ]
 }
 
@@ -232,28 +243,27 @@ function webClassNameExpr(t, classNamesExpr, inheritedProps) {
   return classNamesExpr
 }
 
-function webStyleExpr(t, styles, inheritedProps) {
-  if (inheritedProps) {
-    const inheritedStyles = t.memberExpression(inheritedProps, t.identifier('style'))
+function webStyleExpr(t, styles, inheritedProps, zacsStyle) {
+  const inheritedStyles = inheritedProps
+    ? t.memberExpression(inheritedProps, t.identifier('style'))
+    : null
+  const allStyles = [styles, zacsStyle, inheritedStyles].filter(Boolean)
 
-    if (styles) {
-      // Object.assign({styles:'values'}, props.style)
-      // TODO: Maybe we can use spread operator and babel will transpile it into ES5 if necessary?
-      return t.callExpression(t.memberExpression(t.identifier('Object'), t.identifier('assign')), [
-        styles,
-        inheritedStyles,
-      ])
-    }
-
-    // only inherited styles
-    return inheritedStyles
+  if (!allStyles.length) {
+    return null
+  } else if (allStyles.length === 1) {
+    return allStyles[0]
   }
 
-  // only defined styles
-  return styles
+  // Object.assign({styles:'values'}, props.style)
+  // TODO: Maybe we can use spread operator and babel will transpile it into ES5 if necessary?
+  return t.callExpression(
+    t.memberExpression(t.identifier('Object'), t.identifier('assign')),
+    allStyles,
+  )
 }
 
-function webStyleAttributes(t, [classNames, styles, inheritedProps]) {
+function webStyleAttributes(t, [classNames, styles, inheritedProps, zacsStyle]) {
   const attributes = []
 
   const classNamesExpr = classNames.reduce((expr, [className, condition]) => {
@@ -275,7 +285,7 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps]) {
     attributes.push(jsxAttr(t, 'className', classNamesValue))
   }
 
-  const stylesValue = webStyleExpr(t, styles, inheritedProps)
+  const stylesValue = webStyleExpr(t, styles, inheritedProps, zacsStyle)
   if (stylesValue) {
     attributes.push(jsxAttr(t, 'style', stylesValue))
   }
@@ -283,13 +293,17 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps]) {
   return attributes
 }
 
-function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps]) {
+function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps, zacsStyle]) {
   const styles = styleDefs.map(([styleName, condition]) =>
     condition ? t.logicalExpression('&&', condition, styleName) : styleName,
   )
 
   if (addedStyles) {
     styles.push(addedStyles)
+  }
+
+  if (zacsStyle) {
+    styles.push(zacsStyle)
   }
 
   if (!styles.length && !inheritedProps) {
@@ -440,7 +454,7 @@ function createZacsComponent(t, state, path) {
   passedProps.forEach(prop => {
     const isAttrWebSafe =
       platform === 'web' && htmlElements.has(elementName) ? isAttributeWebSafe(prop) : true
-    if (prop !== 'zacs:inherit' && prop !== 'ref' && isAttrWebSafe) {
+    if (prop !== 'zacs:inherit' && prop !== 'zacs:style' && prop !== 'ref' && isAttrWebSafe) {
       jsxAttributes.push(
         jsxAttr(t, prop, t.memberExpression(t.identifier('props'), t.identifier(prop))),
       )
@@ -490,6 +504,12 @@ function validateZacsDeclaration(t, path) {
   const { node } = path
   const { init } = node
   const zacsMethod = init.callee.property.name
+
+  // Validate variable name
+
+  if (!t.isIdentifier(node.id)) {
+    throw path.buildCodeFrameError('Expected zacs declaration to be assigned to a simple variable')
+  }
 
   // Validate declaration
   if (
@@ -568,28 +588,44 @@ function validateElementHasNoIllegalAttributes(t, path) {
 
 function transformZacsAttributesOnNonZacsElement(t, platform, path) {
   // this is called on a JSXElement that doesn't (directly) reference a zacs declaration
-  // we need to spread zacs:inherit into separate props or it won't work
+  // we need to spread zacs:inherit and zacs:style into separate props or it won't work
   const { node } = path
   const { openingElement } = node
 
-  const inheritedPropsAttr = findZacsInherited(t, openingElement.attributes)
-  if (!inheritedPropsAttr) {
+  const inheritedPropsAttr = findNamespacedAttr(t, openingElement.attributes, 'inherit')
+  const zacsStyleAttr = findNamespacedAttr(t, openingElement.attributes, 'style')
+  if (!inheritedPropsAttr && !zacsStyleAttr) {
     return
   }
 
-  const inheritedProps = inheritedPropsAttr.value.expression
-  const styleAttr = jsxAttr(t, 'style', t.memberExpression(inheritedProps, t.identifier('style')))
-  const classNameAttr = jsxAttr(
-    t,
-    'className',
-    t.memberExpression(inheritedProps, t.identifier('className')),
-  )
-  const addedAttrs = platform === 'web' ? [styleAttr, classNameAttr] : [styleAttr]
+  const addedAttrs = []
+
+  if (inheritedPropsAttr) {
+    const inheritedProps = inheritedPropsAttr.value.expression
+    const styleAttr = jsxAttr(t, 'style', t.memberExpression(inheritedProps, t.identifier('style')))
+    addedAttrs.push(styleAttr)
+
+    if (platform === 'web') {
+      const classNameAttr = jsxAttr(
+        t,
+        'className',
+        t.memberExpression(inheritedProps, t.identifier('className')),
+      )
+      addedAttrs.push(classNameAttr)
+    }
+  }
+
+  if (zacsStyleAttr) {
+    // rewrite zacs:style to __zacs_style, otherwise React babel plugin will have a problem
+    addedAttrs.push(jsxAttr(t, '__zacs_style', zacsStyleAttr.value.expression))
+  }
 
   openingElement.attributes = openingElement.attributes
-    .filter(attr => attr !== inheritedPropsAttr)
+    .filter(attr => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
     .concat(addedAttrs)
 }
+
+const componentKey = name => `declaration_${name}`
 
 exports.default = function(babel) {
   const { types: t } = babel
@@ -610,23 +646,28 @@ exports.default = function(babel) {
 
         if (zacsMethod.startsWith('create')) {
           node.init = createZacsComponent(t, state, path)
+        } else {
+          const id = node.id.name
+          const stateKey = componentKey(id)
+          if (state.get(stateKey)) {
+            throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
+          }
+          state.set(stateKey, node)
+
+          if (!state.opts.keepDeclarations) {
+            path.remove()
+          }
         }
       },
       JSXElement(path, state) {
         const { node } = path
         const { openingElement } = node
         const { name } = openingElement.name
-
-        // check if element is referenced (i.e. not built-in element)
-        const binding = path.scope.getBinding(name)
-        if (!binding) {
-          return
-        }
+        const platform = getPlatform(state)
 
         // check if it's a ZACS element
-        const elementDeclarator = binding.path.node
-        const platform = getPlatform(state)
-        if (!isZacsDeclaration(t, elementDeclarator)) {
+        const declaration = state.get(componentKey(name))
+        if (!declaration) {
           transformZacsAttributesOnNonZacsElement(t, platform, path)
           return
         }
@@ -634,7 +675,7 @@ exports.default = function(babel) {
         validateElementHasNoIllegalAttributes(t, path)
 
         // get ZACS element info
-        const { id, init } = elementDeclarator
+        const { id, init } = declaration
         const originalName = id.name
         const zacsMethod = init.callee.property.name
         const elementName = getElementName(

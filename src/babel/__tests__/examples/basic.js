@@ -117,6 +117,13 @@ const AddedStylesNull = zacs.view(null, null, null)
 
 const addedNull = <AddedStylesNull onPress={onPress} />
 
+/* === Added styles (directly with a prop) === */
+
+const addedViaProp = <AddedStylesNull zacs:style={{ width: 100, height: 50 }} />
+const stylesToAddViaProp = { width: 100, height: 50 }
+
+const addedViaProp_2 = <AddedStylesNull zacs:style={stylesToAddViaProp} />
+
 /* === Added, conditional, main styles === */
 
 const Mix1 = zacs.view(
@@ -136,6 +143,12 @@ const mix1_add_1 = <Mix1 isFoo={isFoo} width={500} />
 const mix1_add_2 = <Mix1 isFoo={isFoo} isBar width={500} />
 
 const mix_splat = <Mix1 isFoo={isFoo} isBar width={500} {...props} />
+
+const mix1_zacsStyle = <Mix1 zacs:style={{ width: 100 }} />
+const mix1_add_zacsStyle = <Mix1 zacs:style={{ width: 100 }} width={50} />
+const mix1_add_zacsStyle_2 = <Mix1 zacs:style={{ width: 100 }} width={50} isFoo />
+
+const mix1_add_zacsStyle_3 = <Mix1 zacs:style={stylesToAddViaProp} width={50} isFoo />
 
 /* === styled(Component) === */
 
@@ -189,6 +202,7 @@ const StylableMain = zacs.text(style.main, { isHighlighted: style.highlighted },
 const stylableMain = <StylableMain zacs:inherit={props} />
 const stylableMain_highlighted = <StylableMain zacs:inherit={props} isHighlighted />
 const stylableMain_color = <StylableMain zacs:inherit={props} color="red" />
+const stylableMain_colorAlt = <StylableMain zacs:inherit={props} zacs:style={{ color: 'red' }} />
 const stylableMain_all = <StylableMain zacs:inherit={props} isHighlighted color="red" />
 
 const stylableMain_splat = <StylableMain zacs:inherit={props} {...props} /> // dangerous territory!
@@ -230,6 +244,13 @@ export const ExportedStylable = zacs.createText(
   ['zacs:inherit'],
 )
 
+export const ExportedStylable2 = zacs.createText(
+  style.text,
+  { isBold: style.bold },
+  { color: 'color' },
+  ['zacs:inherit', 'zacs:style'],
+)
+
 export const ExportedCombo = zacs.createStyled(
   { native: NativeCombo, web: WebCombo },
   style.combo,
@@ -243,3 +264,12 @@ export const ExportedCombo = zacs.createStyled(
 const combo = <ExportedCombo />
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />
 const combo_styles = <ExportedCombo zacs:inherit={props} />
+const combo_styles2 = <ExportedCombo zacs:inherit={props} zacs:style={{ width: 500 }} />
+
+// Pretend we're using an exported component
+
+const ImportedComponent2 = require('ImportedComponent')
+const passZacsStyledWithoutDef = <ImportedComponent2 zacs:style={{ width: 199 }} />
+const passZacsStyledWithoutDefInherit = (
+  <ImportedComponent2 zacs:inherit={props} zacs:style={{ width: 199 }} />
+)
