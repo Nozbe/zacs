@@ -16,8 +16,8 @@ styles.foo                      -- predefined styleset
 { foo: 'bar' }                  -- literal styleset
 
 zacs.view(
-  styles.foo,                   -- unconditional styleset
-  { bar: styles.bar },          -- conditional styleset spec
+  styles.foo,                   -- unconditional styleset (uncond styleset)
+  { bar: styles.bar },          -- conditional styleset spec (cond styleset)
   { width: 'width' }            -- literal style spec
 )
 
@@ -73,17 +73,17 @@ function webSafeAttributes(attributes) {
   })
 }
 
-function withoutStylingProps(t, attributes, conditionalStyles, addedStyles) {
+function withoutStylingProps(t, attributes, condStylesets, literalStyleSpec) {
   const stylingProps = []
 
-  if (conditionalStyles && conditionalStyles.properties) {
-    conditionalStyles.properties.forEach(property => {
+  if (condStylesets && condStylesets.properties) {
+    condStylesets.properties.forEach(property => {
       stylingProps.push(property.key.name)
     })
   }
 
-  if (addedStyles && addedStyles.properties) {
-    addedStyles.properties.forEach(property => {
+  if (literalStyleSpec && literalStyleSpec.properties) {
+    literalStyleSpec.properties.forEach(property => {
       stylingProps.push(property.key.name)
     })
   }
@@ -155,16 +155,16 @@ function findNamespacedAttr(t, attributes, attrName) {
   )
 }
 
-function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttributes, passedProps) {
+function getStyles(t, uncondStyleset, condStylesets, literalStyleSpec, jsxAttributes, passedProps) {
   const styles = []
-  const addedStyles = []
+  const literalStyles = []
 
-  if (mainStyle && !t.isNullLiteral(mainStyle)) {
-    styles.push([mainStyle])
+  if (uncondStyleset && !t.isNullLiteral(uncondStyleset)) {
+    styles.push([uncondStyleset])
   }
 
-  if (conditionalStyles && !t.isNullLiteral(conditionalStyles)) {
-    conditionalStyles.properties.forEach(property => {
+  if (condStylesets && !t.isNullLiteral(condStylesets)) {
+    condStylesets.properties.forEach(property => {
       const style = property.value
       const propName = property.key.name
 
@@ -189,8 +189,8 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
     })
   }
 
-  if (addedStylesDef && !t.isNullLiteral(addedStylesDef)) {
-    addedStylesDef.properties.forEach(property => {
+  if (literalStyleSpec && !t.isNullLiteral(literalStyleSpec)) {
+    literalStyleSpec.properties.forEach(property => {
       const styleAttr = property.value.value
       const propName = property.key.name
 
@@ -201,9 +201,9 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
         }
 
         const styleValue = jsxAttrValue(t, attr)
-        addedStyles.push([styleAttr, styleValue])
+        literalStyles.push([styleAttr, styleValue])
       } else {
-        addedStyles.push([
+        literalStyles.push([
           styleAttr,
           t.memberExpression(t.identifier('props'), t.identifier(propName)),
         ])
@@ -212,7 +212,7 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
   }
 
   // TODO: Validate zacs:style value
-  // TODO: If the value is a simple object, we could merge them into addedStyles. OTOH, maybe another
+  // TODO: If the value is a simple object, we could merge them into literalStyles. OTOH, maybe another
   // optimizer Babel plugin can do it further down the line?
   const zacsStyleAttribute = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'style')
   const hasZacsStyleAttr = zacsStyleAttribute || passedProps.includes('zacs:style')
@@ -230,7 +230,7 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
 
   return [
     styles,
-    addedStyles.length ? objectExpressionFromPairs(t, addedStyles) : null,
+    literalStyles.length ? objectExpressionFromPairs(t, literalStyles) : null,
     inheritedProps,
     zacsStyle,
   ]
@@ -311,13 +311,13 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps, zacsStyle]) 
   return attributes
 }
 
-function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps, zacsStyle]) {
-  const styles = styleDefs.map(([styleName, condition]) =>
+function nativeStyleAttributes(t, [stylesets, literalStyleset, inheritedProps, zacsStyle]) {
+  const styles = stylesets.map(([styleName, condition]) =>
     condition ? t.logicalExpression('&&', condition, styleName) : styleName,
   )
 
-  if (addedStyles) {
-    styles.push(addedStyles)
+  if (literalStyleset) {
+    styles.push(literalStyleset)
   }
 
   if (zacsStyle) {
@@ -348,13 +348,20 @@ function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps, zacsS
 function styleAttributes(
   t,
   platform,
-  mainStyle,
-  conditionalStyles,
-  addedStyles,
+  uncondStyleset,
+  condStylesets,
+  literalStyleSpec,
   jsxAttributes,
   passedProps = [],
 ) {
-  const styles = getStyles(t, mainStyle, conditionalStyles, addedStyles, jsxAttributes, passedProps)
+  const styles = getStyles(
+    t,
+    uncondStyleset,
+    condStylesets,
+    literalStyleSpec,
+    jsxAttributes,
+    passedProps,
+  )
   switch (platform) {
     case 'web':
       return webStyleAttributes(t, styles)
@@ -454,7 +461,7 @@ function createZacsComponent(t, state, path) {
     path, // should be path to declaration
     zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
   )
-  const [mainStyle, conditionalStyles, addedStyles, passedPropsExpr] =
+  const [uncondStyleset, condStylesets, literalStyleSpec, passedPropsExpr] =
     zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
 
   if (platform === 'native') {
@@ -484,7 +491,15 @@ function createZacsComponent(t, state, path) {
   }
 
   jsxAttributes.unshift(
-    ...styleAttributes(t, platform, mainStyle, conditionalStyles, addedStyles, null, passedProps),
+    ...styleAttributes(
+      t,
+      platform,
+      uncondStyleset,
+      condStylesets,
+      literalStyleSpec,
+      null,
+      passedProps,
+    ),
   )
 
   const component = t.arrowFunctionExpression(
@@ -564,15 +579,12 @@ function validateZacsDeclaration(t, path) {
     }
   }
 
-  const [, conditionalStyles, addedStyles] =
+  const [, condStylesets, literalStyleSpec] =
     zacsMethod === 'styled' || zacsMethod === 'createStyled'
       ? init.arguments.slice(1)
       : init.arguments
 
-  if (
-    conditionalStyles &&
-    !(t.isObjectExpression(conditionalStyles) || t.isNullLiteral(conditionalStyles))
-  ) {
+  if (condStylesets && !(t.isObjectExpression(condStylesets) || t.isNullLiteral(condStylesets))) {
     throw path.buildCodeFrameError(
       'Conditional styles (second argument to ZACS) should be an object expression',
     )
@@ -580,7 +592,10 @@ function validateZacsDeclaration(t, path) {
     // TODO: Validate keys / values too
   }
 
-  if (addedStyles && !(t.isObjectExpression(addedStyles) || t.isNullLiteral(addedStyles))) {
+  if (
+    literalStyleSpec &&
+    !(t.isObjectExpression(literalStyleSpec) || t.isNullLiteral(literalStyleSpec))
+  ) {
     throw path.buildCodeFrameError(
       'Added styles (second argument to ZACS) should be an object expression',
     )
@@ -702,7 +717,7 @@ exports.default = function(babel) {
           path, // should be path to declaration
           zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
         )
-        const [mainStyle, conditionalStyles, addedStyles] =
+        const [uncondStyleset, condStylesets, literalStyleSpec] =
           zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
         const originalAttributes = openingElement.attributes
 
@@ -718,8 +733,8 @@ exports.default = function(babel) {
         openingElement.attributes = withoutStylingProps(
           t,
           openingElement.attributes,
-          conditionalStyles,
-          addedStyles,
+          condStylesets,
+          literalStyleSpec,
         )
 
         // replace definition
@@ -746,9 +761,9 @@ exports.default = function(babel) {
           ...styleAttributes(
             t,
             platform,
-            mainStyle,
-            conditionalStyles,
-            addedStyles,
+            uncondStyleset,
+            condStylesets,
+            literalStyleSpec,
             originalAttributes,
           ),
         )
