@@ -229,6 +229,34 @@ const rendered = <Box zacs:style={{ width: 100, color: '#80EADC' }} />
 This is equivalent to the example above, but instead of predefining list of props that turn into styles,
 we pass styles directly. Note that this only works on ZACS components.
 
+### Multiple unconditional styles
+
+```js
+import styles from './styles'
+
+const TitleText = zacs.text([styles.text, styles.titleText])
+
+const rendered = <TitleText />
+```
+
+<details>
+  <summary>See compiled output</summary>
+
+  **Web:**
+
+  ```js
+  const rendered = <span className={styles.text + ' ' + styles.titleText} />
+  ```
+
+  **React Native:**
+
+  ```js
+  import { Text } from 'react-native'
+
+  const rendered = <Text style={[styles.text, styles.titleText]} />
+  ```
+</details>
+
 ### Styling custom components
 
 ```js
@@ -273,8 +301,6 @@ export default const Touchable = props => {
   return <Root zacs:inherit={props} />
 }
 ```
-
-**TODO:** I don't love the `zacs:inherit` name — if you have a better suggestion, let us know!
 
 <details>
   <summary>See compiled output</summary>
