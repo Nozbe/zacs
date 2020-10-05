@@ -5,6 +5,24 @@ Object.defineProperty(exports, '__esModule', {
   value: true,
 })
 
+/*
+
+TERMINOLOGY:
+
+zacs.{view,text,styled}()       -- styled declaration
+zacs.create{View,Text,Styled}() -- styled component
+
+styles.foo                      -- predefined styleset
+{ foo: 'bar' }                  -- literal styleset
+
+zacs.view(
+  styles.foo,                   -- unconditional styleset
+  { bar: styles.bar },          -- conditional styleset spec
+  { width: 'width' }            -- literal style spec
+)
+
+*/
+
 function getPlatform(state) {
   // return 'web'
   // return 'native'
