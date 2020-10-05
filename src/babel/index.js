@@ -153,12 +153,16 @@ function findNamespacedAttr(t, attributes, attrName) {
   )
 }
 
-function getStyles(t, uncondStyleset, condStyles, literalStyleSpec, jsxAttributes, passedProps) {
-  const styles = []
+function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passedProps) {
+  const stylesets = []
   const literalStyles = []
 
-  if (uncondStyleset && !t.isNullLiteral(uncondStyleset)) {
-    styles.push([uncondStyleset])
+  if (uncondStyles && !t.isNullLiteral(uncondStyles)) {
+    if (t.isArrayExpression(uncondStyles)) {
+      stylesets.push(...uncondStyles.elements.map(styleset => [styleset]))
+    } else {
+      stylesets.push([uncondStyles])
+    }
   }
 
   if (condStyles && !t.isNullLiteral(condStyles)) {
@@ -175,14 +179,14 @@ function getStyles(t, uncondStyleset, condStyles, literalStyleSpec, jsxAttribute
         const flag = inferJsxAttrTruthiness(t, attr)
 
         if (flag === true) {
-          styles.push([style])
+          stylesets.push([style])
         } else if (flag === false) {
           // we know for a fact the style won't be used -- so ignore it
         } else {
-          styles.push([style, flag])
+          stylesets.push([style, flag])
         }
       } else {
-        styles.push([style, t.memberExpression(t.identifier('props'), t.identifier(propName))])
+        stylesets.push([style, t.memberExpression(t.identifier('props'), t.identifier(propName))])
       }
     })
   }
@@ -227,7 +231,7 @@ function getStyles(t, uncondStyleset, condStyles, literalStyleSpec, jsxAttribute
     : null
 
   return [
-    styles,
+    stylesets,
     literalStyles.length ? objectExpressionFromPairs(t, literalStyles) : null,
     inheritedProps,
     zacsStyle,
@@ -346,7 +350,7 @@ function nativeStyleAttributes(t, [stylesets, literalStyleset, inheritedProps, z
 function styleAttributes(
   t,
   platform,
-  uncondStyleset,
+  uncondStyles,
   condStyles,
   literalStyleSpec,
   jsxAttributes,
@@ -354,7 +358,7 @@ function styleAttributes(
 ) {
   const styles = getStyles(
     t,
-    uncondStyleset,
+    uncondStyles,
     condStyles,
     literalStyleSpec,
     jsxAttributes,
@@ -459,7 +463,7 @@ function createZacsComponent(t, state, path) {
     path, // should be path to declaration
     zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
   )
-  const [uncondStyleset, condStyles, literalStyleSpec, passedPropsExpr] =
+  const [uncondStyles, condStyles, literalStyleSpec, passedPropsExpr] =
     zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
 
   if (platform === 'native') {
@@ -489,15 +493,7 @@ function createZacsComponent(t, state, path) {
   }
 
   jsxAttributes.unshift(
-    ...styleAttributes(
-      t,
-      platform,
-      uncondStyleset,
-      condStyles,
-      literalStyleSpec,
-      null,
-      passedProps,
-    ),
+    ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
   )
 
   const component = t.arrowFunctionExpression(
@@ -562,13 +558,14 @@ function validateZacsDeclaration(t, path) {
   }
 
   if (zacsMethod === 'styled') {
+    const componentToStyle = init.arguments[0]
     if (
       !(
         init.arguments.length >= 1 &&
         // TODO: Validate platform specifier keys
-        (t.isIdentifier(init.arguments[0]) ||
-          t.isStringLiteral(init.arguments[0]) ||
-          t.isObjectExpression(init.arguments[0]))
+        (t.isIdentifier(componentToStyle) ||
+          t.isStringLiteral(componentToStyle) ||
+          t.isObjectExpression(componentToStyle))
       )
     ) {
       throw path.buildCodeFrameError(
@@ -595,7 +592,7 @@ function validateZacsDeclaration(t, path) {
     !(t.isObjectExpression(literalStyleSpec) || t.isNullLiteral(literalStyleSpec))
   ) {
     throw path.buildCodeFrameError(
-      'Added styles (second argument to ZACS) should be an object expression',
+      'Literal styles (third argument to ZACS) should be an object expression',
     )
 
     // TODO: Validate keys / values too
@@ -715,7 +712,7 @@ exports.default = function(babel) {
           path, // should be path to declaration
           zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
         )
-        const [uncondStyleset, condStyles, literalStyleSpec] =
+        const [uncondStyles, condStyles, literalStyleSpec] =
           zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
         const originalAttributes = openingElement.attributes
 
@@ -735,7 +732,7 @@ exports.default = function(babel) {
           literalStyleSpec,
         )
 
-        // replace definition
+        // replace component
         if (platform === 'web') {
           renameJSX(node, elementName)
 
@@ -759,7 +756,7 @@ exports.default = function(babel) {
           ...styleAttributes(
             t,
             platform,
-            uncondStyleset,
+            uncondStyles,
             condStyles,
             literalStyleSpec,
             originalAttributes,
