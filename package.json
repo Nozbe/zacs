@@ -7,7 +7,7 @@
     "test": "jest",
     "flow": "flow check",
     "eslint": "eslint ./src -c ./.eslintrc.yml --cache --cache-location ./.cache/.eslintcache",
-    "playground": "jest --testMatch='**/__playground__/index.js' --watch",
+    "playground": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js\"",
     "prettier": "prettier-eslint --config ./.prettierrc --write \"./src/**/*.js\"",
     "ci:check": "concurrently 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail"
   },
@@ -52,6 +52,7 @@
   "devDependencies": {
     "babel-eslint": "^10.0.3",
     "chalk": "^4.1.0",
+    "chokidar-cli": "^2.1.0",
     "cli-highlight": "^2.1.4",
     "concurrently": "^4.1.2",
     "eslint": "^6.3.0",
