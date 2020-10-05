@@ -1,9 +1,7 @@
 /* eslint-disable no-use-before-define */
 // Note: Why is this one big file? Because that makes it possible to work with it using https://astexplorer.net :)
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
-})
+exports.__esModule = true
 
 /*
 
@@ -73,11 +71,11 @@ function webSafeAttributes(attributes) {
   })
 }
 
-function withoutStylingProps(t, attributes, condStylesets, literalStyleSpec) {
+function withoutStylingProps(t, attributes, condStyles, literalStyleSpec) {
   const stylingProps = []
 
-  if (condStylesets && condStylesets.properties) {
-    condStylesets.properties.forEach(property => {
+  if (condStyles && condStyles.properties) {
+    condStyles.properties.forEach(property => {
       stylingProps.push(property.key.name)
     })
   }
@@ -155,7 +153,7 @@ function findNamespacedAttr(t, attributes, attrName) {
   )
 }
 
-function getStyles(t, uncondStyleset, condStylesets, literalStyleSpec, jsxAttributes, passedProps) {
+function getStyles(t, uncondStyleset, condStyles, literalStyleSpec, jsxAttributes, passedProps) {
   const styles = []
   const literalStyles = []
 
@@ -163,8 +161,8 @@ function getStyles(t, uncondStyleset, condStylesets, literalStyleSpec, jsxAttrib
     styles.push([uncondStyleset])
   }
 
-  if (condStylesets && !t.isNullLiteral(condStylesets)) {
-    condStylesets.properties.forEach(property => {
+  if (condStyles && !t.isNullLiteral(condStyles)) {
+    condStyles.properties.forEach(property => {
       const style = property.value
       const propName = property.key.name
 
@@ -349,7 +347,7 @@ function styleAttributes(
   t,
   platform,
   uncondStyleset,
-  condStylesets,
+  condStyles,
   literalStyleSpec,
   jsxAttributes,
   passedProps = [],
@@ -357,7 +355,7 @@ function styleAttributes(
   const styles = getStyles(
     t,
     uncondStyleset,
-    condStylesets,
+    condStyles,
     literalStyleSpec,
     jsxAttributes,
     passedProps,
@@ -461,7 +459,7 @@ function createZacsComponent(t, state, path) {
     path, // should be path to declaration
     zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
   )
-  const [uncondStyleset, condStylesets, literalStyleSpec, passedPropsExpr] =
+  const [uncondStyleset, condStyles, literalStyleSpec, passedPropsExpr] =
     zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
 
   if (platform === 'native') {
@@ -495,7 +493,7 @@ function createZacsComponent(t, state, path) {
       t,
       platform,
       uncondStyleset,
-      condStylesets,
+      condStyles,
       literalStyleSpec,
       null,
       passedProps,
@@ -579,12 +577,12 @@ function validateZacsDeclaration(t, path) {
     }
   }
 
-  const [, condStylesets, literalStyleSpec] =
+  const [, condStyles, literalStyleSpec] =
     zacsMethod === 'styled' || zacsMethod === 'createStyled'
       ? init.arguments.slice(1)
       : init.arguments
 
-  if (condStylesets && !(t.isObjectExpression(condStylesets) || t.isNullLiteral(condStylesets))) {
+  if (condStyles && !(t.isObjectExpression(condStyles) || t.isNullLiteral(condStyles))) {
     throw path.buildCodeFrameError(
       'Conditional styles (second argument to ZACS) should be an object expression',
     )
@@ -717,7 +715,7 @@ exports.default = function(babel) {
           path, // should be path to declaration
           zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
         )
-        const [uncondStyleset, condStylesets, literalStyleSpec] =
+        const [uncondStyleset, condStyles, literalStyleSpec] =
           zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
         const originalAttributes = openingElement.attributes
 
@@ -733,7 +731,7 @@ exports.default = function(babel) {
         openingElement.attributes = withoutStylingProps(
           t,
           openingElement.attributes,
-          condStylesets,
+          condStyles,
           literalStyleSpec,
         )
 
@@ -762,7 +760,7 @@ exports.default = function(babel) {
             t,
             platform,
             uncondStyleset,
-            condStylesets,
+            condStyles,
             literalStyleSpec,
             originalAttributes,
           ),
