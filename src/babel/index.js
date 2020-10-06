@@ -619,6 +619,21 @@ function validateElementHasNoIllegalAttributes(t, path) {
   }
 }
 
+function validateZacsImport(t, path) {
+  const { node } = path
+  if (
+    !(
+      node.specifiers.length === 1 &&
+      t.isImportDefaultSpecifier(node.specifiers[0]) &&
+      node.specifiers[0].local.name === 'zacs'
+    )
+  ) {
+    throw path.buildCodeFrameError(
+      'ZACS import must say exactly `import zacs from \'@nozbe/zacs\'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.',
+    )
+  }
+}
+
 function transformZacsAttributesOnNonZacsElement(t, platform, path) {
   // this is called on a JSXElement that doesn't (directly) reference a zacs declaration
   // we need to spread zacs:inherit and zacs:style into separate props or it won't work
@@ -787,6 +802,19 @@ exports.default = function(babel) {
             }
           }
         },
+      },
+      ImportDeclaration(path, state) {
+        const { node } = path
+
+        if (
+          !node.source ||
+          // Make it work even if someone makes a fork of zacs
+          !(node.source.value === 'zacs' || node.source.value.endsWith('/zacs'))
+        ) {
+          return
+        }
+
+        validateZacsImport(t, path)
       },
     },
   }
