@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Strip ZACS declarations (`const Foo = zacs.foo(...)`) and ZACS import from output code by default. Pass `keepDeclarations: true` in Babel config to revert to previous behavior.
 - Fix buggy behavior on `zacs.createXXX` components with both `zacs:inherit` and `zacs:style` props whitelisted
 - Improved validation and error messages
+- Improved Flow typing (likely to reveal new errors)
 
 ## 0.9.3 (2019-09-27)
 

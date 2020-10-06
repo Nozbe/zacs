@@ -9,67 +9,72 @@ type ReactNativeStyleSheetId = number
 type ReactNativeStyleObject = Object
 type PredefinedStyle = CSSClassName | ReactNativeStyleSheetId | ReactNativeStyleObject
 
+type UnconditionalStyles = PredefinedStyle | PredefinedStyle[]
+
 type ConditionalStyles = { [propNameThatAddsConditionalStyleIfTruthy: string]: PredefinedStyle }
 
 type StyleAttributeName = CSSPropertyName | ReactNativeStyleAttributeName
 type StyleAttributes = { [propName: string]: StyleAttributeName }
 
 type ZacsViewFunction = (
-  mainStyle: ?PredefinedStyle,
+  unconditionalStyles: ?UnconditionalStyles,
   conditionalStyles: ?ConditionalStyles,
-  styleAttributes: ?StyleAttributes,
+  literalStyles: ?StyleAttributes,
 ) => React$Component<any>
 
 type ZacsTextFunction = (
-  mainStyle: ?PredefinedStyle,
+  unconditionalStyles: ?UnconditionalStyles,
   conditionalStyles: ?ConditionalStyles,
-  styleAttributes: ?StyleAttributes,
+  literalStyles: ?StyleAttributes,
 ) => React$Component<any>
 
 type BuiltinElementName = string
-type ConcreteComponentToStyle = React$Component<any> | BuiltinElementName
-type ComponentPlatformSelect = $Exact<{
-  web: ConcreteComponentToStyle | ZacsViewFunction | ZacsTextFunction,
-  native: ConcreteComponentToStyle | ZacsViewFunction | ZacsTextFunction,
+type ConcreteComponentToStyle<Props> = React$Component<Props> | BuiltinElementName
+type ComponentPlatformSelect<Props> = $Exact<{
+  web: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
+  native: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
 }>
-type ComponentToStyle = ConcreteComponentToStyle | ComponentPlatformSelect
+type ComponentToStyle<Props> = ConcreteComponentToStyle<Props> | ComponentPlatformSelect<Props>
 
-type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | string>
+type ZacsStyledFunction = <Props>(
+  componentToStyle: ComponentToStyle<Props>,
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+) => React$Component<{ ...Props, ... }>
+
+type ZacsCreateViewFunction = (
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+  whitelistedProps: ?WhitelistedPropNames,
+) => React$Component<any>
+
+type ZacsCreateTextFunction = (
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+  whitelistedProps: ?WhitelistedPropNames,
+) => React$Component<any>
+
+type ZacsCreateStyledFunction = <Props>(
+  componentToStyle: ComponentToStyle<Props>,
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+  whitelistedProps: ?WhitelistedPropNames,
+) => React$Component<{ ...Props, ... }>
+
+type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | 'zacs:style' | string>
 
 declare export default {
   // TODO: Return components with the right prop types typed out (inherit prop types from component being styles + add conditionalStyles & style attributes)
   view: ZacsViewFunction,
-
   text: ZacsTextFunction,
-
-  styled: (
-    componentToStyle: ComponentToStyle,
-    mainStyle: ?PredefinedStyle,
-    conditionalStyles: ?ConditionalStyles,
-    styleAttributes: ?StyleAttributes,
-  ) => React$Component<any>,
-
-  createView: (
-    mainStyle: ?PredefinedStyle,
-    conditionalStyles: ?ConditionalStyles,
-    styleAttributes: ?StyleAttributes,
-    whitelistedProps: ?WhitelistedPropNames,
-  ) => React$Component<any>,
-
-  createText: (
-    mainStyle: ?PredefinedStyle,
-    conditionalStyles: ?ConditionalStyles,
-    styleAttributes: ?StyleAttributes,
-    whitelistedProps: ?WhitelistedPropNames,
-  ) => React$Component<any>,
-
-  createStyled: (
-    componentToStyle: ComponentToStyle,
-    mainStyle: ?PredefinedStyle,
-    conditionalStyles: ?ConditionalStyles,
-    styleAttributes: ?StyleAttributes,
-    whitelistedProps: ?WhitelistedPropNames,
-  ) => React$Component<any>,
+  styled: ZacsStyledFunction,
+  createView: ZacsCreateViewFunction,
+  createText: ZacsCreateTextFunction,
+  createStyled: ZacsCreateStyledFunction,
 }
 
 type ReactNativeStyleAttributeName =
