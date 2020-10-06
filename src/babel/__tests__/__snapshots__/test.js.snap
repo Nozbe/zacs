@@ -215,7 +215,9 @@ export const ExportedStylable2 = props => <ZACS_RN_Text style={[style.text, prop
 export const ExportedCombo = React.forwardRef((props, ref) => <NativeCombo style={[style.combo, props.isFoo && style.foo, props.isBar && style.bar, {
   color: props.color,
   height: props.height
-}].concat(props.style || [])} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</NativeCombo>); // Make sure nothing breaks if I use created component in the same file
+}].concat(props.style || [])} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</NativeCombo>); // regression test
+
+export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_View>; // Make sure nothing breaks if I use created component in the same file
 
 const combo = <ExportedCombo />;
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
@@ -431,7 +433,9 @@ export const ExportedStylable2 = props => <span className={style.text + (props.i
 export const ExportedCombo = React.forwardRef((props, ref) => <WebCombo className={style.combo + (props.isFoo ? \\" \\" + style.foo : \\"\\") + (props.isBar ? \\" \\" + style.bar : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
   color: props.color,
   height: props.height
-}, props.style)} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</WebCombo>); // Make sure nothing breaks if I use created component in the same file
+}, props.style)} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</WebCombo>); // regression test
+
+export const ExporterZacsStyleInherit = props => <div className={style.foo + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({}, props.__zacs_style, props.style)}>{props.children}</div>; // Make sure nothing breaks if I use created component in the same file
 
 const combo = <ExportedCombo />;
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;

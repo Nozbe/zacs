@@ -275,6 +275,11 @@ function webStyleExpr(t, styles, inheritedProps, zacsStyle) {
     return allStyles[0]
   }
 
+  // prevent Object.assign(props.__zacs_style, ...), because if it's not an object, it will crash
+  if (!styles && zacsStyle && inheritedProps && !t.isObjectExpression(zacsStyle)) {
+    allStyles.unshift(t.objectExpression([]))
+  }
+
   // Object.assign({styles:'values'}, props.style)
   // TODO: Maybe we can use spread operator and babel will transpile it into ES5 if necessary?
   return t.callExpression(
