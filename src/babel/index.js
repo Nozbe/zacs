@@ -375,7 +375,7 @@ function styleAttributes(
     case 'native':
       return nativeStyleAttributes(t, styles)
     default:
-      throw new Error('Unknown platform')
+      throw new Error('Unknown platform passed to ZACS config')
   }
 }
 
@@ -557,7 +557,7 @@ function validateZacsDeclaration(t, path) {
     // declarator -> declaration -> export declaration
     if (t.isExportDeclaration(path.parentPath.parent)) {
       throw path.buildCodeFrameError(
-        `It's not allowed to export zacs declarations -- but you can export zacs components (use zacs.createView/createText/createStyled)`,
+        `It's not allowed to export zacs declarations. You can export zacs components (use zacs.createView/createText/createStyled), however they behave a little differently -- please check documentation for more information.`,
       )
     }
   }
@@ -574,7 +574,7 @@ function validateZacsDeclaration(t, path) {
       )
     ) {
       throw path.buildCodeFrameError(
-        'zacs.styled() requires an argument - a `Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"`',
+        'zacs.styled() requires an argument - a `Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
       )
     }
   }
