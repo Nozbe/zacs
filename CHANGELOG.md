@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 - You can now declare multiple unconditional styles by passing an array of stylesets/class names
 - You can now add extra styles to a ZACS component via `zacs:style={{ attr: value }}` syntax
-- Strip ZACS declarations (`const Foo = zacs.foo(...)`) from output code by default. Pass `keepDeclarations: true` in Babel config to revert to previous behavior
+- Strip ZACS declarations (`const Foo = zacs.foo(...)`) and ZACS import from output code by default. Pass `keepDeclarations: true` in Babel config to revert to previous behavior.
+- Fix buggy behavior on `zacs.createXXX` components with both `zacs:inherit` and `zacs:style` props whitelisted
+- Improved validation and error messages
 
 ## 0.9.3 (2019-09-27)
 
