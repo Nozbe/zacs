@@ -815,6 +815,10 @@ exports.default = function(babel) {
         }
 
         validateZacsImport(t, path)
+
+        if (!state.opts.keepDeclarations) {
+          path.remove()
+        }
       },
     },
   }

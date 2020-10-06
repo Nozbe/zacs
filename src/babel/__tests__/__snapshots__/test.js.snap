@@ -2,7 +2,6 @@
 
 exports[`zacs doesn't add __zacs_original_name in production 1`] = `
 "/* eslint-disable */
-import zacs from 'zacs';
 const root = <div className={style.root} />;"
 `;
 
@@ -20,7 +19,6 @@ const ZACS_RN_Text = zacsReactNative.Text;
 const ZACS_RN_View = zacsReactNative.View;
 
 /* eslint-disable */
-import zacs from 'zacs';
 
 /* === Different invocations === */
 const view = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
@@ -238,7 +236,6 @@ const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} 
 
 exports[`zacs works with the basic example on web 1`] = `
 "/* eslint-disable */
-import zacs from 'zacs';
 
 /* === Different invocations === */
 const view = <div className={style.root} __zacs_original_name=\\"Root\\" />;
