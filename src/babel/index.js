@@ -569,12 +569,13 @@ function validateZacsDeclaration(t, path) {
         init.arguments.length >= 1 &&
         // TODO: Validate platform specifier keys
         (t.isIdentifier(componentToStyle) ||
+        t.isMemberExpression(componentToStyle) || // e.g. Foo.Bar -- TODO: validate that all segments are identifiers/valid JSX opening names
           t.isStringLiteral(componentToStyle) ||
           t.isObjectExpression(componentToStyle))
       )
     ) {
       throw path.buildCodeFrameError(
-        'zacs.styled() requires an argument - a `Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
+        'zacs.styled() requires an argument - a `Component`, `Namespaced.Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
       )
     }
   }
