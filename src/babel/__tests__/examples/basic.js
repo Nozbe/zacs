@@ -170,8 +170,8 @@ const link_attrs = <StyledLink foo={foo} bar title="hello" />
 
 /* === styled(Namespaced.Component) === */
 
-const StyledModalText = zacs.styled(Modal.Text)
-const modalText = <Modal.Text />
+const StyledModalText = zacs.styled(Modal.Text, style.foo)
+const modalText = <StyledModalText />
 
 /* === styled('builtin') === */
 

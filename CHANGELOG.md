@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Fix buggy behavior on `zacs.createXXX` components with both `zacs:inherit` and `zacs:style` props whitelisted
 - Improved validation and error messages
 - Improved Flow typing (likely to reveal new errors)
+- Allow styling namespaced components, e.g. `zacs.style(Modal.Text, style.root)`
 
 ## 0.9.3 (2019-09-27)
 

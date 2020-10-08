@@ -394,7 +394,7 @@ const builtinElements = {
   },
 }
 
-function getElementName(t, platform, path, component) {
+function getElementName(t, platform, path, originalName, component) {
   if (typeof component === 'string') {
     return builtinElements[platform][component]
   } else if (
@@ -408,19 +408,24 @@ function getElementName(t, platform, path, component) {
     return component.name
   } else if (t.isStringLiteral(component)) {
     return component.value
+  } else if (t.isMemberExpression(component)) {
+    // assuming it was already validated to be id.id
+    return `${component.object.name}.${component.property.name}`
   } else if (t.isObjectExpression(component)) {
     const platformComponent = component.properties.find(property => property.key.name === platform)
 
     if (!platformComponent) {
       throw path.buildCodeFrameError(
-        `Invalid component specifier in zacs declaration - no ${platform} key specified`,
+        `Invalid component specifier in ZACS declaration - no ${platform} key specified for ${originalName}`,
       )
     }
 
-    return getElementName(t, platform, path, platformComponent.value)
+    return getElementName(t, platform, path, originalName, platformComponent.value)
   }
 
-  throw path.buildCodeFrameError(`Invalid component type in zacs declaration`)
+  throw path.buildCodeFrameError(
+    `Invalid component type in ZACS declaration -- look at the const ${originalName} = zacs.styled/createStyled(...) declaration. The component to style that was passed is not of valid syntax.`,
+  )
 }
 
 function propsChildren(t) {
@@ -466,6 +471,7 @@ function createZacsComponent(t, state, path) {
     t,
     platform,
     path, // should be path to declaration
+    undefined, // TODO: this should be the name of the component
     zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
   )
   const [uncondStyles, condStyles, literalStyleSpec, passedPropsExpr] =
@@ -567,10 +573,14 @@ function validateZacsDeclaration(t, path) {
     if (
       !(
         init.arguments.length >= 1 &&
-        // TODO: Validate platform specifier keys
         (t.isIdentifier(componentToStyle) ||
-        t.isMemberExpression(componentToStyle) || // e.g. Foo.Bar -- TODO: validate that all segments are identifiers/valid JSX opening names
+          // e.g. Foo.Bar
+          (t.isMemberExpression(componentToStyle) &&
+            t.isIdentifier(componentToStyle.object) &&
+            t.isIdentifier(componentToStyle.property)) ||
+          // builtin, e.g. 'div'
           t.isStringLiteral(componentToStyle) ||
+          // {web:x, native:y} TODO: Validate platform specifier keys
           t.isObjectExpression(componentToStyle))
       )
     ) {
@@ -730,7 +740,10 @@ exports.default = function(babel) {
         const elementName = getElementName(
           t,
           platform,
-          path, // should be path to declaration
+          // should be path to declaration, not use, but the path gets removed after visiting
+          // (unless keepDeclarations: true)
+          path,
+          originalName,
           zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
         )
         const [uncondStyles, condStyles, literalStyleSpec] =
