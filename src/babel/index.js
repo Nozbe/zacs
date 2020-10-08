@@ -725,13 +725,13 @@ function isPlainObjectProperty(t, node) {
 function validateStyleSheet(t, args, path) {
   const [stylesheet] = args
   if (!(args.length === 1 && t.isObjectExpression(stylesheet))) {
-    throw path.buildCodeFrameError('ZACS Stylesheet accepts a single Object argument')
+    throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
   }
   const stylesets = stylesheet.properties
   if (!stylesets.every(styleset => isPlainObjectProperty(t, styleset))) {
     // TODO: We can probably allow `"name":`, no problem.
     throw path.buildCodeFrameError(
-      'ZACS Stylesheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
+      'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
     )
   }
 
@@ -743,9 +743,26 @@ function validateStyleSheet(t, args, path) {
     )
   ) {
     throw path.buildCodeFrameError(
-      'ZACS Stylesheets can only contain simple style properties with properties like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[prop]:`, `"prop": `, `...styles` are not allowed.',
+      'ZACS StyleSheets can only contain simple style properties with properties like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[prop]:`, `"prop": `, `...styles` are not allowed.',
     )
   }
+
+  // TODO: Validate values
+}
+
+function encodeCSSAttribute(property) {
+  return `  ${property.key.name}: ${property.value.value};`
+}
+
+function encodeCSSStyleset(styleset) {
+  const { name } = styleset.key
+  const attributes = styleset.value.properties.map(encodeCSSAttribute).join('\n')
+  return `.${name} {\n${attributes}\n}`
+}
+
+function encodeCSSStyleSheet(stylesheet) {
+  const stylesets = stylesheet.properties.map(encodeCSSStyleset).join('\n\n')
+  return `${stylesets}\n`
 }
 
 function transformStyleSheet(t, state, path) {
@@ -754,6 +771,25 @@ function transformStyleSheet(t, state, path) {
   const { arguments: args } = init
 
   validateStyleSheet(t, args, path)
+
+  const stylesheet = args[0]
+  const css = encodeCSSStyleSheet(stylesheet)
+
+  const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
+  const magicCssExpression = t.expressionStatement(
+    t.taggedTemplateExpression(
+      t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
+      t.templateLiteral([t.templateElement({ raw: preparedCss, cooked: preparedCss })], []),
+    ),
+  )
+  t.addComment(
+    magicCssExpression,
+    'leading',
+    '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
+  )
+  t.addComment(magicCssExpression, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
+
+  path.parentPath.insertAfter(magicCssExpression)
 }
 
 const componentKey = name => `declaration_${name}`
