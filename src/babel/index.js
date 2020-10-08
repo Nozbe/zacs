@@ -38,11 +38,26 @@ function isProduction(state) {
   return !!production
 }
 
-function renameJSX(node, name) {
+function jsxName(t, name) {
+  if (name.includes('.')) {
+    const segments = name.split('.')
+    if (segments.length !== 2) {
+      throw new Error(`Invalid JSX name ${name}`)
+    }
+    const [obj, prop] = segments
+    return t.jSXMemberExpression(t.jSXIdentifier(obj), t.jSXIdentifier(prop))
+  }
+    return t.jSXIdentifier(name)
+
+}
+
+function renameJSX(t, node, name) {
   const { openingElement, closingElement } = node
-  openingElement.name.name = name
+  const jsxId = jsxName(t, name)
+
+  openingElement.name = jsxId
   if (closingElement) {
-    closingElement.name.name = name
+    closingElement.name = jsxId
   }
 }
 
@@ -768,7 +783,7 @@ exports.default = function(babel) {
 
         // replace component
         if (platform === 'web') {
-          renameJSX(node, elementName)
+          renameJSX(t, node, elementName)
 
           // filter out non-DOM attributes (React will throw errors at us for this)
           if (htmlElements.has(elementName)) {
@@ -780,7 +795,7 @@ exports.default = function(babel) {
           // as a binding on next attempt (as to not duplicate imports)
           state.set(`uses_rn`, true)
           state.set(`uses_rn_${zacsMethod}`, true)
-          renameJSX(node, elementName)
+          renameJSX(t, node, elementName)
         } else {
           throw new Error('Unknown platform')
         }
