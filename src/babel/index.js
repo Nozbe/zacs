@@ -47,8 +47,7 @@ function jsxName(t, name) {
     const [obj, prop] = segments
     return t.jSXMemberExpression(t.jSXIdentifier(obj), t.jSXIdentifier(prop))
   }
-    return t.jSXIdentifier(name)
-
+  return t.jSXIdentifier(name)
 }
 
 function renameJSX(t, node, name) {
@@ -522,11 +521,13 @@ function createZacsComponent(t, state, path) {
     ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
   )
 
+  const jsxId = jsxName(t, elementName)
+
   const component = t.arrowFunctionExpression(
     shouldForwardRef ? [t.identifier('props'), t.identifier('ref')] : [t.identifier('props')],
     t.jSXElement(
-      t.jSXOpeningElement(t.jSXIdentifier(elementName), jsxAttributes),
-      t.jSXClosingElement(t.jSXIdentifier(elementName)),
+      t.jSXOpeningElement(jsxId, jsxAttributes),
+      t.jSXClosingElement(jsxId),
       propsChildren(t),
     ),
   )
