@@ -750,13 +750,20 @@ function validateStyleSheet(t, args, path) {
   // TODO: Validate values
 }
 
-function encodeCSSAttribute(property) {
-  return `  ${property.key.name}: ${property.value.value};`
+// TODO: Find a JS-to-CSS package
+const capitalRegex = /([A-Z])/g
+const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
+function encodeCSSProperty(property) {
+  return property.name.replace(capitalRegex, cssCaseReplacer)
+}
+
+function encodeCSSStyle(property) {
+  return `  ${encodeCSSProperty(property.key)}: ${property.value.value};`
 }
 
 function encodeCSSStyleset(styleset) {
   const { name } = styleset.key
-  const attributes = styleset.value.properties.map(encodeCSSAttribute).join('\n')
+  const attributes = styleset.value.properties.map(encodeCSSStyle).join('\n')
   return `.${name} {\n${attributes}\n}`
 }
 
@@ -783,13 +790,12 @@ function transformStyleSheet(t, state, path) {
     ),
   )
   t.addComment(
-    magicCssExpression,
+    path.parent,
     'leading',
     '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
   )
-  t.addComment(magicCssExpression, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
-
-  path.parentPath.insertAfter(magicCssExpression)
+  path.get('init').replaceWith(magicCssExpression)
+  t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
 }
 
 const componentKey = name => `declaration_${name}`
