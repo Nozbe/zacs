@@ -12,6 +12,16 @@ const Root = zacs.view(style.root);
 const root = <div className={style.root} />;"
 `;
 
+exports[`zacs transforms experimental stylesheets 1`] = `
+"/* eslint-disable */
+const styles = zacs._experimentalStyleSheet({
+  root: {
+    backgroundColor: 'red',
+    height: 100
+  }
+});"
+`;
+
 exports[`zacs works with the basic example on native 1`] = `
 "const zacsReactNative = require('react-native');
 
