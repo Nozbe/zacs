@@ -50,6 +50,8 @@
     "access": "public"
   },
   "devDependencies": {
+    "acorn": "^6.4.2",
+    "ajv-errors": "^1.0.1",
     "babel-eslint": "^10.0.3",
     "chalk": "^4.1.0",
     "chokidar-cli": "^2.1.0",
@@ -66,12 +68,16 @@
     "eslint-plugin-react": "^7.14.3",
     "flow-bin": "^0.106.3",
     "jest": "^24.9.0",
+    "memfs": "^3.2.0",
     "prettier": "^1.18.2",
     "prettier-eslint-cli": "^5.0.0",
-    "react": "^16.9.0"
+    "react": "^16.9.0",
+    "schema-utils": "^1.0.0",
+    "webpack": "^4.44.2"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
-    "@babel/plugin-syntax-jsx": "^7.2.0"
+    "@babel/plugin-syntax-jsx": "^7.2.0",
+    "loader-utils": "^2.0.0"
   }
 }
