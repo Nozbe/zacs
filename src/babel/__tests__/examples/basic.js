@@ -168,6 +168,11 @@ const link_colored = <StyledLink isVisited={visited} color={factoryColor(color)}
 
 const link_attrs = <StyledLink foo={foo} bar title="hello" />
 
+/* === styled(Namespaced.Component) === */
+
+const StyledModalText = zacs.styled(Modal.Text, style.foo)
+const modalText = <StyledModalText />
+
 /* === styled('builtin') === */
 
 // you wouldn't do it in shared code, only in .{native,web}.js
@@ -252,7 +257,7 @@ export const ExportedStylable2 = zacs.createText(
 )
 
 export const ExportedCombo = zacs.createStyled(
-  { native: NativeCombo, web: WebCombo },
+  { native: Native.Combo, web: WebCombo },
   style.combo,
   { isFoo: style.foo, isBar: style.bar },
   { color: 'color', height: 'height' },

@@ -38,11 +38,25 @@ function isProduction(state) {
   return !!production
 }
 
-function renameJSX(node, name) {
+function jsxName(t, name) {
+  if (name.includes('.')) {
+    const segments = name.split('.')
+    if (segments.length !== 2) {
+      throw new Error(`Invalid JSX name ${name}`)
+    }
+    const [obj, prop] = segments
+    return t.jSXMemberExpression(t.jSXIdentifier(obj), t.jSXIdentifier(prop))
+  }
+  return t.jSXIdentifier(name)
+}
+
+function renameJSX(t, node, name) {
   const { openingElement, closingElement } = node
-  openingElement.name.name = name
+  const jsxId = jsxName(t, name)
+
+  openingElement.name = jsxId
   if (closingElement) {
-    closingElement.name.name = name
+    closingElement.name = jsxId
   }
 }
 
@@ -394,7 +408,7 @@ const builtinElements = {
   },
 }
 
-function getElementName(t, platform, path, component) {
+function getElementName(t, platform, path, originalName, component) {
   if (typeof component === 'string') {
     return builtinElements[platform][component]
   } else if (
@@ -408,19 +422,24 @@ function getElementName(t, platform, path, component) {
     return component.name
   } else if (t.isStringLiteral(component)) {
     return component.value
+  } else if (t.isMemberExpression(component)) {
+    // assuming it was already validated to be id.id
+    return `${component.object.name}.${component.property.name}`
   } else if (t.isObjectExpression(component)) {
     const platformComponent = component.properties.find(property => property.key.name === platform)
 
     if (!platformComponent) {
       throw path.buildCodeFrameError(
-        `Invalid component specifier in zacs declaration - no ${platform} key specified`,
+        `Invalid component specifier in ZACS declaration - no ${platform} key specified for ${originalName}`,
       )
     }
 
-    return getElementName(t, platform, path, platformComponent.value)
+    return getElementName(t, platform, path, originalName, platformComponent.value)
   }
 
-  throw path.buildCodeFrameError(`Invalid component type in zacs declaration`)
+  throw path.buildCodeFrameError(
+    `Invalid component type in ZACS declaration -- look at the const ${originalName} = zacs.styled/createStyled(...) declaration. The component to style that was passed is not of valid syntax.`,
+  )
 }
 
 function propsChildren(t) {
@@ -466,6 +485,7 @@ function createZacsComponent(t, state, path) {
     t,
     platform,
     path, // should be path to declaration
+    undefined, // TODO: this should be the name of the component
     zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
   )
   const [uncondStyles, condStyles, literalStyleSpec, passedPropsExpr] =
@@ -501,11 +521,13 @@ function createZacsComponent(t, state, path) {
     ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
   )
 
+  const jsxId = jsxName(t, elementName)
+
   const component = t.arrowFunctionExpression(
     shouldForwardRef ? [t.identifier('props'), t.identifier('ref')] : [t.identifier('props')],
     t.jSXElement(
-      t.jSXOpeningElement(t.jSXIdentifier(elementName), jsxAttributes),
-      t.jSXClosingElement(t.jSXIdentifier(elementName)),
+      t.jSXOpeningElement(jsxId, jsxAttributes),
+      t.jSXClosingElement(jsxId),
       propsChildren(t),
     ),
   )
@@ -567,14 +589,19 @@ function validateZacsDeclaration(t, path) {
     if (
       !(
         init.arguments.length >= 1 &&
-        // TODO: Validate platform specifier keys
         (t.isIdentifier(componentToStyle) ||
+          // e.g. Foo.Bar
+          (t.isMemberExpression(componentToStyle) &&
+            t.isIdentifier(componentToStyle.object) &&
+            t.isIdentifier(componentToStyle.property)) ||
+          // builtin, e.g. 'div'
           t.isStringLiteral(componentToStyle) ||
+          // {web:x, native:y} TODO: Validate platform specifier keys
           t.isObjectExpression(componentToStyle))
       )
     ) {
       throw path.buildCodeFrameError(
-        'zacs.styled() requires an argument - a `Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
+        'zacs.styled() requires an argument - a `Component`, `Namespaced.Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
       )
     }
   }
@@ -729,7 +756,10 @@ exports.default = function(babel) {
         const elementName = getElementName(
           t,
           platform,
-          path, // should be path to declaration
+          // should be path to declaration, not use, but the path gets removed after visiting
+          // (unless keepDeclarations: true)
+          path,
+          originalName,
           zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
         )
         const [uncondStyles, condStyles, literalStyleSpec] =
@@ -754,7 +784,7 @@ exports.default = function(babel) {
 
         // replace component
         if (platform === 'web') {
-          renameJSX(node, elementName)
+          renameJSX(t, node, elementName)
 
           // filter out non-DOM attributes (React will throw errors at us for this)
           if (htmlElements.has(elementName)) {
@@ -766,7 +796,7 @@ exports.default = function(babel) {
           // as a binding on next attempt (as to not duplicate imports)
           state.set(`uses_rn`, true)
           state.set(`uses_rn_${zacsMethod}`, true)
-          renameJSX(node, elementName)
+          renameJSX(t, node, elementName)
         } else {
           throw new Error('Unknown platform')
         }
