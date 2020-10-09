@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 1.1.0 (2020-10-09)
 
 - You can now declare multiple unconditional styles by passing an array of stylesets/class names
 - You can now add extra styles to a ZACS component via `zacs:style={{ attr: value }}` syntax
