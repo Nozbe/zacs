@@ -1,18 +1,7 @@
 const webpack = require('webpack')
 const { createFsFromVolume, Volume } = require('memfs')
-
-const babel = require('@babel/core')
 const path = require('path')
-const fs = require('fs')
-// const plugin = require('../index')
-
-// function transform(input, platform, extra = {}) {
-//   const { code } = babel.transform(input, {
-//     configFile: false,
-//     plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }]],
-//   })
-//   return code
-// }
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const compile = (fixture, options = {}) => {
   const compiler = webpack({
@@ -22,19 +11,50 @@ const compile = (fixture, options = {}) => {
       path: path.resolve(__dirname),
       filename: 'bundle.js',
     },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'static/[name].css',
+        chunkFilename: 'static/[name].[hash].css',
+      }),
+    ],
     module: {
       rules: [
         {
-          test: /\.txt$/,
-          use: {
-            loader: path.resolve(__dirname, '../loader.js'),
-            options,
-          },
+          test: /\.js$/,
+          use: [
+            // {
+            //   loader: 'babel-loader',
+            //   options: {},
+            // },
+            {
+              loader: path.resolve(__dirname, '../loader.js'),
+              options,
+            },
+          ],
         },
         {
-          test: /.(js|jsx)$/,
-          exclude: /node_modules/,
-          loader: 'babel-loader',
+          test: /\.css$/,
+          use: [
+            // {
+            //   loader: 'style-loader',
+            //   options: {
+            //     injectType: 'singletonStyleTag',
+            //   },
+            // },
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                // hmr: process.env.NODE_ENV !== 'production',
+              },
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                // importLoaders: 1,
+                // sourceMap: process.env.NODE_ENV !== 'production',
+              },
+            },
+          ],
         },
       ],
     },
@@ -57,13 +77,11 @@ const compile = (fixture, options = {}) => {
   })
 }
 
-// function example(name) {
-//   return fs.readFileSync(path.resolve(__dirname, 'examples', `${name}.js`)).toString()
-// }
-
 describe('zacs-loader', () => {
-  it(`loads`, async () => {
-    const stats = await compile('examples/example.txt', { name: 'Alice' })
+  it(`extracts CSS`, async () => {
+    const stats = await compile('examples/basic.js')
+    const generatedModules = stats.toJson().modules
+    console.log(generatedModules)
     const output = stats.toJson().modules[0].source
     expect(output).toBe('export default "Hello Alice!"')
   })

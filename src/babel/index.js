@@ -751,6 +751,7 @@ function validateStyleSheet(t, args, path) {
 }
 
 // TODO: Find a JS-to-CSS package
+// Inspiration: https://github.com/giuseppeg/style-sheet/blob/master/src/data.js
 const capitalRegex = /([A-Z])/g
 const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
 function encodeCSSProperty(property) {

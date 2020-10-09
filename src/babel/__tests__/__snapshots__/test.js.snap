@@ -13,22 +13,16 @@ const root = <div className={style.root} />;"
 `;
 
 exports[`zacs transforms experimental stylesheets 1`] = `
-"/* eslint-disable */
-const styles = zacs._experimentalStyleSheet({
-  root: {
-    backgroundColor: 'red',
-    height: 100
-  }
-});
-
-/*
+"/*
 ZACS-generated CSS stylesheet begins below.
 PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
 If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
 */
-ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
+
+/* eslint-disable */
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
 .root {
-  backgroundColor: red;
+  background-color: red;
   height: 100;
 }
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`;
