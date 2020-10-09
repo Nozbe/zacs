@@ -7,7 +7,7 @@ function displayZacsError(methodName) {
       throw new Error(
         'zacs.' +
           methodName +
-          'method called directly (not transpiled). Your Babel file is probably misconfigured or you have a syntax error. See https://github.com/Nozbe/zacs#troubleshooting for more info',
+          'method was called directly (was not transpiled into zero-abstraction-cost form). This is an error. Most likely, you have a syntax error, your Babel configuration file is misconfigured, or you incorrectly use ZACS declarations as component objects. In fact, unless you pass { keepDeclarations: true } to ZACS Babel config, you should never see this file in the compiled app. See https://github.com/Nozbe/zacs#troubleshooting for more information.',
       )
     }
   }

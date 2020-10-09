@@ -61,4 +61,16 @@ describe('zacs', () => {
       'Duplicate ZACS declaration for name: Foo',
     )
   })
+  it(`imports are validated`, () => {
+    const badForms = [
+      `import Zacs from '@nozbe/zacs'`,
+      `import {text,createView} from '@nozbe/zacs'`,
+      `import * as zacs from '@nozbe/zacs'`,
+      `import ZACS from 'zacs'`,
+    ]
+    badForms.forEach(js => {
+      // console.log(js)
+      expect(() => transform(js, 'web')).toThrow('ZACS import must say exactly')
+    })
+  })
 })

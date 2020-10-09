@@ -1,9 +1,25 @@
 /* eslint-disable no-use-before-define */
 // Note: Why is this one big file? Because that makes it possible to work with it using https://astexplorer.net :)
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
-})
+exports.__esModule = true
+
+/*
+
+TERMINOLOGY:
+
+zacs.{view,text,styled}()       -- styled declaration
+zacs.create{View,Text,Styled}() -- styled component
+
+styles.foo                      -- predefined styleset
+{ foo: 'bar' }                  -- literal styleset
+
+zacs.view(
+  styles.foo,                   -- unconditional styleset (uncond styleset)
+  { bar: styles.bar },          -- conditional styleset spec (cond styleset)
+  { width: 'width' }            -- literal style spec
+)
+
+*/
 
 function getPlatform(state) {
   // return 'web'
@@ -55,17 +71,17 @@ function webSafeAttributes(attributes) {
   })
 }
 
-function withoutStylingProps(t, attributes, conditionalStyles, addedStyles) {
+function withoutStylingProps(t, attributes, condStyles, literalStyleSpec) {
   const stylingProps = []
 
-  if (conditionalStyles && conditionalStyles.properties) {
-    conditionalStyles.properties.forEach(property => {
+  if (condStyles && condStyles.properties) {
+    condStyles.properties.forEach(property => {
       stylingProps.push(property.key.name)
     })
   }
 
-  if (addedStyles && addedStyles.properties) {
-    addedStyles.properties.forEach(property => {
+  if (literalStyleSpec && literalStyleSpec.properties) {
+    literalStyleSpec.properties.forEach(property => {
       stylingProps.push(property.key.name)
     })
   }
@@ -137,16 +153,20 @@ function findNamespacedAttr(t, attributes, attrName) {
   )
 }
 
-function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttributes, passedProps) {
-  const styles = []
-  const addedStyles = []
+function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passedProps) {
+  const stylesets = []
+  const literalStyles = []
 
-  if (mainStyle && !t.isNullLiteral(mainStyle)) {
-    styles.push([mainStyle])
+  if (uncondStyles && !t.isNullLiteral(uncondStyles)) {
+    if (t.isArrayExpression(uncondStyles)) {
+      stylesets.push(...uncondStyles.elements.map(styleset => [styleset]))
+    } else {
+      stylesets.push([uncondStyles])
+    }
   }
 
-  if (conditionalStyles && !t.isNullLiteral(conditionalStyles)) {
-    conditionalStyles.properties.forEach(property => {
+  if (condStyles && !t.isNullLiteral(condStyles)) {
+    condStyles.properties.forEach(property => {
       const style = property.value
       const propName = property.key.name
 
@@ -159,20 +179,20 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
         const flag = inferJsxAttrTruthiness(t, attr)
 
         if (flag === true) {
-          styles.push([style])
+          stylesets.push([style])
         } else if (flag === false) {
           // we know for a fact the style won't be used -- so ignore it
         } else {
-          styles.push([style, flag])
+          stylesets.push([style, flag])
         }
       } else {
-        styles.push([style, t.memberExpression(t.identifier('props'), t.identifier(propName))])
+        stylesets.push([style, t.memberExpression(t.identifier('props'), t.identifier(propName))])
       }
     })
   }
 
-  if (addedStylesDef && !t.isNullLiteral(addedStylesDef)) {
-    addedStylesDef.properties.forEach(property => {
+  if (literalStyleSpec && !t.isNullLiteral(literalStyleSpec)) {
+    literalStyleSpec.properties.forEach(property => {
       const styleAttr = property.value.value
       const propName = property.key.name
 
@@ -183,9 +203,9 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
         }
 
         const styleValue = jsxAttrValue(t, attr)
-        addedStyles.push([styleAttr, styleValue])
+        literalStyles.push([styleAttr, styleValue])
       } else {
-        addedStyles.push([
+        literalStyles.push([
           styleAttr,
           t.memberExpression(t.identifier('props'), t.identifier(propName)),
         ])
@@ -194,7 +214,7 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
   }
 
   // TODO: Validate zacs:style value
-  // TODO: If the value is a simple object, we could merge them into addedStyles. OTOH, maybe another
+  // TODO: If the value is a simple object, we could merge them into literalStyles. OTOH, maybe another
   // optimizer Babel plugin can do it further down the line?
   const zacsStyleAttribute = jsxAttributes && findNamespacedAttr(t, jsxAttributes, 'style')
   const hasZacsStyleAttr = zacsStyleAttribute || passedProps.includes('zacs:style')
@@ -211,8 +231,8 @@ function getStyles(t, mainStyle, conditionalStyles, addedStylesDef, jsxAttribute
     : null
 
   return [
-    styles,
-    addedStyles.length ? objectExpressionFromPairs(t, addedStyles) : null,
+    stylesets,
+    literalStyles.length ? objectExpressionFromPairs(t, literalStyles) : null,
     inheritedProps,
     zacsStyle,
   ]
@@ -255,6 +275,11 @@ function webStyleExpr(t, styles, inheritedProps, zacsStyle) {
     return allStyles[0]
   }
 
+  // prevent Object.assign(props.__zacs_style, ...), because if it's not an object, it will crash
+  if (!styles && zacsStyle && inheritedProps && !t.isObjectExpression(zacsStyle)) {
+    allStyles.unshift(t.objectExpression([]))
+  }
+
   // Object.assign({styles:'values'}, props.style)
   // TODO: Maybe we can use spread operator and babel will transpile it into ES5 if necessary?
   return t.callExpression(
@@ -293,13 +318,13 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps, zacsStyle]) 
   return attributes
 }
 
-function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps, zacsStyle]) {
-  const styles = styleDefs.map(([styleName, condition]) =>
+function nativeStyleAttributes(t, [stylesets, literalStyleset, inheritedProps, zacsStyle]) {
+  const styles = stylesets.map(([styleName, condition]) =>
     condition ? t.logicalExpression('&&', condition, styleName) : styleName,
   )
 
-  if (addedStyles) {
-    styles.push(addedStyles)
+  if (literalStyleset) {
+    styles.push(literalStyleset)
   }
 
   if (zacsStyle) {
@@ -330,20 +355,27 @@ function nativeStyleAttributes(t, [styleDefs, addedStyles, inheritedProps, zacsS
 function styleAttributes(
   t,
   platform,
-  mainStyle,
-  conditionalStyles,
-  addedStyles,
+  uncondStyles,
+  condStyles,
+  literalStyleSpec,
   jsxAttributes,
   passedProps = [],
 ) {
-  const styles = getStyles(t, mainStyle, conditionalStyles, addedStyles, jsxAttributes, passedProps)
+  const styles = getStyles(
+    t,
+    uncondStyles,
+    condStyles,
+    literalStyleSpec,
+    jsxAttributes,
+    passedProps,
+  )
   switch (platform) {
     case 'web':
       return webStyleAttributes(t, styles)
     case 'native':
       return nativeStyleAttributes(t, styles)
     default:
-      throw new Error('Unknown platform')
+      throw new Error('Unknown platform passed to ZACS config')
   }
 }
 
@@ -436,7 +468,7 @@ function createZacsComponent(t, state, path) {
     path, // should be path to declaration
     zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
   )
-  const [mainStyle, conditionalStyles, addedStyles, passedPropsExpr] =
+  const [uncondStyles, condStyles, literalStyleSpec, passedPropsExpr] =
     zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
 
   if (platform === 'native') {
@@ -466,7 +498,7 @@ function createZacsComponent(t, state, path) {
   }
 
   jsxAttributes.unshift(
-    ...styleAttributes(t, platform, mainStyle, conditionalStyles, addedStyles, null, passedProps),
+    ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
   )
 
   const component = t.arrowFunctionExpression(
@@ -525,36 +557,34 @@ function validateZacsDeclaration(t, path) {
     // declarator -> declaration -> export declaration
     if (t.isExportDeclaration(path.parentPath.parent)) {
       throw path.buildCodeFrameError(
-        `It's not allowed to export zacs declarations -- but you can export zacs components (use zacs.createView/createText/createStyled)`,
+        `It's not allowed to export zacs declarations. You can export zacs components (use zacs.createView/createText/createStyled), however they behave a little differently -- please check documentation for more information.`,
       )
     }
   }
 
   if (zacsMethod === 'styled') {
+    const componentToStyle = init.arguments[0]
     if (
       !(
         init.arguments.length >= 1 &&
         // TODO: Validate platform specifier keys
-        (t.isIdentifier(init.arguments[0]) ||
-          t.isStringLiteral(init.arguments[0]) ||
-          t.isObjectExpression(init.arguments[0]))
+        (t.isIdentifier(componentToStyle) ||
+          t.isStringLiteral(componentToStyle) ||
+          t.isObjectExpression(componentToStyle))
       )
     ) {
       throw path.buildCodeFrameError(
-        'zacs.styled() requires an argument - a `Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"`',
+        'zacs.styled() requires an argument - a `Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
       )
     }
   }
 
-  const [, conditionalStyles, addedStyles] =
+  const [, condStyles, literalStyleSpec] =
     zacsMethod === 'styled' || zacsMethod === 'createStyled'
       ? init.arguments.slice(1)
       : init.arguments
 
-  if (
-    conditionalStyles &&
-    !(t.isObjectExpression(conditionalStyles) || t.isNullLiteral(conditionalStyles))
-  ) {
+  if (condStyles && !(t.isObjectExpression(condStyles) || t.isNullLiteral(condStyles))) {
     throw path.buildCodeFrameError(
       'Conditional styles (second argument to ZACS) should be an object expression',
     )
@@ -562,9 +592,12 @@ function validateZacsDeclaration(t, path) {
     // TODO: Validate keys / values too
   }
 
-  if (addedStyles && !(t.isObjectExpression(addedStyles) || t.isNullLiteral(addedStyles))) {
+  if (
+    literalStyleSpec &&
+    !(t.isObjectExpression(literalStyleSpec) || t.isNullLiteral(literalStyleSpec))
+  ) {
     throw path.buildCodeFrameError(
-      'Added styles (second argument to ZACS) should be an object expression',
+      'Literal styles (third argument to ZACS) should be an object expression',
     )
 
     // TODO: Validate keys / values too
@@ -582,6 +615,21 @@ function validateElementHasNoIllegalAttributes(t, path) {
   if (hasAttrNamed(t, 'className', attributes)) {
     throw path.buildCodeFrameError(
       'It\'s not allowed to pass `className` attribute to ZACS-styled components',
+    )
+  }
+}
+
+function validateZacsImport(t, path) {
+  const { node } = path
+  if (
+    !(
+      node.specifiers.length === 1 &&
+      t.isImportDefaultSpecifier(node.specifiers[0]) &&
+      node.specifiers[0].local.name === 'zacs'
+    )
+  ) {
+    throw path.buildCodeFrameError(
+      'ZACS import must say exactly `import zacs from \'@nozbe/zacs\'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.',
     )
   }
 }
@@ -684,7 +732,7 @@ exports.default = function(babel) {
           path, // should be path to declaration
           zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
         )
-        const [mainStyle, conditionalStyles, addedStyles] =
+        const [uncondStyles, condStyles, literalStyleSpec] =
           zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
         const originalAttributes = openingElement.attributes
 
@@ -700,11 +748,11 @@ exports.default = function(babel) {
         openingElement.attributes = withoutStylingProps(
           t,
           openingElement.attributes,
-          conditionalStyles,
-          addedStyles,
+          condStyles,
+          literalStyleSpec,
         )
 
-        // replace definition
+        // replace component
         if (platform === 'web') {
           renameJSX(node, elementName)
 
@@ -728,9 +776,9 @@ exports.default = function(babel) {
           ...styleAttributes(
             t,
             platform,
-            mainStyle,
-            conditionalStyles,
-            addedStyles,
+            uncondStyles,
+            condStyles,
+            literalStyleSpec,
             originalAttributes,
           ),
         )
@@ -754,6 +802,23 @@ exports.default = function(babel) {
             }
           }
         },
+      },
+      ImportDeclaration(path, state) {
+        const { node } = path
+
+        if (
+          !node.source ||
+          // Make it work even if someone makes a fork of zacs
+          !(node.source.value === 'zacs' || node.source.value.endsWith('/zacs'))
+        ) {
+          return
+        }
+
+        validateZacsImport(t, path)
+
+        if (!state.opts.keepDeclarations) {
+          path.remove()
+        }
       },
     },
   }

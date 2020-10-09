@@ -259,6 +259,12 @@ export const ExportedCombo = zacs.createStyled(
   ['comboProp1', 'comboProp2', 'zacs:inherit', 'ref'],
 )
 
+// regression test
+export const ExporterZacsStyleInherit = zacs.createView(style.foo, null, null, [
+  'zacs:style',
+  'zacs:inherit',
+])
+
 // Make sure nothing breaks if I use created component in the same file
 
 const combo = <ExportedCombo />
