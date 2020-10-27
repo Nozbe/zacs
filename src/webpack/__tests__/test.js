@@ -18,17 +18,13 @@ const compile = (fixture, options = {}) => {
       }),
     ],
     optimization: {
-      minimize: false
+      minimize: false,
     },
     module: {
       rules: [
         {
           test: /\.js$/,
           use: [
-            // {
-            //   loader: 'babel-loader',
-            //   options: {},
-            // },
             {
               loader: path.resolve(__dirname, '../loader.js'),
               options,
@@ -38,6 +34,7 @@ const compile = (fixture, options = {}) => {
         {
           test: /\.css$/,
           use: [
+            // NOTE: use for development
             // {
             //   loader: 'style-loader',
             //   options: {
@@ -47,14 +44,19 @@ const compile = (fixture, options = {}) => {
             {
               loader: MiniCssExtractPlugin.loader,
               options: {
-                // hmr: process.env.NODE_ENV !== 'production',
+                esModule: true,
+                modules: {
+                  namedExport: true,
+                },
               },
             },
             {
               loader: 'css-loader',
               options: {
-                // importLoaders: 1,
-                // sourceMap: process.env.NODE_ENV !== 'production',
+                modules: {
+                  namedExport: true,
+                  localIdentName: '[name]__[local]',
+                },
               },
             },
           ],
@@ -80,15 +82,19 @@ const compile = (fixture, options = {}) => {
   })
 }
 
+/*
+NOTE:
+useful stuff in these paths:
+
+stats.compilation.modules
+stats.compilation.assets
+json.modules
+
+*/
+
 describe('zacs-loader', () => {
   it(`extracts CSS`, async () => {
     const stats = await compile('examples/basic.js')
-    // console.log(stats.compilation.modules)
-    // console.log(stats.compilation.assets)
-    // console.log(json.modules)
-
-    // expect(Object.keys(stats.compilation.assets).length).toBe(2)
-    // expect(stats.compilation.assets['static/main.css'].source()).toMatchSnapshot()
 
     const modules = stats.compilation.modules
     expect(modules.length).toBe(3)
