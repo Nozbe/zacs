@@ -43,6 +43,7 @@ exports.default = function loader(source) {
     // This will prevent unnecessary WDS reloads
     let currentCssText;
 
+    // TODO: We should be using input/output fs provided to webpack, but it breaks tests for some reason
     try {
       currentCssText = fs.readFileSync(outputFilename, 'utf-8');
     } catch (e) {
