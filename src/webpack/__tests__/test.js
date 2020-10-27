@@ -95,16 +95,16 @@ json.modules
 describe('zacs-loader', () => {
   it(`extracts CSS`, async () => {
     const stats = await compile('examples/basic.js')
-
-    const modules = stats.compilation.modules
+    const { modules } = stats.compilation
     expect(modules.length).toBe(3)
+
     const js = modules.find(m => m.rawRequest === './examples/basic.js')._source._value
-    console.log(js)
+    expect(js).toMatchSnapshot()
 
     const css = modules.find(m => m.constructor.name === 'CssModule').content
-    console.log(css)
+    expect(css).toMatchSnapshot()
 
     const cssShim = modules.find(m => m.rawRequest.endsWith('/basic.zacs.css'))._source._value
-    console.log(cssShim)
+    expect(cssShim).toMatchSnapshot()
   })
 })
