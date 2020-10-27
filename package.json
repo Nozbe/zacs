@@ -82,6 +82,8 @@
   "dependencies": {
     "@babel/core": "^7.5.5",
     "@babel/plugin-syntax-jsx": "^7.2.0",
-    "loader-utils": "^2.0.0"
+    "loader-utils": "^2.0.0",
+    "mkdirp": "^1.0.4",
+    "normalize-path": "^3.0.0"
   }
 }

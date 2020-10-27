@@ -17,6 +17,9 @@ const compile = (fixture, options = {}) => {
         chunkFilename: 'static/[name].[hash].css',
       }),
     ],
+    optimization: {
+      minimize: false
+    },
     module: {
       rules: [
         {
@@ -80,9 +83,19 @@ const compile = (fixture, options = {}) => {
 describe('zacs-loader', () => {
   it(`extracts CSS`, async () => {
     const stats = await compile('examples/basic.js')
-    const generatedModules = stats.toJson().modules
-    console.log(generatedModules)
-    const output = stats.toJson().modules[0].source
+    const json = stats.toJson()
+    // console.log(stats.toJson())
+    // console.log(json.assets)
+    console.log(stats.compilation.modules)
+    // console.log(stats.compilation.assets)
+    console.log(json.modules)
+    // console.log(json.modules[1].source)
+
+    expect(Object.keys(stats.compilation.assets).length).toBe(2)
+    expect(stats.compilation.assets['static/main.css'].source()).toMatchSnapshot()
+
+
+    const output = json.modules[0].source
     expect(output).toBe('export default "Hello Alice!"')
   })
 })

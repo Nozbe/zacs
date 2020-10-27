@@ -11,3 +11,5 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START`
 }
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
 /* ZACS-generated CSS stylesheet ends above */
+
+styles.root
