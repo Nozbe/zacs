@@ -9,6 +9,7 @@ const normalize = require('normalize-path')
 const loaderUtils = require('loader-utils')
 
 exports.default = function loader(source) {
+  // TODO: Options
   // const options = getOptions(this)
 
   const stylesheetMarkerPos = source.indexOf('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START`')
@@ -22,10 +23,11 @@ exports.default = function loader(source) {
   )
   const cssText = match[1]
 
-  const baseOutputFileName = this.resourcePath.replace(/\.[^.]+$/, '.zacs.css')
 
-  const root = /*workspaceRoot || lernaRoot || */ process.cwd()
-  const cacheDirectory = '.zacs-cache'
+  // TODO: Linaria checks for workspace/learna root -- see if it's needed here
+  const root = /* workspaceRoot || lernaRoot || */ process.cwd()
+  const cacheDirectory = '.zacs-cache' // TODO: Make configurable?
+  const baseOutputFileName = this.resourcePath.replace(/\.[^.]+$/, '.zacs.css')
   const outputFilename = normalize(
     path.join(
       path.isAbsolute(cacheDirectory) ? cacheDirectory : path.join(process.cwd(), cacheDirectory),
@@ -48,7 +50,7 @@ exports.default = function loader(source) {
   }
 
   if (currentCssText !== cssText) {
-    // TODO: Remove unnecessary dependency
+    // TODO: Remove unnecessary dependency on mkdirp
     mkdirp.sync(path.dirname(outputFilename))
     fs.writeFileSync(outputFilename, cssText)
   }
@@ -62,4 +64,5 @@ exports.default = function loader(source) {
     cleanSource,
     // TODO: source map
   )
+  return undefined
 }
