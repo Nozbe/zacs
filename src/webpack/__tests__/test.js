@@ -83,19 +83,22 @@ const compile = (fixture, options = {}) => {
 describe('zacs-loader', () => {
   it(`extracts CSS`, async () => {
     const stats = await compile('examples/basic.js')
-    const json = stats.toJson()
-    // console.log(stats.toJson())
-    // console.log(json.assets)
-    console.log(stats.compilation.modules)
+    // console.log(stats.compilation.modules)
     // console.log(stats.compilation.assets)
-    console.log(json.modules)
-    // console.log(json.modules[1].source)
+    // console.log(json.modules)
 
-    expect(Object.keys(stats.compilation.assets).length).toBe(2)
-    expect(stats.compilation.assets['static/main.css'].source()).toMatchSnapshot()
+    // expect(Object.keys(stats.compilation.assets).length).toBe(2)
+    // expect(stats.compilation.assets['static/main.css'].source()).toMatchSnapshot()
 
+    const modules = stats.compilation.modules
+    expect(modules.length).toBe(3)
+    const js = modules.find(m => m.rawRequest === './examples/basic.js')._source._value
+    console.log(js)
 
-    const output = json.modules[0].source
-    expect(output).toBe('export default "Hello Alice!"')
+    const css = modules.find(m => m.constructor.name === 'CssModule').content
+    console.log(css)
+
+    const cssShim = modules.find(m => m.rawRequest.endsWith('/basic.zacs.css'))._source._value
+    console.log(cssShim)
   })
 })
