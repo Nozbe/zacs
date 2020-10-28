@@ -112,4 +112,9 @@ describe('zacs-loader', () => {
       message: expect.stringMatching('not allowed to have multiple'),
     })
   })
+  it(`fails on broken stylesheet markers`, async () => {
+    await expect(compile('examples/brokenMarker.js')).rejects.toMatchObject({
+      message: expect.stringMatching('Broken ZACS stylesheet'),
+    })
+  })
 })

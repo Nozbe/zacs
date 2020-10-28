@@ -46,12 +46,14 @@ exports.default = function loader(source) {
     this.emitError(`It's not allowed to have multiple \`zacs.stylesheet()\`s in a single JavaScript file`)
   }
 
-  // TODO: Avoid regex (perf) + allow multiple markers
-  const match = source.match(
-    /ZACS_MAGIC_CSS_STYLESHEET_MARKER_START`(.*)ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`/s,
-  )
-  const cssText = match[1]
+  const stylesheetEndPos = source.indexOf(endMarker)
+  if (stylesheetEndPos < stylesheetMarkerPos) {
+    this.emitError(`Broken ZACS stylesheet. Found the beginning of it, but the end is missing or malformed.`)
+  }
 
+  // NOTE: Avoiding regex for perf (probably unnecessarily :))
+  const extractedStyles = source.substring(stylesheetMarkerPos, stylesheetEndPos + endMarker.length)
+  const cssText = source.substring(stylesheetMarkerPos + startMarker.length, stylesheetEndPos)
 
   // TODO: Linaria checks for workspace/learna root -- see if it's needed here
   const root = /* workspaceRoot || lernaRoot || */ process.cwd()
@@ -69,10 +71,10 @@ exports.default = function loader(source) {
   writeFileIfChanged(outputFilename, cssText)
 
   // Add extra whitespace as to not break sourcemap positions of items before/after
-  const extraWhitespaceCount = match[0].split('\n').length - 1
+  const extraWhitespaceCount = extractedStyles.split('\n').length - 1
   const extraWhitespace = Array(extraWhitespaceCount).fill('\n').join('')
   const requireStatement = `require(${loaderUtils.stringifyRequest(this, outputFilename)})${extraWhitespace}`
-  const cleanSource = source.replace(match[0], requireStatement)
+  const cleanSource = source.replace(extractedStyles, requireStatement)
 
   this.callback(
     null,
