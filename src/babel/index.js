@@ -26,9 +26,23 @@ function getPlatform(state) {
   // return 'native'
   const { platform } = state.opts
   if (!platform) {
-    throw new Error('platform not specified to this plugin')
+    throw new Error('platform option is required for ZACS babel plugin')
+  }
+  if (platform !== 'web' && platform !== 'native') {
+    throw new Error('illegal platform option passed to ZACS babel plugin. allowed values: web, native')
   }
   return platform
+}
+
+function getTarget(state) {
+  // return 'ios'
+  // return 'android'
+  const { target } = state.opts
+  if (target && !['ios', 'android', 'web'].includes(target)) {
+    // eslint-disable-next-line no-console
+    console.warn('Unrecognized target passed to ZACS babel plugin. Known targets: web, ios, android')
+  }
+  return target
 }
 
 function isProduction(state) {
@@ -816,20 +830,24 @@ function encodeCSSStyleSheet(stylesheet) {
   return `${stylesets}\n`
 }
 
-function resolveRNStylesheet(platform, stylesheet) {
+function resolveRNStylesheet(platform, target, stylesheet) {
   stylesheet.properties.forEach(styleset => {
     const resolvedProperties = []
+    const pushFromInner = objectExpr => {
+      objectExpr.properties.forEach(innerProperty => {
+        resolvedProperties.push(innerProperty)
+      })
+    }
     styleset.value.properties.forEach(property => {
       const key = property.key.name
       if (key === 'web' || key === 'css') {
         // do nothing
       } else if (key === 'native') {
-        const innerStyleset = property.value.properties
-        innerStyleset.forEach(innerProperty => {
-          resolvedProperties.push(innerProperty)
-        })
+        pushFromInner(property.value)
       } else if (key === 'ios' || key === 'android') {
-        // TODO: check platform & push
+        if (target === key) {
+          pushFromInner(property.value)
+        }
       } else {
         resolvedProperties.push(property)
       }
@@ -870,7 +888,9 @@ function transformStyleSheet(t, state, path) {
     state.set(`uses_rn`, true)
     state.set(`uses_rn_stylesheet`, true)
 
-    const resolvedRules = resolveRNStylesheet(platform, stylesheet)
+    const target = getTarget(state)
+
+    const resolvedRules = resolveRNStylesheet(platform, target, stylesheet)
     const rnStylesheet = t.callExpression(
       t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
       [resolvedRules],
