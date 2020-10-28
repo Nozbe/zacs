@@ -32,7 +32,8 @@ const styles = ZACS_RN_StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
+    opacity: 0.5
   }
 });"
 `;
@@ -58,7 +59,8 @@ const styles = ZACS_RN_StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
+    opacity: 0.5
   }
 });"
 `;
@@ -84,7 +86,8 @@ const styles = ZACS_RN_StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
+    opacity: 0.5
   }
 });"
 `;
@@ -115,6 +118,11 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
   font-weight: bold;
   padding-left: 20px;
   padding-right: 20px;
+  opacity: 0.5;
+  &:hover {
+      opacity: .8;
+      color: #abbaba;
+    }
 }
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`;
 /* ZACS-generated CSS stylesheet ends above */"

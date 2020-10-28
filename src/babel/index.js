@@ -736,6 +736,14 @@ function isPlainObjectProperty(t, node) {
   )
 }
 
+function isPlainTemplateLiteral(t, node) {
+  return (
+    t.isTemplateLiteral(node) &&
+    !node.expressions.length &&
+    node.quasis.length === 1
+  )
+}
+
 function validateStyleset(t, styleset, path) {
   if (
     !t.isObjectExpression(styleset) &&
@@ -751,7 +759,7 @@ function validateStyleset(t, styleset, path) {
       const key = property.key.name
       const { value } = property
       if (key === 'css') {
-        return t.isStringLiteral(value)
+        return t.isStringLiteral(value) ||isPlainTemplateLiteral(t, value)
       } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
         validateStyleset(t, value, path)
         return true
@@ -808,7 +816,7 @@ function encodeCSSStyle(property) {
   if (key === 'native' || key === 'ios' || key === 'android') {
     return null
   } else if (key === 'css') {
-    return '  ' + value.value
+    return '  ' + (value.value || value.quasis[0].value.cooked)
   } else if (key === 'web') {
     return encodeCSSStyles(value)
   }
