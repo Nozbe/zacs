@@ -8,7 +8,9 @@ const styles = zacs._experimentalStyleSheet({
     width: '100%',
     flex: 1,
     zIndex: 1000,
-    WebkitPaddingStart: 20,
+    web: {
+      WebkitPaddingStart: 20,
+    },
   },
   text: {
     color: '#abcdef',

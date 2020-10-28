@@ -722,11 +722,44 @@ function isPlainObjectProperty(t, node) {
   )
 }
 
+function validateStyleset(t, styleset, path) {
+  if (
+    !t.isObjectExpression(styleset) &&
+    styleset.properties.every(property => isPlainObjectProperty(t, property))
+  ) {
+    throw path.buildCodeFrameError(
+      'ZACS StyleSheets can only contain simple style properties with properties like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[prop]:`, `"prop": `, `...styles` are not allowed.',
+    )
+  }
+
+  if (
+    !styleset.properties.every(property => {
+      const key = property.key.name
+      const { value } = property
+      if (key === 'css') {
+        return t.isStringLiteral(value)
+      } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
+        validateStyleset(t, value, path)
+        return true
+      }
+
+      return t.isStringLiteral(value) || t.isNumericLiteral(value)
+    })
+  ) {
+    throw path.buildCodeFrameError(
+      "ZACS StyleSheet style values must be strings or numbers, like so: `{ backgroundColor: 'red', height: 100 }` -- except for magic web:/native: keys (which expect an object with style properties) and magic css: key (which expects a string)",
+    )
+  }
+}
+
 function validateStyleSheet(t, args, path) {
   const [stylesheet] = args
   if (!(args.length === 1 && t.isObjectExpression(stylesheet))) {
     throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
   }
+
+  // TODO: Throw on more specific paths than the full stylesheet path
+
   const stylesets = stylesheet.properties
   if (!stylesets.every(styleset => isPlainObjectProperty(t, styleset))) {
     // TODO: We can probably allow `"name":`, no problem.
@@ -735,19 +768,9 @@ function validateStyleSheet(t, args, path) {
     )
   }
 
-  if (
-    !stylesets.every(
-      styleset =>
-        t.isObjectExpression(styleset.value) &&
-        styleset.value.properties.every(property => isPlainObjectProperty(t, property)),
-    )
-  ) {
-    throw path.buildCodeFrameError(
-      'ZACS StyleSheets can only contain simple style properties with properties like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[prop]:`, `"prop": `, `...styles` are not allowed.',
-    )
-  }
-
-  // TODO: Validate values
+  stylesets.forEach(styleset => {
+    validateStyleset(t, styleset.value, path)
+  })
 }
 
 // TODO: Find a JS-to-CSS package
