@@ -747,7 +747,7 @@ function validateStyleset(t, styleset, path) {
     })
   ) {
     throw path.buildCodeFrameError(
-      "ZACS StyleSheet style values must be strings or numbers, like so: `{ backgroundColor: 'red', height: 100 }` -- except for magic web:/native: keys (which expect an object with style properties) and magic css: key (which expects a string)",
+      "ZACS StyleSheet style values must be literal strings or numbers, like so: `{ backgroundColor: 'red', height: 100 }` -- except for magic web:/native: keys (which expect an object with style properties) and magic css: key (which expects a string)",
     )
   }
 }
@@ -778,29 +778,66 @@ function validateStyleSheet(t, args, path) {
 const capitalRegex = /([A-Z])/g
 const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
 function encodeCSSProperty(property) {
-  return property.name.replace(capitalRegex, cssCaseReplacer)
+  return property.replace(capitalRegex, cssCaseReplacer)
 }
 
 function encodeCSSValue(property, value) {
-  if (typeof value.value === 'number' && !unitlessCssAttributes.has(property.name)) {
+  if (typeof value.value === 'number' && !unitlessCssAttributes.has(property)) {
     return `${value.value}px`
   }
   return value.value
 }
 
 function encodeCSSStyle(property) {
-  return `  ${encodeCSSProperty(property.key)}: ${encodeCSSValue(property.key, property.value)};`
+  const {value} = property
+  const key = property.key.name
+  if (key === 'native' || key === 'ios' || key === 'android') {
+    return null
+  } else if (key === 'css') {
+    return '  ' + value.value
+  } else if (key === 'web') {
+    return encodeCSSStyles(value)
+  }
+
+  return `  ${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
+}
+
+function encodeCSSStyles(styleset) {
+  return styleset.properties.map(encodeCSSStyle).filter(rule => rule !== null).join('\n')
 }
 
 function encodeCSSStyleset(styleset) {
   const { name } = styleset.key
-  const attributes = styleset.value.properties.map(encodeCSSStyle).join('\n')
-  return `.${name} {\n${attributes}\n}`
+  return `.${name} {\n${encodeCSSStyles(styleset.value)}\n}`
 }
 
 function encodeCSSStyleSheet(stylesheet) {
   const stylesets = stylesheet.properties.map(encodeCSSStyleset).join('\n\n')
   return `${stylesets}\n`
+}
+
+function resolveRNStylesheet(platform, stylesheet) {
+  stylesheet.properties.forEach(styleset => {
+    const resolvedProperties = []
+    styleset.value.properties.forEach(property => {
+      const key = property.key.name
+      if (key === 'web' || key === 'css') {
+        // do nothing
+      } else if (key === 'native') {
+        const innerStyleset = property.value.properties
+        innerStyleset.forEach(innerProperty => {
+          resolvedProperties.push(innerProperty)
+        })
+      } else if (key === 'ios' || key === 'android') {
+        // TODO: check platform & push
+      } else {
+        resolvedProperties.push(property)
+      }
+    })
+    styleset.value.properties = resolvedProperties
+  })
+
+  return stylesheet
 }
 
 function transformStyleSheet(t, state, path) {
@@ -833,9 +870,10 @@ function transformStyleSheet(t, state, path) {
     state.set(`uses_rn`, true)
     state.set(`uses_rn_stylesheet`, true)
 
+    const resolvedRules = resolveRNStylesheet(platform, stylesheet)
     const rnStylesheet = t.callExpression(
       t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
-      [stylesheet],
+      [resolvedRules],
     )
     path.get('init').replaceWith(rnStylesheet)
   } else {

@@ -10,7 +10,18 @@ const styles = zacs._experimentalStyleSheet({
     zIndex: 1000,
     web: {
       WebkitPaddingStart: 20,
+      zIndex: 1500,
     },
+    native: {
+      width: 1337,
+    },
+    ios: {
+      width: 2137,
+    },
+    android: {
+      opacity: 0.1
+    },
+    css: '& > span { opacity: 0.5 }',
   },
   text: {
     color: '#abcdef',
