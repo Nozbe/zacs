@@ -29,7 +29,9 @@ function getPlatform(state) {
     throw new Error('platform option is required for ZACS babel plugin')
   }
   if (platform !== 'web' && platform !== 'native') {
-    throw new Error('illegal platform option passed to ZACS babel plugin. allowed values: web, native')
+    throw new Error(
+      'illegal platform option passed to ZACS babel plugin. allowed values: web, native',
+    )
   }
   return platform
 }
@@ -40,7 +42,9 @@ function getTarget(state) {
   const { target } = state.opts
   if (target && !['ios', 'android', 'web'].includes(target)) {
     // eslint-disable-next-line no-console
-    console.warn('Unrecognized target passed to ZACS babel plugin. Known targets: web, ios, android')
+    console.warn(
+      'Unrecognized target passed to ZACS babel plugin. Known targets: web, ios, android',
+    )
   }
   return target
 }
@@ -737,11 +741,7 @@ function isPlainObjectProperty(t, node) {
 }
 
 function isPlainTemplateLiteral(t, node) {
-  return (
-    t.isTemplateLiteral(node) &&
-    !node.expressions.length &&
-    node.quasis.length === 1
-  )
+  return t.isTemplateLiteral(node) && !node.expressions.length && node.quasis.length === 1
 }
 
 function validateStyleset(t, styleset, path) {
@@ -759,7 +759,7 @@ function validateStyleset(t, styleset, path) {
       const key = property.key.name
       const { value } = property
       if (key === 'css') {
-        return t.isStringLiteral(value) ||isPlainTemplateLiteral(t, value)
+        return t.isStringLiteral(value) || isPlainTemplateLiteral(t, value)
       } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
         validateStyleset(t, value, path)
         return true
@@ -811,7 +811,7 @@ function encodeCSSValue(property, value) {
 }
 
 function encodeCSSStyle(property) {
-  const {value} = property
+  const { value } = property
   const key = property.key.name
   if (key === 'native' || key === 'ios' || key === 'android') {
     return null
@@ -825,7 +825,10 @@ function encodeCSSStyle(property) {
 }
 
 function encodeCSSStyles(styleset) {
-  return styleset.properties.map(encodeCSSStyle).filter(rule => rule !== null).join('\n')
+  return styleset.properties
+    .map(encodeCSSStyle)
+    .filter(rule => rule !== null)
+    .join('\n')
 }
 
 function encodeCSSStyleset(styleset) {

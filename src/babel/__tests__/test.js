@@ -80,9 +80,9 @@ describe('zacs', () => {
     expect(transform(example('stylesheet'), 'native')).toMatchSnapshot()
   })
   it(`transforms experimental stylesheets (native, ios)`, () => {
-    expect(transform(example('stylesheet'), 'native', {target: 'ios'})).toMatchSnapshot()
+    expect(transform(example('stylesheet'), 'native', { target: 'ios' })).toMatchSnapshot()
   })
   it(`transforms experimental stylesheets (native, android)`, () => {
-    expect(transform(example('stylesheet'), 'native', {target: 'android'})).toMatchSnapshot()
+    expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
   })
 })

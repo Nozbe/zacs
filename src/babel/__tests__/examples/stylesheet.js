@@ -19,7 +19,7 @@ const styles = zacs._experimentalStyleSheet({
       width: 2137,
     },
     android: {
-      opacity: 0.1
+      opacity: 0.1,
     },
     css: '& > span { opacity: 0.5 }',
   },
@@ -33,6 +33,6 @@ const styles = zacs._experimentalStyleSheet({
     css: `&:hover {
       opacity: .8;
       color: #abbaba;
-    }`
+    }`,
   },
 })
