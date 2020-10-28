@@ -32,7 +32,7 @@ function writeFileIfChanged(outputFilename, cssText) {
 const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START`'
 const endMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`'
 
-exports.default = function loader(source) {
+exports.default = function loader(source, inputSourceMap) {
   // TODO: Options
   // const options = getOptions(this)
 
@@ -79,7 +79,7 @@ exports.default = function loader(source) {
   this.callback(
     null,
     cleanSource,
-    // TODO: source map
+    inputSourceMap,
   )
   return undefined
 }
