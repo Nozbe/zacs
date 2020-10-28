@@ -758,8 +758,15 @@ function encodeCSSProperty(property) {
   return property.name.replace(capitalRegex, cssCaseReplacer)
 }
 
+function encodeCSSValue(property, value) {
+  if (typeof value.value === 'number' && !unitlessCssAttributes.has(property.name)) {
+    return `${value.value}px`
+  }
+  return value.value
+}
+
 function encodeCSSStyle(property) {
-  return `  ${encodeCSSProperty(property.key)}: ${property.value.value};`
+  return `  ${encodeCSSProperty(property.key)}: ${encodeCSSValue(property.key, property.value)};`
 }
 
 function encodeCSSStyleset(styleset) {
@@ -1241,4 +1248,50 @@ const htmlElements = new Set([
   'variable',
   'video',
   'wbr',
+])
+
+const unitlessCssAttributes = new Set([
+  // Based on https://github.com/giuseppeg/style-sheet/blob/e71c119ecaccdb2e50be0759b45820b8cbf0c6df/src/data.js
+  'animationIterationCount',
+  'borderImageOutset',
+  'borderImageSlice',
+  'borderImageWidth',
+  'boxFlex',
+  'boxFlexGroup',
+  'boxOrdinalGroup',
+  'columnCount',
+  'columns',
+  'flex',
+  'flexGrow',
+  'flexPositive',
+  'flexShrink',
+  'flexNegative',
+  'flexOrder',
+  'gridRow',
+  'gridRowEnd',
+  'gridRowSpan',
+  'gridRowStart',
+  'gridColumn',
+  'gridColumnEnd',
+  'gridColumnSpan',
+  'gridColumnStart',
+  'fontWeight',
+  'lineClamp',
+  'lineHeight',
+  'opacity',
+  'order',
+  'orphans',
+  'tabSize',
+  'widows',
+  'zIndex',
+  'zoom',
+  // SVG
+  'fillOpacity',
+  'floodOpacity',
+  'stopOpacity',
+  'strokeDasharray',
+  'strokeDashoffset',
+  'strokeMiterlimit',
+  'strokeOpacity',
+  'strokeWidth',
 ])

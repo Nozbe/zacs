@@ -23,7 +23,11 @@ If you only see this comment and the one below in generated code, this is normal
 const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
 .root {
   background-color: red;
-  height: 100;
+  height: 50px;
+  width: 100%;
+  flex: 1;
+  z-index: 1000;
+  -webkit-padding-start: 20px;
 }
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`;
 /* ZACS-generated CSS stylesheet ends above */"
