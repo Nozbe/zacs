@@ -648,12 +648,12 @@ function validateElementHasNoIllegalAttributes(t, path) {
   const { attributes } = openingElement
   if (hasAttrNamed(t, 'style', attributes)) {
     throw path.buildCodeFrameError(
-      'It\'s not allowed to pass `style` attribute to ZACS-styled components',
+      "It's not allowed to pass `style` attribute to ZACS-styled components",
     )
   }
   if (hasAttrNamed(t, 'className', attributes)) {
     throw path.buildCodeFrameError(
-      'It\'s not allowed to pass `className` attribute to ZACS-styled components',
+      "It's not allowed to pass `className` attribute to ZACS-styled components",
     )
   }
 }
@@ -668,7 +668,7 @@ function validateZacsImport(t, path) {
     )
   ) {
     throw path.buildCodeFrameError(
-      'ZACS import must say exactly `import zacs from \'@nozbe/zacs\'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.',
+      "ZACS import must say exactly `import zacs from '@nozbe/zacs'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.",
     )
   }
 }
@@ -784,26 +784,40 @@ function transformStyleSheet(t, state, path) {
   const { node } = path
   const { init } = node
   const { arguments: args } = init
+  const platform = getPlatform(state)
 
   validateStyleSheet(t, args, path)
 
   const stylesheet = args[0]
-  const css = encodeCSSStyleSheet(stylesheet)
 
-  const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
-  const magicCssExpression = t.expressionStatement(
-    t.taggedTemplateExpression(
-      t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
-      t.templateLiteral([t.templateElement({ raw: preparedCss, cooked: preparedCss })], []),
-    ),
-  )
-  t.addComment(
-    path.parent,
-    'leading',
-    '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
-  )
-  path.get('init').replaceWith(magicCssExpression)
-  t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
+  if (platform === 'web') {
+    const css = encodeCSSStyleSheet(stylesheet)
+    const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
+    const magicCssExpression = t.expressionStatement(
+      t.taggedTemplateExpression(
+        t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
+        t.templateLiteral([t.templateElement({ raw: preparedCss, cooked: preparedCss })], []),
+      ),
+    )
+    t.addComment(
+      path.parent,
+      'leading',
+      '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
+    )
+    path.get('init').replaceWith(magicCssExpression)
+    t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
+  } else if (platform === 'native') {
+    state.set(`uses_rn`, true)
+    state.set(`uses_rn_stylesheet`, true)
+
+    const rnStylesheet = t.callExpression(
+      t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
+      [stylesheet],
+    )
+    path.get('init').replaceWith(rnStylesheet)
+  } else {
+    throw new Error('unknown platform')
+  }
 }
 
 const componentKey = name => `declaration_${name}`
@@ -936,6 +950,13 @@ exports.default = function(babel) {
 
             if (state.get('uses_rn_text')) {
               const makeZacsElement = babel.template(`const ZACS_RN_Text = zacsReactNative.Text`)
+              zacsRN.insertAfter(makeZacsElement())
+            }
+
+            if (state.get('uses_rn_stylesheet')) {
+              const makeZacsElement = babel.template(
+                `const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet`,
+              )
               zacsRN.insertAfter(makeZacsElement())
             }
           }

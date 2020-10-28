@@ -73,7 +73,10 @@ describe('zacs', () => {
       expect(() => transform(js, 'web')).toThrow('ZACS import must say exactly')
     })
   })
-  it(`transforms experimental stylesheets`, () => {
+  it(`transforms experimental stylesheets (web)`, () => {
     expect(transform(example('stylesheet'), 'web')).toMatchSnapshot()
+  })
+  it(`transforms experimental stylesheets (native)`, () => {
+    expect(transform(example('stylesheet'), 'native')).toMatchSnapshot()
   })
 })

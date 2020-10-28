@@ -10,4 +10,11 @@ const styles = zacs._experimentalStyleSheet({
     zIndex: 1000,
     WebkitPaddingStart: 20,
   },
+  text: {
+    color: '#abcdef',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
 })

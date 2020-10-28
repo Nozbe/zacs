@@ -12,7 +12,32 @@ const Root = zacs.view(style.root);
 const root = <div className={style.root} />;"
 `;
 
-exports[`zacs transforms experimental stylesheets 1`] = `
+exports[`zacs transforms experimental stylesheets (native) 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  root: {
+    backgroundColor: 'red',
+    height: 50,
+    width: '100%',
+    flex: 1,
+    zIndex: 1000,
+    WebkitPaddingStart: 20
+  },
+  text: {
+    color: '#abcdef',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    paddingRight: 20
+  }
+});"
+`;
+
+exports[`zacs transforms experimental stylesheets (web) 1`] = `
 "/*
 ZACS-generated CSS stylesheet begins below.
 PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
@@ -28,6 +53,14 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
   flex: 1;
   z-index: 1000;
   -webkit-padding-start: 20px;
+}
+
+.text {
+  color: #abcdef;
+  font-size: 12px;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`;
 /* ZACS-generated CSS stylesheet ends above */"
