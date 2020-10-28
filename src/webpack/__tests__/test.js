@@ -107,4 +107,9 @@ describe('zacs-loader', () => {
     const cssShim = modules.find(m => m.rawRequest.endsWith('/basic.zacs.css'))._source._value
     expect(cssShim).toMatchSnapshot()
   })
+  it(`does not allow multiple stylesheets in one file`, async () => {
+    await expect(compile('examples/multipleMarkers.js')).rejects.toMatchObject({
+      message: expect.stringMatching('not allowed to have multiple'),
+    })
+  })
 })

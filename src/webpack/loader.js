@@ -8,13 +8,42 @@ const mkdirp = require('mkdirp')
 const normalize = require('normalize-path')
 const loaderUtils = require('loader-utils')
 
+function writeFileIfChanged(outputFilename, cssText) {
+  // Read the file first to compare the content
+  // Write the new content only if it's changed
+  // This will prevent unnecessary WDS reloads
+  let currentCssText
+
+  // TODO: We should be using input/output fs provided to webpack, but it breaks tests for some reason
+  // TODO: read, then write without a transaction is susceptible to race conditions
+  try {
+    currentCssText = fs.readFileSync(outputFilename, 'utf-8')
+  } catch (e) {
+    // Ignore error
+  }
+
+  if (currentCssText !== cssText) {
+    // TODO: Remove unnecessary dependency on mkdirp
+    mkdirp.sync(path.dirname(outputFilename))
+    fs.writeFileSync(outputFilename, cssText)
+  }
+}
+
+const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START`'
+const endMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`'
+
 exports.default = function loader(source) {
   // TODO: Options
   // const options = getOptions(this)
 
-  const stylesheetMarkerPos = source.indexOf('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START`')
+  const stylesheetMarkerPos = source.indexOf(startMarker)
   if (stylesheetMarkerPos === -1) {
+    // fast path
     return source
+  }
+
+  if (source.lastIndexOf(startMarker) !== stylesheetMarkerPos) {
+    this.emitError(`It's not allowed to have multiple \`zacs.stylesheet()\`s in a single JavaScript file`)
   }
 
   // TODO: Avoid regex (perf) + allow multiple markers
@@ -37,26 +66,12 @@ exports.default = function loader(source) {
     ),
   )
 
-  // Read the file first to compare the content
-  // Write the new content only if it's changed
-  // This will prevent unnecessary WDS reloads
-  let currentCssText
+  writeFileIfChanged(outputFilename, cssText)
 
-  // TODO: We should be using input/output fs provided to webpack, but it breaks tests for some reason
-  try {
-    currentCssText = fs.readFileSync(outputFilename, 'utf-8')
-  } catch (e) {
-    // Ignore error
-  }
-
-  if (currentCssText !== cssText) {
-    // TODO: Remove unnecessary dependency on mkdirp
-    mkdirp.sync(path.dirname(outputFilename))
-    fs.writeFileSync(outputFilename, cssText)
-  }
-
-  const requireStatement = `require(${loaderUtils.stringifyRequest(this, outputFilename)})`
-  // TODO: This breaks source maps
+  // Add extra whitespace as to not break sourcemap positions of items before/after
+  const extraWhitespaceCount = match[0].split('\n').length - 1
+  const extraWhitespace = Array(extraWhitespaceCount).fill('\n').join('')
+  const requireStatement = `require(${loaderUtils.stringifyRequest(this, outputFilename)})${extraWhitespace}`
   const cleanSource = source.replace(match[0], requireStatement)
 
   this.callback(
