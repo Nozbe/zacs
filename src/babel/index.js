@@ -744,59 +744,61 @@ function isPlainTemplateLiteral(t, node) {
   return t.isTemplateLiteral(node) && !node.expressions.length && node.quasis.length === 1
 }
 
-function validateStyleset(t, styleset, path) {
-  if (
-    !t.isObjectExpression(styleset) &&
-    styleset.properties.every(property => isPlainObjectProperty(t, property))
-  ) {
-    throw path.buildCodeFrameError(
-      'ZACS StyleSheets can only contain simple style properties with properties like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[prop]:`, `"prop": `, `...styles` are not allowed.',
+function validateStyleset(t, styleset) {
+  if (!t.isObjectExpression(styleset.node)) {
+    throw styleset.buildCodeFrameError(
+      "ZACS StyleSheets must be simple object literals, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
     )
   }
 
-  if (
-    !styleset.properties.every(property => {
-      const key = property.key.name
-      const { value } = property
-      if (key === 'css') {
-        return t.isStringLiteral(value) || isPlainTemplateLiteral(t, value)
-      } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
-        validateStyleset(t, value, path)
-        return true
+  const properties = styleset.get('properties')
+  properties.forEach(property => {
+    if (!isPlainObjectProperty(t, property.node)) {
+      throw property.buildCodeFrameError(
+        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:`, `"backgroundColor": `, `...styles` are not allowed.',
+      )
+    }
+
+    const key = property.node.key.name
+    const valuePath = property.get('value')
+    const value = valuePath.node
+
+    if (key === 'css') {
+      if (!(t.isStringLiteral(value) || isPlainTemplateLiteral(t, value))) {
+        throw valuePath.buildCodeFrameError(
+          "ZACS StyleSheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
+        )
       }
-
-      return t.isStringLiteral(value) || t.isNumericLiteral(value)
-    })
-  ) {
-    throw path.buildCodeFrameError(
-      "ZACS StyleSheet style values must be literal strings or numbers, like so: `{ backgroundColor: 'red', height: 100 }` -- except for magic web:/native: keys (which expect an object with style properties) and magic css: key (which expects a string)",
-    )
-  }
-}
-
-function validateStyleSheet(t, args, path) {
-  const [stylesheet] = args
-  if (!(args.length === 1 && t.isObjectExpression(stylesheet))) {
-    throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
-  }
-
-  // TODO: Throw on more specific paths than the full stylesheet path
-
-  const stylesets = stylesheet.properties
-  if (!stylesets.every(styleset => isPlainObjectProperty(t, styleset))) {
-    // TODO: We can probably allow `"name":`, no problem.
-    throw path.buildCodeFrameError(
-      'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
-    )
-  }
-
-  stylesets.forEach(styleset => {
-    validateStyleset(t, styleset.value, path)
+    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
+      validateStyleset(t, valuePath)
+    } else {
+      if (!(t.isStringLiteral(value) || t.isNumericLiteral(value))) {
+        throw valuePath.buildCodeFrameError(
+          "ZACS StyleSheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
+        )
+      }
+    }
   })
 }
 
-// TODO: Find a JS-to-CSS package
-// Inspiration: https://github.com/giuseppeg/style-sheet/blob/master/src/data.js
+function validateStyleSheet(t, path) {
+  const args = path.get('init.arguments')
+  const stylesheet = args[0]
+  if (!(args.length === 1 && t.isObjectExpression(stylesheet.node))) {
+    throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
+  }
+
+  stylesheet.get('properties').forEach(styleset => {
+    if (!isPlainObjectProperty(t, styleset.node)) {
+      // TODO: We can probably allow `"name":`, no problem.
+      throw styleset.buildCodeFrameError(
+        'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
+      )
+    }
+    validateStyleset(t, styleset.get('value'))
+  })
+}
+
 const capitalRegex = /([A-Z])/g
 const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
 function encodeCSSProperty(property) {
@@ -875,7 +877,7 @@ function transformStyleSheet(t, state, path) {
   const { arguments: args } = init
   const platform = getPlatform(state)
 
-  validateStyleSheet(t, args, path)
+  validateStyleSheet(t, path)
 
   const stylesheet = args[0]
 
