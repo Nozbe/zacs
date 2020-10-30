@@ -107,6 +107,15 @@ describe('zacs-loader', () => {
     const cssShim = modules.find(m => m.rawRequest.endsWith('/basic.zacs.css'))._source._value
     expect(cssShim).toMatchSnapshot()
   })
+  it(`extracts CSS with slightly malformed whitespace`, async () => {
+    // For some reason, babel can insert unexpected whitespace in the generated marked CSS
+    const stats = await compile('examples/brokenWhitespace.js')
+    const { modules } = stats.compilation
+    expect(modules.length).toBe(3)
+
+    const js = modules.find(m => m.rawRequest === './examples/brokenWhitespace.js')._source._value
+    expect(js).toMatchSnapshot()
+  })
   it(`does not allow multiple stylesheets in one file`, async () => {
     await expect(compile('examples/multipleMarkers.js')).rejects.toMatchObject({
       message: expect.stringMatching('not allowed to have multiple'),

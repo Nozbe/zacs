@@ -56,7 +56,7 @@ exports.default = function loader(source, inputSourceMap) {
   // const cssText = source.substring(stylesheetMarkerPos + startMarker.length, stylesheetEndPos)
   //   .replace(/ \\n\\/g, '')
 
-  const match = source.match(/ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\("(.*)ZACS_MAGIC_CSS_STYLESHEET_MARKER_END"\)/s)
+  const match = source.match(/ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\("(.*)ZACS_MAGIC_CSS_STYLESHEET_MARKER_END"\s*\)/s)
   if (!match) {
     this.emitError(`Broken ZACS stylesheet. Found the beginning of it, but the end is missing or malformed.`)
   }
