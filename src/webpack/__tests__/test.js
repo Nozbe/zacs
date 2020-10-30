@@ -117,4 +117,6 @@ describe('zacs-loader', () => {
       message: expect.stringMatching('Broken ZACS stylesheet'),
     })
   })
+  // TODO: e2e test (from source code to end result) with a more realistic setup.
+  // further babel plugins may mess up formatting of the magic markers breaking webpack
 })

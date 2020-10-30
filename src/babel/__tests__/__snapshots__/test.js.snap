@@ -100,7 +100,7 @@ If you only see this comment and the one below in generated code, this is normal
 */
 
 /* eslint-disable */
-const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\`
 .root {
   background-color: red;
   height: 50px;
@@ -124,7 +124,7 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
       color: #abbaba;
     }
 }
-ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`;
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`);
 /* ZACS-generated CSS stylesheet ends above */"
 `;
 

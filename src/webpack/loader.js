@@ -29,8 +29,8 @@ function writeFileIfChanged(outputFilename, cssText) {
   }
 }
 
-const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START`'
-const endMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`'
+const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(`'
+const endMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`)'
 
 exports.default = function loader(source, inputSourceMap) {
   // TODO: Options
