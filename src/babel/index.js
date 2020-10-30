@@ -884,10 +884,14 @@ function transformStyleSheet(t, state, path) {
   if (platform === 'web') {
     const css = encodeCSSStyleSheet(stylesheet)
     const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
+    const formattedCss = t.stringLiteral(preparedCss)
+    // TODO: TODO
+    formattedCss.extra = { rawValue: preparedCss, raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"` }
+
     const magicCssExpression = t.expressionStatement(
       t.callExpression(
         t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
-        [t.templateLiteral([t.templateElement({ raw: preparedCss, cooked: preparedCss })], [])],
+        [formattedCss],
       ),
     )
     t.addComment(

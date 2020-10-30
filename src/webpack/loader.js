@@ -29,8 +29,8 @@ function writeFileIfChanged(outputFilename, cssText) {
   }
 }
 
-const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(`'
-const endMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`)'
+const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START("'
+const endMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_END")'
 
 exports.default = function loader(source, inputSourceMap) {
   // TODO: Options
@@ -54,6 +54,7 @@ exports.default = function loader(source, inputSourceMap) {
   // NOTE: Avoiding regex for perf (probably unnecessarily :))
   const extractedStyles = source.substring(stylesheetMarkerPos, stylesheetEndPos + endMarker.length)
   const cssText = source.substring(stylesheetMarkerPos + startMarker.length, stylesheetEndPos)
+    .replace(/ \\n\\/g, '')
 
   // TODO: Linaria checks for workspace/learna root -- see if it's needed here
   const root = /* workspaceRoot || lernaRoot || */ process.cwd()
