@@ -20,7 +20,8 @@ zacs.view(styles.someName)
 `;
 
 exports[`zacs-loader extracts CSS 2`] = `
-"
+"/* Generated CSS file (from ZACS Stylesheets) - do not edit! */
+
 .basic-zacs__someName {
   background-color: red;
   height: 100;
@@ -56,4 +57,9 @@ const styles = require(\\"../../../../.zacs-cache/src/webpack/__tests__/examples
 
 zacs.view(styles.someName)
 "
+`;
+
+exports[`zacs-loader has configurable cache directory and extension 1`] = `
+"// extracted by mini-css-extract-plugin
+export const someName = \\"basic-zacstest__someName\\";"
 `;

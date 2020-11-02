@@ -103,7 +103,6 @@ describe('zacs-loader', () => {
 
     const css = modules.find(m => m.constructor.name === 'CssModule').content
     expect(css).toMatchSnapshot()
-
     const cssShim = modules.find(m => m.rawRequest.endsWith('/basic.zacs.css'))._source._value
     expect(cssShim).toMatchSnapshot()
   })
@@ -115,6 +114,17 @@ describe('zacs-loader', () => {
 
     const js = modules.find(m => m.rawRequest === './examples/brokenWhitespace.js')._source._value
     expect(js).toMatchSnapshot()
+  })
+  it(`has configurable cache directory and extension`, async () => {
+    const stats = await compile('examples/basic.js', {
+      cacheDirectory: path.resolve(__dirname, '.zacs-cache-test'),
+      extension: '.zacstest.css',
+    })
+    const { modules } = stats.compilation
+    expect(modules.length).toBe(3)
+
+    const cssShim = modules.find(m => m.rawRequest.endsWith('../.zacs-cache-test/src/webpack/__tests__/examples/basic.zacstest.css'))._source._value
+    expect(cssShim).toMatchSnapshot()
   })
   it(`does not allow multiple stylesheets in one file`, async () => {
     await expect(compile('examples/multipleMarkers.js')).rejects.toMatchObject({

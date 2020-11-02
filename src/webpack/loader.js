@@ -30,10 +30,10 @@ function writeFileIfChanged(outputFilename, cssText) {
 }
 
 const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START("'
+const cssDisclaimer = '/* Generated CSS file (from ZACS Stylesheets) - do not edit! */\n'
 
 exports.default = function loader(source, inputSourceMap) {
-  // TODO: Options
-  // const options = getOptions(this)
+  const { cacheDirectory = '.zacs-cache', extension = '.zacs.css' } = loaderUtils.getOptions(this) || {}
 
   const stylesheetMarkerPos = source.indexOf(startMarker)
   if (stylesheetMarkerPos === -1) {
@@ -53,12 +53,11 @@ exports.default = function loader(source, inputSourceMap) {
   }
 
   const extractedStyles = match[0]
-  const cssText = match[1].replace(/ \\n\\/g, '')
+  const cssText = cssDisclaimer + match[1].replace(/ \\n\\/g, '')
 
   // TODO: Linaria checks for workspace/learna root -- see if it's needed here
   const root = /* workspaceRoot || lernaRoot || */ process.cwd()
-  const cacheDirectory = '.zacs-cache' // TODO: Make configurable?
-  const baseOutputFileName = this.resourcePath.replace(/\.[^.]+$/, '.zacs.css')
+  const baseOutputFileName = this.resourcePath.replace(/\.[^.]+$/, extension)
   const outputFilename = normalize(
     path.join(
       path.isAbsolute(cacheDirectory) ? cacheDirectory : path.join(process.cwd(), cacheDirectory),
