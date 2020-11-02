@@ -30,7 +30,6 @@ function writeFileIfChanged(outputFilename, cssText) {
 }
 
 const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START("'
-const endMarker = ''
 
 exports.default = function loader(source, inputSourceMap) {
   // TODO: Options
@@ -46,16 +45,8 @@ exports.default = function loader(source, inputSourceMap) {
     this.emitError(`It's not allowed to have multiple \`zacs.stylesheet()\`s in a single JavaScript file`)
   }
 
-  // const stylesheetEndPos = source.indexOf(endMarker)
-  // if (stylesheetEndPos < stylesheetMarkerPos) {
-  //   this.emitError(`Broken ZACS stylesheet. Found the beginning of it, but the end is missing or malformed.`)
-  // }
-
-  // // NOTE: Avoiding regex for perf (probably unnecessarily :))
-  // const extractedStyles = source.substring(stylesheetMarkerPos, stylesheetEndPos + endMarker.length)
-  // const cssText = source.substring(stylesheetMarkerPos + startMarker.length, stylesheetEndPos)
-  //   .replace(/ \\n\\/g, '')
-
+  // NOTE: We can't use simple indexOf + substring, because some Babel plugins malform the magic markers, insterting whitespace
+  // between end of string argument and the closing paren
   const match = source.match(/ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\("(.*)ZACS_MAGIC_CSS_STYLESHEET_MARKER_END"\s*\)/s)
   if (!match) {
     this.emitError(`Broken ZACS stylesheet. Found the beginning of it, but the end is missing or malformed.`)
