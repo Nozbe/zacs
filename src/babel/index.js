@@ -885,7 +885,10 @@ function transformStyleSheet(t, state, path) {
     const css = encodeCSSStyleSheet(stylesheet)
     const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
     const formattedCss = t.stringLiteral(preparedCss)
-    // TODO: TODO
+    // NOTE: We can't use a template literal, because most people use a Babel transform for it, and it
+    // doesn't spit out clean output. So we spit out an ugly string literal, but keep it multi-line
+    // so that it's easier to view source code in case webpack fails to extract it.
+    // TODO: Escaped characters are probably broken here, please investigate
     formattedCss.extra = { rawValue: preparedCss, raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"` }
 
     const magicCssExpression = t.expressionStatement(
