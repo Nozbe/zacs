@@ -7,7 +7,7 @@ const styles = zacs._experimentalStyleSheet({
     height: 50,
     width: '100%',
     flex: 1,
-    zIndex: 1000,
+    zIndex: -1000,
     web: {
       WebkitPaddingStart: 20,
       zIndex: 1500,
@@ -23,7 +23,7 @@ const styles = zacs._experimentalStyleSheet({
     },
     css: '& > span { opacity: 0.5 }',
     '& > div': {
-      margin: 20,
+      margin: -20,
       opacity: 0.5,
     }
   },

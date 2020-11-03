@@ -24,7 +24,7 @@ const styles = ZACS_RN_StyleSheet.create({
     height: 50,
     width: '100%',
     flex: 1,
-    zIndex: 1000,
+    zIndex: -1000,
     width: 1337
   },
   text: {
@@ -50,7 +50,7 @@ const styles = ZACS_RN_StyleSheet.create({
     height: 50,
     width: '100%',
     flex: 1,
-    zIndex: 1000,
+    zIndex: -1000,
     width: 1337,
     opacity: 0.1
   },
@@ -77,7 +77,7 @@ const styles = ZACS_RN_StyleSheet.create({
     height: 50,
     width: '100%',
     flex: 1,
-    zIndex: 1000,
+    zIndex: -1000,
     width: 1337,
     width: 2137
   },
@@ -106,12 +106,12 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
   height: 50px; \\\\n\\\\
   width: 100%; \\\\n\\\\
   flex: 1; \\\\n\\\\
-  z-index: 1000; \\\\n\\\\
+  z-index: -1000; \\\\n\\\\
   -webkit-padding-start: 20px; \\\\n\\\\
   z-index: 1500; \\\\n\\\\
   & > span { opacity: 0.5 } \\\\n\\\\
   & > div { \\\\n\\\\
-    margin: 20px; \\\\n\\\\
+    margin: -20px; \\\\n\\\\
     opacity: 0.5; \\\\n\\\\
   } \\\\n\\\\
 } \\\\n\\\\

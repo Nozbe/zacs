@@ -745,6 +745,10 @@ function isPlainTemplateLiteral(t, node) {
   return t.isTemplateLiteral(node) && !node.expressions.length && node.quasis.length === 1
 }
 
+function isNumberLiteral(t, node) {
+  return t.isNumericLiteral(node) || (t.isUnaryExpression(node) && node.operator === '-' && node.prefix && t.isNumericLiteral(node.argument))
+}
+
 function validateStyleset(t, styleset) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
@@ -783,7 +787,7 @@ function validateStyleset(t, styleset) {
     } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
       validateStyleset(t, valuePath)
     } else {
-      if (!(t.isStringLiteral(value) || t.isNumericLiteral(value))) {
+      if (!(t.isStringLiteral(value) || isNumberLiteral(t, value))) {
         throw valuePath.buildCodeFrameError(
           "ZACS StyleSheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
         )
@@ -829,11 +833,21 @@ function encodeCSSProperty(property) {
   return property.replace(capitalRegex, cssCaseReplacer)
 }
 
-function encodeCSSValue(property, value) {
-  if (typeof value.value === 'number' && !unitlessCssAttributes.has(property)) {
-    return `${value.value}px`
+function normalizeNumber(node) {
+  // assume number literal or unaryExpr(-, num)
+  if (node.argument) {
+    return -node.argument.value
   }
-  return value.value
+
+  return node.value
+}
+
+function encodeCSSValue(property, value) {
+  const val = normalizeNumber(value)
+  if (typeof val === 'number' && !unitlessCssAttributes.has(property)) {
+    return `${val}px`
+  }
+  return val
 }
 
 function encodeCSSStyle(property, spaces = '  ') {
