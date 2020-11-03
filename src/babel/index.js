@@ -747,7 +747,7 @@ function isPlainTemplateLiteral(t, node) {
 function validateStyleset(t, styleset) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
-      "ZACS StyleSheets must be simple object literals, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
+      "ZACS StyleSheets must be simple object literals, like so: `text: { backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
     )
   }
 
@@ -790,14 +790,27 @@ function validateStyleSheet(t, path) {
 
   stylesheet.get('properties').forEach(styleset => {
     if (!isPlainObjectProperty(t, styleset.node)) {
-      // TODO: We can probably allow `"name":`, no problem.
       throw styleset.buildCodeFrameError(
         'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
       )
     }
-    validateStyleset(t, styleset.get('value'))
+    const stylesetName = styleset.node.key.name
+    if (stylesetName === 'css') {
+      const cssValue = styleset.get('value')
+      if (!(t.isStringLiteral(cssValue.node) || isPlainTemplateLiteral(t, cssValue.node))) {
+        throw cssValue.buildCodeFrameError(
+          "ZACS StyleSheet's magic css: styleset expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
+        )
+      }
+    } else {
+      validateStyleset(t, styleset.get('value'))
+    }
   })
 }
+
+const strval = stringLiteralOrPlainTemplateLiteral =>
+  stringLiteralOrPlainTemplateLiteral.value ||
+  stringLiteralOrPlainTemplateLiteral.quasis[0].value.cooked
 
 const capitalRegex = /([A-Z])/g
 const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
@@ -818,7 +831,7 @@ function encodeCSSStyle(property) {
   if (key === 'native' || key === 'ios' || key === 'android') {
     return null
   } else if (key === 'css') {
-    return '  ' + (value.value || value.quasis[0].value.cooked)
+    return `  ${strval(value)}`
   } else if (key === 'web') {
     return encodeCSSStyles(value)
   }
@@ -835,6 +848,11 @@ function encodeCSSStyles(styleset) {
 
 function encodeCSSStyleset(styleset) {
   const { name } = styleset.key
+
+  if (name === 'css') {
+    return strval(styleset.value)
+  }
+
   return `.${name} {\n${encodeCSSStyles(styleset.value)}\n}`
 }
 
@@ -844,29 +862,32 @@ function encodeCSSStyleSheet(stylesheet) {
 }
 
 function resolveRNStylesheet(platform, target, stylesheet) {
-  stylesheet.properties.forEach(styleset => {
-    const resolvedProperties = []
-    const pushFromInner = objectExpr => {
-      objectExpr.properties.forEach(innerProperty => {
-        resolvedProperties.push(innerProperty)
-      })
-    }
-    styleset.value.properties.forEach(property => {
-      const key = property.key.name
-      if (key === 'web' || key === 'css') {
-        // do nothing
-      } else if (key === 'native') {
-        pushFromInner(property.value)
-      } else if (key === 'ios' || key === 'android') {
-        if (target === key) {
-          pushFromInner(property.value)
-        }
-      } else {
-        resolvedProperties.push(property)
+  stylesheet.properties = stylesheet.properties
+    .filter(styleset => styleset.key.name !== 'css')
+    .map(styleset => {
+      const resolvedProperties = []
+      const pushFromInner = objectExpr => {
+        objectExpr.properties.forEach(innerProperty => {
+          resolvedProperties.push(innerProperty)
+        })
       }
+      styleset.value.properties.forEach(property => {
+        const key = property.key.name
+        if (key === 'web' || key === 'css') {
+          // do nothing
+        } else if (key === 'native') {
+          pushFromInner(property.value)
+        } else if (key === 'ios' || key === 'android') {
+          if (target === key) {
+            pushFromInner(property.value)
+          }
+        } else {
+          resolvedProperties.push(property)
+        }
+      })
+      styleset.value.properties = resolvedProperties
+      return styleset
     })
-    styleset.value.properties = resolvedProperties
-  })
 
   return stylesheet
 }
@@ -889,13 +910,13 @@ function transformStyleSheet(t, state, path) {
     // doesn't spit out clean output. So we spit out an ugly string literal, but keep it multi-line
     // so that it's easier to view source code in case webpack fails to extract it.
     // TODO: Escaped characters are probably broken here, please investigate
-    formattedCss.extra = { rawValue: preparedCss, raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"` }
+    formattedCss.extra = {
+      rawValue: preparedCss,
+      raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"`,
+    }
 
     const magicCssExpression = t.expressionStatement(
-      t.callExpression(
-        t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
-        [formattedCss],
-      ),
+      t.callExpression(t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'), [formattedCss]),
     )
     t.addComment(
       path.parent,

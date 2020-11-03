@@ -86,7 +86,10 @@ describe('zacs', () => {
     expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
   })
   it(`throw an error on illegal stylesheets`, () => {
-    const bad = (syntax, error) => expect(() => transform(`const _ = zacs._experimentalStyleSheet(${syntax})`, 'web')).toThrow(error)
+    const bad = (syntax, error) =>
+      expect(() => transform(`const _ = zacs._experimentalStyleSheet(${syntax})`, 'web')).toThrow(
+        error,
+      )
 
     bad('', 'single Object')
     bad('[]', 'single Object')
@@ -104,6 +107,8 @@ describe('zacs', () => {
     bad('{a: styles}', 'object literal')
     bad('{a: []}', 'object literal')
     bad('{a: ""}', 'object literal')
+
+    bad('{css: {}}', 'magic css:')
 
     bad('{a: {"foo":0}}', 'simple strings')
     bad('{a: {[name]:0}}', 'simple strings')
