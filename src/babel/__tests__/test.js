@@ -110,10 +110,10 @@ describe('zacs', () => {
 
     bad('{css: {}}', 'magic css:')
 
-    bad('{a: {"foo":0}}', 'simple strings')
     bad('{a: {[name]:0}}', 'simple strings')
     bad('{a: {foo:0,...styles}}', 'simple strings')
     bad('{a: {foo}}', 'simple strings')
+    bad('{a: {"foo":0}}', 'web inner styles')
 
     bad('{a: {css:null}}', 'magic css:')
     bad('{a: {css:predefinedCss}}', 'magic css:')

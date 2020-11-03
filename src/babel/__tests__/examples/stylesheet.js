@@ -22,6 +22,10 @@ const styles = zacs._experimentalStyleSheet({
       opacity: 0.1,
     },
     css: '& > span { opacity: 0.5 }',
+    '& > div': {
+      margin: 20,
+      opacity: 0.5,
+    }
   },
   text: {
     color: '#abcdef',

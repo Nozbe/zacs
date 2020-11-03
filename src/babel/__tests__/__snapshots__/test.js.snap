@@ -110,6 +110,10 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
   -webkit-padding-start: 20px; \\\\n\\\\
   z-index: 1500; \\\\n\\\\
   & > span { opacity: 0.5 } \\\\n\\\\
+  & > div { \\\\n\\\\
+    margin: 20px; \\\\n\\\\
+    opacity: 0.5; \\\\n\\\\
+  } \\\\n\\\\
 } \\\\n\\\\
  \\\\n\\\\
 .text { \\\\n\\\\
@@ -124,6 +128,13 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
       color: #abbaba; \\\\n\\\\
     } \\\\n\\\\
 } \\\\n\\\\
+ \\\\n\\\\
+ \\\\n\\\\
+  @keyframes hello { \\\\n\\\\
+    from { opacity: 0 } \\\\n\\\\
+    to { opacity: 0 } \\\\n\\\\
+  } \\\\n\\\\
+   \\\\n\\\\
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
 /* ZACS-generated CSS stylesheet ends above */"
 `;

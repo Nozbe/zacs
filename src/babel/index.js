@@ -730,10 +730,11 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
     .concat(addedAttrs)
 }
 
-function isPlainObjectProperty(t, node) {
+function isPlainObjectProperty(t, node, allowStringLiterals) {
+  const isAllowedKey = t.isIdentifier(node.key) || (allowStringLiterals && t.isStringLiteral(node.key))
   return (
     t.isObjectProperty(node) &&
-    t.isIdentifier(node.key) &&
+    isAllowedKey &&
     !node.shorthand &&
     !node.computed &&
     !node.method
@@ -753,15 +754,25 @@ function validateStyleset(t, styleset) {
 
   const properties = styleset.get('properties')
   properties.forEach(property => {
-    if (!isPlainObjectProperty(t, property.node)) {
+    if (!isPlainObjectProperty(t, property.node, true)) {
       throw property.buildCodeFrameError(
-        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:`, `"backgroundColor": `, `...styles` are not allowed.',
+        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:`, `...styles` are not allowed.',
       )
+    }
+    const valuePath = property.get('value')
+    const value = valuePath.node
+
+    if (t.isStringLiteral(property.node.key)) {
+      if (!t.isObjectExpression(value)) {
+        throw styleset.buildCodeFrameError(
+          "ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Quoted keys are only allowed for web inner styles, e.g. `{ \"& > span\": { opacity: 0.5 } }`",
+        )
+      }
+      validateStyleset(t, valuePath)
+      return
     }
 
     const key = property.node.key.name
-    const valuePath = property.get('value')
-    const value = valuePath.node
 
     if (key === 'css') {
       if (!(t.isStringLiteral(value) || isPlainTemplateLiteral(t, value))) {
@@ -825,23 +836,28 @@ function encodeCSSValue(property, value) {
   return value.value
 }
 
-function encodeCSSStyle(property) {
+function encodeCSSStyle(property, spaces = '  ') {
   const { value } = property
+
+  if (property.key.value) {
+    return `${spaces}${property.key.value} {\n${encodeCSSStyles(value, `${spaces}  `)}\n${spaces}}`
+  }
+
   const key = property.key.name
   if (key === 'native' || key === 'ios' || key === 'android') {
     return null
   } else if (key === 'css') {
-    return `  ${strval(value)}`
+    return `${spaces}${strval(value)}`
   } else if (key === 'web') {
     return encodeCSSStyles(value)
   }
 
-  return `  ${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
+  return `${spaces}${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
 }
 
-function encodeCSSStyles(styleset) {
+function encodeCSSStyles(styleset, spaces) {
   return styleset.properties
-    .map(encodeCSSStyle)
+    .map(style => encodeCSSStyle(style, spaces))
     .filter(rule => rule !== null)
     .join('\n')
 }
@@ -875,6 +891,8 @@ function resolveRNStylesheet(platform, target, stylesheet) {
         const key = property.key.name
         if (key === 'web' || key === 'css') {
           // do nothing
+        } else if (property.key.value) {
+          // css inner selector - do nothing
         } else if (key === 'native') {
           pushFromInner(property.value)
         } else if (key === 'ios' || key === 'android') {
