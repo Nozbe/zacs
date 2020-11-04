@@ -758,9 +758,18 @@ function validateStyleset(t, styleset) {
 
   const properties = styleset.get('properties')
   properties.forEach(property => {
+    if (t.isSpreadElement(property.node)) {
+      const spreadArg = property.get('argument')
+      if (!t.isObjectExpression(spreadArg.node)) {
+        throw spreadArg.buildCodeFrameError("Spread element in a ZACS StyleSheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
+      }
+      validateStyleset(t, spreadArg)
+      return
+    }
+
     if (!isPlainObjectProperty(t, property.node, true)) {
       throw property.buildCodeFrameError(
-        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:`, `...styles` are not allowed.',
+        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:` are not allowed.',
       )
     }
     const valuePath = property.get('value')
@@ -851,6 +860,10 @@ function encodeCSSValue(property, value) {
 }
 
 function encodeCSSStyle(property, spaces = '  ') {
+  if (property.type === 'SpreadElement') {
+    return encodeCSSStyles(property.argument, spaces)
+  }
+
   const { value } = property
 
   if (property.key.value) {
@@ -902,6 +915,11 @@ function resolveRNStylesheet(platform, target, stylesheet) {
         })
       }
       styleset.value.properties.forEach(property => {
+        if (property.type === 'SpreadElement') {
+          pushFromInner(property.argument)
+          return
+        }
+
         const key = property.key.name
         if (key === 'web' || key === 'css') {
           // do nothing

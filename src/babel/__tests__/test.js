@@ -127,8 +127,8 @@ describe('zacs', () => {
     bad('{css: {}}', 'magic css:')
 
     bad('{a: {[name]:0}}', 'simple strings')
-    bad('{a: {foo:0,...styles}}', 'simple strings')
     bad('{a: {foo}}', 'simple strings')
+    bad('{a: {foo:0,...styles}}', 'Spread element')
     bad('{a: {"foo":0}}', 'web inner styles')
 
     bad('{a: {css:null}}', 'magic css:')
@@ -138,7 +138,7 @@ describe('zacs', () => {
     bad('{a: {css:`foo${bar}`}}', 'magic css:')
 
     bad('{a: {web:{foo}}}', 'simple strings')
-    bad('{a: {native:{...styles}}}', 'simple strings')
+    bad('{a: {native:{...styles}}}', 'Spread element')
     bad('{a: {ios:{foo}}}', 'simple strings')
     bad('{a: {android:{foo}}}', 'simple strings')
 

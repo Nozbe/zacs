@@ -79,6 +79,7 @@ const styles = ZACS_RN_StyleSheet.create({
     flex: 1,
     zIndex: -1000,
     width: 1337,
+    // check replacement by babel
     width: 2137
   },
   text: {

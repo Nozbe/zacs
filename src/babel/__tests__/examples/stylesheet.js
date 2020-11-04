@@ -6,20 +6,26 @@ const styles = zacs._experimentalStyleSheet({
     backgroundColor: 'red',
     height: 50,
     width: '100%',
-    flex: 1,
-    zIndex: -1000,
-    web: {
-      WebkitPaddingStart: 20,
-      zIndex: 1500,
+    // check emulated mixin
+    ...{
+      flex: 1,
+      zIndex: -1000,
     },
+    // native-only
     native: {
       width: 1337,
     },
     ios: {
+      // check replacement by babel
       width: REPLACE_INTO_NUMBER,
     },
     android: {
       opacity: 0.1,
+    },
+    // web-only
+    web: {
+      WebkitPaddingStart: 20,
+      zIndex: 1500,
     },
     css: '& > span { opacity: 0.5 }',
     '& > div': {
