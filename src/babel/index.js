@@ -758,14 +758,21 @@ function validateStyleset(t, styleset) {
 
   const properties = styleset.get('properties')
   properties.forEach(property => {
-    if (t.isSpreadElement(property.node)) {
-      const spreadArg = property.get('argument')
-      if (!t.isObjectExpression(spreadArg.node)) {
-        throw spreadArg.buildCodeFrameError("Spread element in a ZACS StyleSheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
-      }
-      validateStyleset(t, spreadArg)
-      return
-    }
+    // FIXME: We want to allow `...{literal-object}` syntax as a natural way to do mixins, but
+    // most setups use a Babel plugin that will transpile object spread syntax into a function call
+    // before ZACS stylesheets be processed. We can't do all processing earlier because that will
+    // break constant-replacement and other plugins that turn dynamic syntax into compile-time constants
+    // I think the way to fix it is to preprocess at the beginning, traverse object literal tree and
+    // replace `...`s, but that might still turn out to be buggy...
+
+    // if (t.isSpreadElement(property.node)) {
+    //   const spreadArg = property.get('argument')
+    //   if (!t.isObjectExpression(spreadArg.node)) {
+    //     throw spreadArg.buildCodeFrameError("Spread element in a ZACS StyleSheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
+    //   }
+    //   validateStyleset(t, spreadArg)
+    //   return
+    // }
 
     if (!isPlainObjectProperty(t, property.node, true)) {
       throw property.buildCodeFrameError(
@@ -793,7 +800,7 @@ function validateStyleset(t, styleset) {
           "ZACS StyleSheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
         )
       }
-    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
+    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android' || key === '_mixin') {
       validateStyleset(t, valuePath)
     } else {
       if (!(t.isStringLiteral(value) || isNumberLiteral(t, value))) {
@@ -875,7 +882,7 @@ function encodeCSSStyle(property, spaces = '  ') {
     return null
   } else if (key === 'css') {
     return `${spaces}${strval(value)}`
-  } else if (key === 'web') {
+  } else if (key === 'web' || key === '_mixin') {
     return encodeCSSStyles(value)
   }
 
@@ -925,7 +932,7 @@ function resolveRNStylesheet(platform, target, stylesheet) {
           // do nothing
         } else if (property.key.value) {
           // css inner selector - do nothing
-        } else if (key === 'native') {
+        } else if (key === 'native' || key === '_mixin') {
           pushFromInner(property.value)
         } else if (key === 'ios' || key === 'android') {
           if (target === key) {
