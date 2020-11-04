@@ -982,33 +982,51 @@ exports.default = function(babel) {
   return {
     name: 'zacs',
     visitor: {
-      VariableDeclarator(path, state) {
-        if (!isZacsDeclaration(t, path.node)) {
-          return
-        }
+      VariableDeclarator: {
+        enter(path, state) {
+          if (!isZacsDeclaration(t, path.node)) {
+            return
+          }
 
-        validateZacsDeclaration(t, path)
+          validateZacsDeclaration(t, path)
 
-        const { node } = path
-        const { init } = node
-        const zacsMethod = init.callee.property.name
+          const { node } = path
+          const { init } = node
+          const zacsMethod = init.callee.property.name
 
-        if (zacsMethod === '_experimentalStyleSheet') {
+          if (zacsMethod === '_experimentalStyleSheet') {
+            // do nothing, will process on exit
+            // eslint-disable-next-line no-useless-return
+            return
+          } else if (zacsMethod.startsWith('create')) {
+            node.init = createZacsComponent(t, state, path)
+          } else {
+            const id = node.id.name
+            const stateKey = componentKey(id)
+            if (state.get(stateKey)) {
+              throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
+            }
+            state.set(stateKey, node)
+
+            if (!state.opts.keepDeclarations) {
+              path.remove()
+            }
+          }
+        },
+        // StyleSheets must be processed on exit so that other babel plugins that transform
+        // inline expressions into literals can do their work first
+        // TODO: Deduplicate
+        exit(path, state) {
+          if (!isZacsDeclaration(t, path.node)) {
+            return
+          }
+
+          const zacsMethod = path.node.init.callee.property.name
+          if (zacsMethod !== '_experimentalStyleSheet') {
+            return
+          }
           transformStyleSheet(t, state, path)
-        } else if (zacsMethod.startsWith('create')) {
-          node.init = createZacsComponent(t, state, path)
-        } else {
-          const id = node.id.name
-          const stateKey = componentKey(id)
-          if (state.get(stateKey)) {
-            throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
-          }
-          state.set(stateKey, node)
-
-          if (!state.opts.keepDeclarations) {
-            path.remove()
-          }
-        }
+        },
       },
       JSXElement(path, state) {
         const { node } = path

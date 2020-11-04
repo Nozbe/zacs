@@ -16,7 +16,7 @@ const styles = zacs._experimentalStyleSheet({
       width: 1337,
     },
     ios: {
-      width: 2137,
+      width: REPLACE_INTO_NUMBER,
     },
     android: {
       opacity: 0.1,

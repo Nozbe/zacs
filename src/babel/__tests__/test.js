@@ -3,10 +3,26 @@ const path = require('path')
 const fs = require('fs')
 const plugin = require('../index')
 
+function testBabelPlugin(pluginBabel) {
+  const { types: t } = pluginBabel
+
+  return {
+    name: 'test-plugin',
+    visitor: {
+      Identifier(p) {
+        if (p.node.name === 'REPLACE_INTO_NUMBER') {
+          p.replaceWith(t.numericLiteral(2137))
+        }
+      },
+    },
+  }
+}
+
+
 function transform(input, platform, extra = {}) {
   const { code } = babel.transform(input, {
     configFile: false,
-    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }]],
+    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }], testBabelPlugin],
   })
   return code
 }
