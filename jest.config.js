@@ -5,7 +5,8 @@ module.exports = {
   modulePaths: ['<rootDir>/src'],
   moduleDirectories: ['<rootDir>/node_modules'],
   restoreMocks: true,
-  moduleFileExtensions: ['js'],
+  moduleFileExtensions: ['js', 'json'],
+  testEnvironment: 'node',
   modulePathIgnorePatterns: [
     '<rootDir>/dist',
     '<rootDir>/dev',

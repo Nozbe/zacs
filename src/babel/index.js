@@ -567,11 +567,23 @@ function validateZacsDeclaration(t, path) {
 
   // Validate declaration
   if (
-    !['text', 'view', 'styled', 'createText', 'createView', 'createStyled'].includes(zacsMethod)
+    ![
+      'text',
+      'view',
+      'styled',
+      'createText',
+      'createView',
+      'createStyled',
+      '_experimentalStyleSheet',
+    ].includes(zacsMethod)
   ) {
     throw path.buildCodeFrameError(
       `zacs.${init.callee.property.name} is not a valid zacs declaration`,
     )
+  }
+
+  if (zacsMethod === '_experimentalStyleSheet') {
+    return
   }
 
   if (!zacsMethod.startsWith('create')) {
@@ -700,6 +712,93 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
     .concat(addedAttrs)
 }
 
+function isPlainObjectProperty(t, node) {
+  return (
+    t.isObjectProperty(node) &&
+    t.isIdentifier(node.key) &&
+    !node.shorthand &&
+    !node.computed &&
+    !node.method
+  )
+}
+
+function validateStyleSheet(t, args, path) {
+  const [stylesheet] = args
+  if (!(args.length === 1 && t.isObjectExpression(stylesheet))) {
+    throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
+  }
+  const stylesets = stylesheet.properties
+  if (!stylesets.every(styleset => isPlainObjectProperty(t, styleset))) {
+    // TODO: We can probably allow `"name":`, no problem.
+    throw path.buildCodeFrameError(
+      'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
+    )
+  }
+
+  if (
+    !stylesets.every(
+      styleset =>
+        t.isObjectExpression(styleset.value) &&
+        styleset.value.properties.every(property => isPlainObjectProperty(t, property)),
+    )
+  ) {
+    throw path.buildCodeFrameError(
+      'ZACS StyleSheets can only contain simple style properties with properties like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[prop]:`, `"prop": `, `...styles` are not allowed.',
+    )
+  }
+
+  // TODO: Validate values
+}
+
+// TODO: Find a JS-to-CSS package
+// Inspiration: https://github.com/giuseppeg/style-sheet/blob/master/src/data.js
+const capitalRegex = /([A-Z])/g
+const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
+function encodeCSSProperty(property) {
+  return property.name.replace(capitalRegex, cssCaseReplacer)
+}
+
+function encodeCSSStyle(property) {
+  return `  ${encodeCSSProperty(property.key)}: ${property.value.value};`
+}
+
+function encodeCSSStyleset(styleset) {
+  const { name } = styleset.key
+  const attributes = styleset.value.properties.map(encodeCSSStyle).join('\n')
+  return `.${name} {\n${attributes}\n}`
+}
+
+function encodeCSSStyleSheet(stylesheet) {
+  const stylesets = stylesheet.properties.map(encodeCSSStyleset).join('\n\n')
+  return `${stylesets}\n`
+}
+
+function transformStyleSheet(t, state, path) {
+  const { node } = path
+  const { init } = node
+  const { arguments: args } = init
+
+  validateStyleSheet(t, args, path)
+
+  const stylesheet = args[0]
+  const css = encodeCSSStyleSheet(stylesheet)
+
+  const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
+  const magicCssExpression = t.expressionStatement(
+    t.taggedTemplateExpression(
+      t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
+      t.templateLiteral([t.templateElement({ raw: preparedCss, cooked: preparedCss })], []),
+    ),
+  )
+  t.addComment(
+    path.parent,
+    'leading',
+    '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
+  )
+  path.get('init').replaceWith(magicCssExpression)
+  t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
+}
+
 const componentKey = name => `declaration_${name}`
 
 exports.default = function(babel) {
@@ -719,7 +818,9 @@ exports.default = function(babel) {
         const { init } = node
         const zacsMethod = init.callee.property.name
 
-        if (zacsMethod.startsWith('create')) {
+        if (zacsMethod === '_experimentalStyleSheet') {
+          transformStyleSheet(t, state, path)
+        } else if (zacsMethod.startsWith('create')) {
           node.init = createZacsComponent(t, state, path)
         } else {
           const id = node.id.name

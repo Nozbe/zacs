@@ -12,6 +12,23 @@ const Root = zacs.view(style.root);
 const root = <div className={style.root} />;"
 `;
 
+exports[`zacs transforms experimental stylesheets 1`] = `
+"/*
+ZACS-generated CSS stylesheet begins below.
+PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
+If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
+*/
+
+/* eslint-disable */
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
+.root {
+  background-color: red;
+  height: 100;
+}
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`;
+/* ZACS-generated CSS stylesheet ends above */"
+`;
+
 exports[`zacs works with the basic example on native 1`] = `
 "const zacsReactNative = require('react-native');
 
