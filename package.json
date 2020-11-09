@@ -1,6 +1,6 @@
 {
   "name": "@nozbe/zacs",
-  "version": "1.1.0",
+  "version": "1.1.0-8",
   "description": "Zero Abstraction Cost Styling (for React DOM and React Native)",
   "main": "src/index.js",
   "scripts": {
@@ -16,6 +16,8 @@
     "src/index.js.flow",
     "src/babel/index.js",
     "babel.js",
+    "src/webpack/loader.js",
+    "loader.js",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"

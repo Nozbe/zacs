@@ -12,7 +12,87 @@ const Root = zacs.view(style.root);
 const root = <div className={style.root} />;"
 `;
 
-exports[`zacs transforms experimental stylesheets 1`] = `
+exports[`zacs transforms experimental stylesheets (native) 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  root: {
+    backgroundColor: 'red',
+    height: 50,
+    width: '100%',
+    flex: 1,
+    zIndex: 1000,
+    width: 1337
+  },
+  text: {
+    color: '#abcdef',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    paddingRight: 20,
+    opacity: 0.5
+  }
+});"
+`;
+
+exports[`zacs transforms experimental stylesheets (native, android) 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  root: {
+    backgroundColor: 'red',
+    height: 50,
+    width: '100%',
+    flex: 1,
+    zIndex: 1000,
+    width: 1337,
+    opacity: 0.1
+  },
+  text: {
+    color: '#abcdef',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    paddingRight: 20,
+    opacity: 0.5
+  }
+});"
+`;
+
+exports[`zacs transforms experimental stylesheets (native, ios) 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  root: {
+    backgroundColor: 'red',
+    height: 50,
+    width: '100%',
+    flex: 1,
+    zIndex: 1000,
+    width: 1337,
+    width: 2137
+  },
+  text: {
+    color: '#abcdef',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    paddingRight: 20,
+    opacity: 0.5
+  }
+});"
+`;
+
+exports[`zacs transforms experimental stylesheets (web) 1`] = `
 "/*
 ZACS-generated CSS stylesheet begins below.
 PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
@@ -20,12 +100,31 @@ If you only see this comment and the one below in generated code, this is normal
 */
 
 /* eslint-disable */
-const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\`
-.root {
-  background-color: red;
-  height: 100;
-}
-ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\`;
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
+.root { \\\\n\\\\
+  background-color: red; \\\\n\\\\
+  height: 50px; \\\\n\\\\
+  width: 100%; \\\\n\\\\
+  flex: 1; \\\\n\\\\
+  z-index: 1000; \\\\n\\\\
+  -webkit-padding-start: 20px; \\\\n\\\\
+  z-index: 1500; \\\\n\\\\
+  & > span { opacity: 0.5 } \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.text { \\\\n\\\\
+  color: #abcdef; \\\\n\\\\
+  font-size: 12px; \\\\n\\\\
+  font-weight: bold; \\\\n\\\\
+  padding-left: 20px; \\\\n\\\\
+  padding-right: 20px; \\\\n\\\\
+  opacity: 0.5; \\\\n\\\\
+  &:hover { \\\\n\\\\
+      opacity: .8; \\\\n\\\\
+      color: #abbaba; \\\\n\\\\
+    } \\\\n\\\\
+} \\\\n\\\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
 /* ZACS-generated CSS stylesheet ends above */"
 `;
 

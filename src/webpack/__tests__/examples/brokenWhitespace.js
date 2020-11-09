@@ -9,7 +9,13 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \n\
   background-color: red; \n\
   height: 100; \n\
 } \n\
-ZACS_MAGIC_CSS_STYLESHEET_MARKER_END")
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END"
+
+
+
+
+
+)
 /* ZACS-generated CSS stylesheet ends above */
 
 zacs.view(styles.someName)

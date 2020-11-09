@@ -26,9 +26,27 @@ function getPlatform(state) {
   // return 'native'
   const { platform } = state.opts
   if (!platform) {
-    throw new Error('platform not specified to this plugin')
+    throw new Error('platform option is required for ZACS babel plugin')
+  }
+  if (platform !== 'web' && platform !== 'native') {
+    throw new Error(
+      'illegal platform option passed to ZACS babel plugin. allowed values: web, native',
+    )
   }
   return platform
+}
+
+function getTarget(state) {
+  // return 'ios'
+  // return 'android'
+  const { target } = state.opts
+  if (target && !['ios', 'android', 'web'].includes(target)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      'Unrecognized target passed to ZACS babel plugin. Known targets: web, ios, android',
+    )
+  }
+  return target
 }
 
 function isProduction(state) {
@@ -648,12 +666,12 @@ function validateElementHasNoIllegalAttributes(t, path) {
   const { attributes } = openingElement
   if (hasAttrNamed(t, 'style', attributes)) {
     throw path.buildCodeFrameError(
-      'It\'s not allowed to pass `style` attribute to ZACS-styled components',
+      "It's not allowed to pass `style` attribute to ZACS-styled components",
     )
   }
   if (hasAttrNamed(t, 'className', attributes)) {
     throw path.buildCodeFrameError(
-      'It\'s not allowed to pass `className` attribute to ZACS-styled components',
+      "It's not allowed to pass `className` attribute to ZACS-styled components",
     )
   }
 }
@@ -668,7 +686,7 @@ function validateZacsImport(t, path) {
     )
   ) {
     throw path.buildCodeFrameError(
-      'ZACS import must say exactly `import zacs from \'@nozbe/zacs\'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.',
+      "ZACS import must say exactly `import zacs from '@nozbe/zacs'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.",
     )
   }
 }
@@ -722,50 +740,102 @@ function isPlainObjectProperty(t, node) {
   )
 }
 
-function validateStyleSheet(t, args, path) {
-  const [stylesheet] = args
-  if (!(args.length === 1 && t.isObjectExpression(stylesheet))) {
-    throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
-  }
-  const stylesets = stylesheet.properties
-  if (!stylesets.every(styleset => isPlainObjectProperty(t, styleset))) {
-    // TODO: We can probably allow `"name":`, no problem.
-    throw path.buildCodeFrameError(
-      'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
-    )
-  }
-
-  if (
-    !stylesets.every(
-      styleset =>
-        t.isObjectExpression(styleset.value) &&
-        styleset.value.properties.every(property => isPlainObjectProperty(t, property)),
-    )
-  ) {
-    throw path.buildCodeFrameError(
-      'ZACS StyleSheets can only contain simple style properties with properties like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[prop]:`, `"prop": `, `...styles` are not allowed.',
-    )
-  }
-
-  // TODO: Validate values
+function isPlainTemplateLiteral(t, node) {
+  return t.isTemplateLiteral(node) && !node.expressions.length && node.quasis.length === 1
 }
 
-// TODO: Find a JS-to-CSS package
-// Inspiration: https://github.com/giuseppeg/style-sheet/blob/master/src/data.js
+function validateStyleset(t, styleset) {
+  if (!t.isObjectExpression(styleset.node)) {
+    throw styleset.buildCodeFrameError(
+      "ZACS StyleSheets must be simple object literals, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
+    )
+  }
+
+  const properties = styleset.get('properties')
+  properties.forEach(property => {
+    if (!isPlainObjectProperty(t, property.node)) {
+      throw property.buildCodeFrameError(
+        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:`, `"backgroundColor": `, `...styles` are not allowed.',
+      )
+    }
+
+    const key = property.node.key.name
+    const valuePath = property.get('value')
+    const value = valuePath.node
+
+    if (key === 'css') {
+      if (!(t.isStringLiteral(value) || isPlainTemplateLiteral(t, value))) {
+        throw valuePath.buildCodeFrameError(
+          "ZACS StyleSheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
+        )
+      }
+    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
+      validateStyleset(t, valuePath)
+    } else {
+      if (!(t.isStringLiteral(value) || t.isNumericLiteral(value))) {
+        throw valuePath.buildCodeFrameError(
+          "ZACS StyleSheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
+        )
+      }
+    }
+  })
+}
+
+function validateStyleSheet(t, path) {
+  const args = path.get('init.arguments')
+  const stylesheet = args[0]
+  if (!(args.length === 1 && t.isObjectExpression(stylesheet.node))) {
+    throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
+  }
+
+  stylesheet.get('properties').forEach(styleset => {
+    if (!isPlainObjectProperty(t, styleset.node)) {
+      // TODO: We can probably allow `"name":`, no problem.
+      throw styleset.buildCodeFrameError(
+        'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
+      )
+    }
+    validateStyleset(t, styleset.get('value'))
+  })
+}
+
 const capitalRegex = /([A-Z])/g
 const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
 function encodeCSSProperty(property) {
-  return property.name.replace(capitalRegex, cssCaseReplacer)
+  return property.replace(capitalRegex, cssCaseReplacer)
+}
+
+function encodeCSSValue(property, value) {
+  if (typeof value.value === 'number' && !unitlessCssAttributes.has(property)) {
+    return `${value.value}px`
+  }
+  return value.value
 }
 
 function encodeCSSStyle(property) {
-  return `  ${encodeCSSProperty(property.key)}: ${property.value.value};`
+  const { value } = property
+  const key = property.key.name
+  if (key === 'native' || key === 'ios' || key === 'android') {
+    return null
+  } else if (key === 'css') {
+    return '  ' + (value.value || value.quasis[0].value.cooked)
+  } else if (key === 'web') {
+    return encodeCSSStyles(value)
+  }
+
+  return `  ${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
+}
+
+function encodeCSSStyles(styleset) {
+  return styleset.properties
+    .map(encodeCSSStyle)
+    .filter(rule => rule !== null)
+    .join('\n')
 }
 
 function encodeCSSStyleset(styleset) {
   const { name } = styleset.key
-  const attributes = styleset.value.properties.map(encodeCSSStyle).join('\n')
-  return `.${name} {\n${attributes}\n}`
+  return `.${name} {\n${encodeCSSStyles(styleset.value)}\n}`
 }
 
 function encodeCSSStyleSheet(stylesheet) {
@@ -773,30 +843,82 @@ function encodeCSSStyleSheet(stylesheet) {
   return `${stylesets}\n`
 }
 
+function resolveRNStylesheet(platform, target, stylesheet) {
+  stylesheet.properties.forEach(styleset => {
+    const resolvedProperties = []
+    const pushFromInner = objectExpr => {
+      objectExpr.properties.forEach(innerProperty => {
+        resolvedProperties.push(innerProperty)
+      })
+    }
+    styleset.value.properties.forEach(property => {
+      const key = property.key.name
+      if (key === 'web' || key === 'css') {
+        // do nothing
+      } else if (key === 'native') {
+        pushFromInner(property.value)
+      } else if (key === 'ios' || key === 'android') {
+        if (target === key) {
+          pushFromInner(property.value)
+        }
+      } else {
+        resolvedProperties.push(property)
+      }
+    })
+    styleset.value.properties = resolvedProperties
+  })
+
+  return stylesheet
+}
+
 function transformStyleSheet(t, state, path) {
   const { node } = path
   const { init } = node
   const { arguments: args } = init
+  const platform = getPlatform(state)
 
-  validateStyleSheet(t, args, path)
+  validateStyleSheet(t, path)
 
   const stylesheet = args[0]
-  const css = encodeCSSStyleSheet(stylesheet)
 
-  const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
-  const magicCssExpression = t.expressionStatement(
-    t.taggedTemplateExpression(
-      t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
-      t.templateLiteral([t.templateElement({ raw: preparedCss, cooked: preparedCss })], []),
-    ),
-  )
-  t.addComment(
-    path.parent,
-    'leading',
-    '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
-  )
-  path.get('init').replaceWith(magicCssExpression)
-  t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
+  if (platform === 'web') {
+    const css = encodeCSSStyleSheet(stylesheet)
+    const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
+    const formattedCss = t.stringLiteral(preparedCss)
+    // NOTE: We can't use a template literal, because most people use a Babel transform for it, and it
+    // doesn't spit out clean output. So we spit out an ugly string literal, but keep it multi-line
+    // so that it's easier to view source code in case webpack fails to extract it.
+    // TODO: Escaped characters are probably broken here, please investigate
+    formattedCss.extra = { rawValue: preparedCss, raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"` }
+
+    const magicCssExpression = t.expressionStatement(
+      t.callExpression(
+        t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
+        [formattedCss],
+      ),
+    )
+    t.addComment(
+      path.parent,
+      'leading',
+      '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
+    )
+    path.get('init').replaceWith(magicCssExpression)
+    t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
+  } else if (platform === 'native') {
+    state.set(`uses_rn`, true)
+    state.set(`uses_rn_stylesheet`, true)
+
+    const target = getTarget(state)
+
+    const resolvedRules = resolveRNStylesheet(platform, target, stylesheet)
+    const rnStylesheet = t.callExpression(
+      t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
+      [resolvedRules],
+    )
+    path.get('init').replaceWith(rnStylesheet)
+  } else {
+    throw new Error('unknown platform')
+  }
 }
 
 const componentKey = name => `declaration_${name}`
@@ -929,6 +1051,13 @@ exports.default = function(babel) {
 
             if (state.get('uses_rn_text')) {
               const makeZacsElement = babel.template(`const ZACS_RN_Text = zacsReactNative.Text`)
+              zacsRN.insertAfter(makeZacsElement())
+            }
+
+            if (state.get('uses_rn_stylesheet')) {
+              const makeZacsElement = babel.template(
+                `const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet`,
+              )
               zacsRN.insertAfter(makeZacsElement())
             }
           }
@@ -1241,4 +1370,50 @@ const htmlElements = new Set([
   'variable',
   'video',
   'wbr',
+])
+
+const unitlessCssAttributes = new Set([
+  // Based on https://github.com/giuseppeg/style-sheet/blob/e71c119ecaccdb2e50be0759b45820b8cbf0c6df/src/data.js
+  'animationIterationCount',
+  'borderImageOutset',
+  'borderImageSlice',
+  'borderImageWidth',
+  'boxFlex',
+  'boxFlexGroup',
+  'boxOrdinalGroup',
+  'columnCount',
+  'columns',
+  'flex',
+  'flexGrow',
+  'flexPositive',
+  'flexShrink',
+  'flexNegative',
+  'flexOrder',
+  'gridRow',
+  'gridRowEnd',
+  'gridRowSpan',
+  'gridRowStart',
+  'gridColumn',
+  'gridColumnEnd',
+  'gridColumnSpan',
+  'gridColumnStart',
+  'fontWeight',
+  'lineClamp',
+  'lineHeight',
+  'opacity',
+  'order',
+  'orphans',
+  'tabSize',
+  'widows',
+  'zIndex',
+  'zoom',
+  // SVG
+  'fillOpacity',
+  'floodOpacity',
+  'stopOpacity',
+  'strokeDasharray',
+  'strokeDashoffset',
+  'strokeMiterlimit',
+  'strokeOpacity',
+  'strokeWidth',
 ])

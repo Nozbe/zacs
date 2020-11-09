@@ -73,7 +73,58 @@ describe('zacs', () => {
       expect(() => transform(js, 'web')).toThrow('ZACS import must say exactly')
     })
   })
-  it(`transforms experimental stylesheets`, () => {
+  it(`transforms experimental stylesheets (web)`, () => {
     expect(transform(example('stylesheet'), 'web')).toMatchSnapshot()
+  })
+  it(`transforms experimental stylesheets (native)`, () => {
+    expect(transform(example('stylesheet'), 'native')).toMatchSnapshot()
+  })
+  it(`transforms experimental stylesheets (native, ios)`, () => {
+    expect(transform(example('stylesheet'), 'native', { target: 'ios' })).toMatchSnapshot()
+  })
+  it(`transforms experimental stylesheets (native, android)`, () => {
+    expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
+  })
+  it(`throw an error on illegal stylesheets`, () => {
+    const bad = (syntax, error) => expect(() => transform(`const _ = zacs._experimentalStyleSheet(${syntax})`, 'web')).toThrow(error)
+
+    bad('', 'single Object')
+    bad('[]', 'single Object')
+    bad('styles', 'single Object')
+
+    bad('{"foo":{}}', 'name: {}')
+    bad('{[name]:{}}', 'name: {}')
+    bad('{foo}', 'name: {}')
+    bad('{foo(){}}', 'name: {}')
+    bad('{a:{},...styles}', 'name: {}')
+    bad('{get b(){}}', 'name: {}')
+
+    bad('{a: 0}', 'object literal')
+    bad('{a: x?{}:{}}', 'object literal')
+    bad('{a: styles}', 'object literal')
+    bad('{a: []}', 'object literal')
+    bad('{a: ""}', 'object literal')
+
+    bad('{a: {"foo":0}}', 'simple strings')
+    bad('{a: {[name]:0}}', 'simple strings')
+    bad('{a: {foo:0,...styles}}', 'simple strings')
+    bad('{a: {foo}}', 'simple strings')
+
+    bad('{a: {css:null}}', 'magic css:')
+    bad('{a: {css:predefinedCss}}', 'magic css:')
+    bad('{a: {css:{}}}', 'magic css:')
+    // eslint-disable-next-line no-template-curly-in-string
+    bad('{a: {css:`foo${bar}`}}', 'magic css:')
+
+    bad('{a: {web:{foo}}}', 'simple strings')
+    bad('{a: {native:{...styles}}}', 'simple strings')
+    bad('{a: {ios:{foo}}}', 'simple strings')
+    bad('{a: {android:{foo}}}', 'simple strings')
+
+    bad('{a: { width: width }}', 'strings or numbers')
+    bad('{a: { width: platform ? 10 : 20 }}', 'strings or numbers')
+    bad('{a: { width: null }}', 'strings or numbers')
+    bad('{a: { width: false }}', 'strings or numbers')
+    bad('{a: { width: foo(bar) }}', 'strings or numbers')
   })
 })
