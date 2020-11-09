@@ -26,7 +26,9 @@ const styles = ZACS_RN_StyleSheet.create({
     flex: 1,
     zIndex: -1000,
     zIndex: -2,
-    width: 1337
+    width: 1337,
+    // check native-only expressions
+    backgroundColor: foo ? rgba(a, b) : bar
   },
   text: {
     color: '#abcdef',
@@ -54,7 +56,10 @@ const styles = ZACS_RN_StyleSheet.create({
     zIndex: -1000,
     zIndex: -2,
     width: 1337,
-    opacity: 0.1
+    // check native-only expressions
+    backgroundColor: foo ? rgba(a, b) : bar,
+    opacity: 0.1,
+    marginVertical: foo(0)
   },
   text: {
     color: '#abcdef',
@@ -82,8 +87,11 @@ const styles = ZACS_RN_StyleSheet.create({
     zIndex: -1000,
     zIndex: -2,
     width: 1337,
+    // check native-only expressions
+    backgroundColor: foo ? rgba(a, b) : bar,
     // check replacement by babel
-    width: 2137
+    width: 2137,
+    marginHorizontal: foo(0)
   },
   text: {
     color: '#abcdef',

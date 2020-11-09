@@ -16,13 +16,17 @@ const styles = zacs._experimentalStyleSheet({
     // native-only
     native: {
       width: 1337,
+      // check native-only expressions
+      backgroundColor: foo ? rgba(a, b) : bar,
     },
     ios: {
       // check replacement by babel
       width: REPLACE_INTO_NUMBER,
+      marginHorizontal: foo(0),
     },
     android: {
       opacity: 0.1,
+      marginVertical: foo(0),
     },
     // web-only
     web: {

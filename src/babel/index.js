@@ -749,7 +749,7 @@ function isNumberLiteral(t, node) {
   return t.isNumericLiteral(node) || (t.isUnaryExpression(node) && node.operator === '-' && node.prefix && t.isNumericLiteral(node.argument))
 }
 
-function validateStyleset(t, styleset) {
+function validateStyleset(t, styleset, nestedIn) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
       "ZACS StyleSheets must be simple object literals, like so: `text: { backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
@@ -770,7 +770,7 @@ function validateStyleset(t, styleset) {
     //   if (!t.isObjectExpression(spreadArg.node)) {
     //     throw spreadArg.buildCodeFrameError("Spread element in a ZACS StyleSheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
     //   }
-    //   validateStyleset(t, spreadArg)
+    //   validateStyleset(t, spreadArg, nestedIn)
     //   return
     // }
 
@@ -788,7 +788,7 @@ function validateStyleset(t, styleset) {
           "ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Quoted keys are only allowed for web inner styles, e.g. `{ \"& > span\": { opacity: 0.5 } }`",
         )
       }
-      validateStyleset(t, valuePath)
+      validateStyleset(t, valuePath, 'web')
       return
     }
 
@@ -800,10 +800,13 @@ function validateStyleset(t, styleset) {
           "ZACS StyleSheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
         )
       }
-    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android' || key === '_mixin') {
-      validateStyleset(t, valuePath)
+    } else if (key === '_mixin') {
+      validateStyleset(t, valuePath, nestedIn)
+    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
+      validateStyleset(t, valuePath, key)
     } else {
-      if (!(t.isStringLiteral(value) || isNumberLiteral(t, value))) {
+      const nestedInNative = nestedIn === 'native' || nestedIn === 'ios' || nestedIn === 'android'
+      if (!(t.isStringLiteral(value) || isNumberLiteral(t, value)) && !nestedInNative) {
         throw valuePath.buildCodeFrameError(
           "ZACS StyleSheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
         )
@@ -834,7 +837,7 @@ function validateStyleSheet(t, path) {
         )
       }
     } else {
-      validateStyleset(t, styleset.get('value'))
+      validateStyleset(t, styleset.get('value'), null)
     }
   })
 }
