@@ -147,5 +147,8 @@ describe('zacs', () => {
     bad('{a: { width: null }}', 'strings or numbers')
     bad('{a: { width: false }}', 'strings or numbers')
     bad('{a: { width: foo(bar) }}', 'strings or numbers')
+
+    bad('{a: {native:{ios:{}}}}', 'nested')
+    bad('{a: {web:{web:{}}}}', 'nested')
   })
 })

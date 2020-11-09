@@ -803,6 +803,10 @@ function validateStyleset(t, styleset, nestedIn) {
     } else if (key === '_mixin') {
       validateStyleset(t, valuePath, nestedIn)
     } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
+      if (nestedIn) {
+        throw property.buildCodeFrameError("ZACS StyleSheets cannot have platform-specific blocks nested within a platform-specific block")
+      }
+
       validateStyleset(t, valuePath, key)
     } else {
       const nestedInNative = nestedIn === 'native' || nestedIn === 'ios' || nestedIn === 'android'
