@@ -3,10 +3,26 @@ const path = require('path')
 const fs = require('fs')
 const plugin = require('../index')
 
+function testBabelPlugin(pluginBabel) {
+  const { types: t } = pluginBabel
+
+  return {
+    name: 'test-plugin',
+    visitor: {
+      Identifier(p) {
+        if (p.node.name === 'REPLACE_INTO_NUMBER') {
+          p.replaceWith(t.numericLiteral(2137))
+        }
+      },
+    },
+  }
+}
+
+
 function transform(input, platform, extra = {}) {
   const { code } = babel.transform(input, {
     configFile: false,
-    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }]],
+    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }], testBabelPlugin],
   })
   return code
 }
@@ -86,7 +102,10 @@ describe('zacs', () => {
     expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
   })
   it(`throw an error on illegal stylesheets`, () => {
-    const bad = (syntax, error) => expect(() => transform(`const _ = zacs._experimentalStyleSheet(${syntax})`, 'web')).toThrow(error)
+    const bad = (syntax, error) =>
+      expect(() => transform(`const _ = zacs._experimentalStyleSheet(${syntax})`, 'web')).toThrow(
+        error,
+      )
 
     bad('', 'single Object')
     bad('[]', 'single Object')
@@ -105,10 +124,12 @@ describe('zacs', () => {
     bad('{a: []}', 'object literal')
     bad('{a: ""}', 'object literal')
 
-    bad('{a: {"foo":0}}', 'simple strings')
+    bad('{css: {}}', 'magic css:')
+
     bad('{a: {[name]:0}}', 'simple strings')
     bad('{a: {foo:0,...styles}}', 'simple strings')
     bad('{a: {foo}}', 'simple strings')
+    bad('{a: {"foo":0}}', 'web inner styles')
 
     bad('{a: {css:null}}', 'magic css:')
     bad('{a: {css:predefinedCss}}', 'magic css:')

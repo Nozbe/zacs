@@ -730,10 +730,11 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
     .concat(addedAttrs)
 }
 
-function isPlainObjectProperty(t, node) {
+function isPlainObjectProperty(t, node, allowStringLiterals) {
+  const isAllowedKey = t.isIdentifier(node.key) || (allowStringLiterals && t.isStringLiteral(node.key))
   return (
     t.isObjectProperty(node) &&
-    t.isIdentifier(node.key) &&
+    isAllowedKey &&
     !node.shorthand &&
     !node.computed &&
     !node.method
@@ -744,24 +745,54 @@ function isPlainTemplateLiteral(t, node) {
   return t.isTemplateLiteral(node) && !node.expressions.length && node.quasis.length === 1
 }
 
+function isNumberLiteral(t, node) {
+  return t.isNumericLiteral(node) || (t.isUnaryExpression(node) && node.operator === '-' && node.prefix && t.isNumericLiteral(node.argument))
+}
+
 function validateStyleset(t, styleset) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
-      "ZACS StyleSheets must be simple object literals, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
+      "ZACS StyleSheets must be simple object literals, like so: `text: { backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
     )
   }
 
   const properties = styleset.get('properties')
   properties.forEach(property => {
-    if (!isPlainObjectProperty(t, property.node)) {
+    // FIXME: We want to allow `...{literal-object}` syntax as a natural way to do mixins, but
+    // most setups use a Babel plugin that will transpile object spread syntax into a function call
+    // before ZACS stylesheets be processed. We can't do all processing earlier because that will
+    // break constant-replacement and other plugins that turn dynamic syntax into compile-time constants
+    // I think the way to fix it is to preprocess at the beginning, traverse object literal tree and
+    // replace `...`s, but that might still turn out to be buggy...
+
+    // if (t.isSpreadElement(property.node)) {
+    //   const spreadArg = property.get('argument')
+    //   if (!t.isObjectExpression(spreadArg.node)) {
+    //     throw spreadArg.buildCodeFrameError("Spread element in a ZACS StyleSheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
+    //   }
+    //   validateStyleset(t, spreadArg)
+    //   return
+    // }
+
+    if (!isPlainObjectProperty(t, property.node, true)) {
       throw property.buildCodeFrameError(
-        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:`, `"backgroundColor": `, `...styles` are not allowed.',
+        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:` are not allowed.',
       )
+    }
+    const valuePath = property.get('value')
+    const value = valuePath.node
+
+    if (t.isStringLiteral(property.node.key)) {
+      if (!t.isObjectExpression(value)) {
+        throw styleset.buildCodeFrameError(
+          "ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Quoted keys are only allowed for web inner styles, e.g. `{ \"& > span\": { opacity: 0.5 } }`",
+        )
+      }
+      validateStyleset(t, valuePath)
+      return
     }
 
     const key = property.node.key.name
-    const valuePath = property.get('value')
-    const value = valuePath.node
 
     if (key === 'css') {
       if (!(t.isStringLiteral(value) || isPlainTemplateLiteral(t, value))) {
@@ -769,10 +800,10 @@ function validateStyleset(t, styleset) {
           "ZACS StyleSheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
         )
       }
-    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
+    } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android' || key === '_mixin') {
       validateStyleset(t, valuePath)
     } else {
-      if (!(t.isStringLiteral(value) || t.isNumericLiteral(value))) {
+      if (!(t.isStringLiteral(value) || isNumberLiteral(t, value))) {
         throw valuePath.buildCodeFrameError(
           "ZACS StyleSheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
         )
@@ -790,14 +821,27 @@ function validateStyleSheet(t, path) {
 
   stylesheet.get('properties').forEach(styleset => {
     if (!isPlainObjectProperty(t, styleset.node)) {
-      // TODO: We can probably allow `"name":`, no problem.
       throw styleset.buildCodeFrameError(
         'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
       )
     }
-    validateStyleset(t, styleset.get('value'))
+    const stylesetName = styleset.node.key.name
+    if (stylesetName === 'css') {
+      const cssValue = styleset.get('value')
+      if (!(t.isStringLiteral(cssValue.node) || isPlainTemplateLiteral(t, cssValue.node))) {
+        throw cssValue.buildCodeFrameError(
+          "ZACS StyleSheet's magic css: styleset expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
+        )
+      }
+    } else {
+      validateStyleset(t, styleset.get('value'))
+    }
   })
 }
+
+const strval = stringLiteralOrPlainTemplateLiteral =>
+  stringLiteralOrPlainTemplateLiteral.value ||
+  stringLiteralOrPlainTemplateLiteral.quasis[0].value.cooked
 
 const capitalRegex = /([A-Z])/g
 const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
@@ -805,36 +849,60 @@ function encodeCSSProperty(property) {
   return property.replace(capitalRegex, cssCaseReplacer)
 }
 
-function encodeCSSValue(property, value) {
-  if (typeof value.value === 'number' && !unitlessCssAttributes.has(property)) {
-    return `${value.value}px`
+function normalizeNumber(node) {
+  // assume number literal or unaryExpr(-, num)
+  if (node.argument) {
+    return -node.argument.value
   }
-  return value.value
+
+  return node.value
 }
 
-function encodeCSSStyle(property) {
+function encodeCSSValue(property, value) {
+  const val = normalizeNumber(value)
+  if (typeof val === 'number' && !unitlessCssAttributes.has(property)) {
+    return `${val}px`
+  }
+  return val
+}
+
+function encodeCSSStyle(property, spaces = '  ') {
+  if (property.type === 'SpreadElement') {
+    return encodeCSSStyles(property.argument, spaces)
+  }
+
   const { value } = property
+
+  if (property.key.value) {
+    return `${spaces}${property.key.value} {\n${encodeCSSStyles(value, `${spaces}  `)}\n${spaces}}`
+  }
+
   const key = property.key.name
   if (key === 'native' || key === 'ios' || key === 'android') {
     return null
   } else if (key === 'css') {
-    return '  ' + (value.value || value.quasis[0].value.cooked)
-  } else if (key === 'web') {
+    return `${spaces}${strval(value)}`
+  } else if (key === 'web' || key === '_mixin') {
     return encodeCSSStyles(value)
   }
 
-  return `  ${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
+  return `${spaces}${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
 }
 
-function encodeCSSStyles(styleset) {
+function encodeCSSStyles(styleset, spaces) {
   return styleset.properties
-    .map(encodeCSSStyle)
+    .map(style => encodeCSSStyle(style, spaces))
     .filter(rule => rule !== null)
     .join('\n')
 }
 
 function encodeCSSStyleset(styleset) {
   const { name } = styleset.key
+
+  if (name === 'css') {
+    return strval(styleset.value)
+  }
+
   return `.${name} {\n${encodeCSSStyles(styleset.value)}\n}`
 }
 
@@ -844,29 +912,39 @@ function encodeCSSStyleSheet(stylesheet) {
 }
 
 function resolveRNStylesheet(platform, target, stylesheet) {
-  stylesheet.properties.forEach(styleset => {
-    const resolvedProperties = []
-    const pushFromInner = objectExpr => {
-      objectExpr.properties.forEach(innerProperty => {
-        resolvedProperties.push(innerProperty)
-      })
-    }
-    styleset.value.properties.forEach(property => {
-      const key = property.key.name
-      if (key === 'web' || key === 'css') {
-        // do nothing
-      } else if (key === 'native') {
-        pushFromInner(property.value)
-      } else if (key === 'ios' || key === 'android') {
-        if (target === key) {
-          pushFromInner(property.value)
-        }
-      } else {
-        resolvedProperties.push(property)
+  stylesheet.properties = stylesheet.properties
+    .filter(styleset => styleset.key.name !== 'css')
+    .map(styleset => {
+      const resolvedProperties = []
+      const pushFromInner = objectExpr => {
+        objectExpr.properties.forEach(innerProperty => {
+          resolvedProperties.push(innerProperty)
+        })
       }
+      styleset.value.properties.forEach(property => {
+        if (property.type === 'SpreadElement') {
+          pushFromInner(property.argument)
+          return
+        }
+
+        const key = property.key.name
+        if (key === 'web' || key === 'css') {
+          // do nothing
+        } else if (property.key.value) {
+          // css inner selector - do nothing
+        } else if (key === 'native' || key === '_mixin') {
+          pushFromInner(property.value)
+        } else if (key === 'ios' || key === 'android') {
+          if (target === key) {
+            pushFromInner(property.value)
+          }
+        } else {
+          resolvedProperties.push(property)
+        }
+      })
+      styleset.value.properties = resolvedProperties
+      return styleset
     })
-    styleset.value.properties = resolvedProperties
-  })
 
   return stylesheet
 }
@@ -889,13 +967,13 @@ function transformStyleSheet(t, state, path) {
     // doesn't spit out clean output. So we spit out an ugly string literal, but keep it multi-line
     // so that it's easier to view source code in case webpack fails to extract it.
     // TODO: Escaped characters are probably broken here, please investigate
-    formattedCss.extra = { rawValue: preparedCss, raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"` }
+    formattedCss.extra = {
+      rawValue: preparedCss,
+      raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"`,
+    }
 
     const magicCssExpression = t.expressionStatement(
-      t.callExpression(
-        t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'),
-        [formattedCss],
-      ),
+      t.callExpression(t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'), [formattedCss]),
     )
     t.addComment(
       path.parent,
@@ -929,33 +1007,51 @@ exports.default = function(babel) {
   return {
     name: 'zacs',
     visitor: {
-      VariableDeclarator(path, state) {
-        if (!isZacsDeclaration(t, path.node)) {
-          return
-        }
+      VariableDeclarator: {
+        enter(path, state) {
+          if (!isZacsDeclaration(t, path.node)) {
+            return
+          }
 
-        validateZacsDeclaration(t, path)
+          validateZacsDeclaration(t, path)
 
-        const { node } = path
-        const { init } = node
-        const zacsMethod = init.callee.property.name
+          const { node } = path
+          const { init } = node
+          const zacsMethod = init.callee.property.name
 
-        if (zacsMethod === '_experimentalStyleSheet') {
+          if (zacsMethod === '_experimentalStyleSheet') {
+            // do nothing, will process on exit
+            // eslint-disable-next-line no-useless-return
+            return
+          } else if (zacsMethod.startsWith('create')) {
+            node.init = createZacsComponent(t, state, path)
+          } else {
+            const id = node.id.name
+            const stateKey = componentKey(id)
+            if (state.get(stateKey)) {
+              throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
+            }
+            state.set(stateKey, node)
+
+            if (!state.opts.keepDeclarations) {
+              path.remove()
+            }
+          }
+        },
+        // StyleSheets must be processed on exit so that other babel plugins that transform
+        // inline expressions into literals can do their work first
+        // TODO: Deduplicate
+        exit(path, state) {
+          if (!isZacsDeclaration(t, path.node)) {
+            return
+          }
+
+          const zacsMethod = path.node.init.callee.property.name
+          if (zacsMethod !== '_experimentalStyleSheet') {
+            return
+          }
           transformStyleSheet(t, state, path)
-        } else if (zacsMethod.startsWith('create')) {
-          node.init = createZacsComponent(t, state, path)
-        } else {
-          const id = node.id.name
-          const stateKey = componentKey(id)
-          if (state.get(stateKey)) {
-            throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
-          }
-          state.set(stateKey, node)
-
-          if (!state.opts.keepDeclarations) {
-            path.remove()
-          }
-        }
+        },
       },
       JSXElement(path, state) {
         const { node } = path

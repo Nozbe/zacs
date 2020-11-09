@@ -67,6 +67,33 @@ type ZacsCreateStyledFunction = <Props>(
 
 type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | 'zacs:style' | string>
 
+type ZacsStylesheetStylesetWeb = $Exact<{
+  [ReactNativeStyleAttributeName | CSSPropertyName]: string | number,
+  ... // TODO: web nested
+}>
+
+type ZacsStylesheetStylesetNative = $Exact<{
+  [ReactNativeStyleAttributeName]: string | number,
+}>
+
+type ZacsStylesheetStyleset = $Exact<{
+  [ReactNativeStyleAttributeName | CSSPropertyName]: string | number,
+  native?: ZacsStylesheetStylesetNative,
+  ios?: ZacsStylesheetStylesetNative,
+  android?: ZacsStylesheetStylesetNative,
+  web?: ZacsStylesheetStylesetWeb,
+  css?: string,
+  ... // TODO: web nested
+}>
+
+type ZacsStylesheet = $Exact<{
+  [string]: ZacsStylesheetStyleset,
+  css?: string,
+}>
+
+// TODO: Fix return type
+type ZacsStylesheetFunction = (ZacsStylesheet) => $Exact<{ [string]: string }>
+
 declare export default {
   // TODO: Return components with the right prop types typed out (inherit prop types from component being styles + add conditionalStyles & style attributes)
   view: ZacsViewFunction,
@@ -75,6 +102,7 @@ declare export default {
   createView: ZacsCreateViewFunction,
   createText: ZacsCreateTextFunction,
   createStyled: ZacsCreateStyledFunction,
+  _experimentalStyleSheet: ZacsStylesheetFunction,
 }
 
 type ReactNativeStyleAttributeName =
