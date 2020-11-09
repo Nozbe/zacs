@@ -1183,6 +1183,21 @@ exports.default = function(babel) {
           path.remove()
         }
       },
+      TaggedTemplateExpression(path) {
+        const { node } = path
+        const { tag } = node
+        if (
+          !(
+            t.isMemberExpression(tag) &&
+            t.isIdentifier(tag.object, { name: 'zacs' }) &&
+            t.isIdentifier(tag.property, { name: 'css' })
+          )
+        ) {
+          return
+        }
+
+        path.replaceWith(node.quasi)
+      },
     },
   }
 }

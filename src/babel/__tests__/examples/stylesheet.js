@@ -51,7 +51,7 @@ const styles = zacs._experimentalStyleSheet({
       color: #abbaba;
     }`,
   },
-  css: `
+  css: zacs.css`
   @keyframes hello {
     from { opacity: 0 }
     to { opacity: 0 }
