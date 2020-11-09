@@ -100,6 +100,7 @@ describe('zacs', () => {
   })
   it(`transforms experimental stylesheets (native, android)`, () => {
     expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
+    expect(transform(example('stylesheetNative'), 'native', { target: 'android' })).toMatchSnapshot()
   })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>

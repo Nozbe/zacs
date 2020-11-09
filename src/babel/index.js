@@ -752,6 +752,12 @@ function isNumberLiteral(t, node) {
   )
 }
 
+// ZACS_STYLESHEET_LITERAL(xxx) - magic syntax that passes validation
+// for use by babel plugins that transform dynamic expressions into static literals
+function isZacsStyleSheetLiteral(t, node) {
+  return (t.isCallExpression(node) && t.isIdentifier(node.callee, { name: 'ZACS_STYLESHEET_LITERAL' }))
+}
+
 function validateStyleset(t, styleset, nestedIn) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
@@ -815,7 +821,7 @@ function validateStyleset(t, styleset, nestedIn) {
       validateStyleset(t, valuePath, key)
     } else {
       const nestedInNative = nestedIn === 'native' || nestedIn === 'ios' || nestedIn === 'android'
-      if (!(t.isStringLiteral(value) || isNumberLiteral(t, value)) && !nestedInNative) {
+      if (!(t.isStringLiteral(value) || isNumberLiteral(t, value) || isZacsStyleSheetLiteral(t, value)) && !nestedInNative) {
         throw valuePath.buildCodeFrameError(
           'ZACS StyleSheet\'s style values must be simple literal strings or numbers, e.g.: `backgroundColor: \'red\'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed',
         )
@@ -923,15 +929,21 @@ function encodeCSSStyleSheet(stylesheet) {
   return `${stylesets}\n`
 }
 
-function resolveRNStylesheet(platform, target, stylesheet) {
+function resolveRNStylesheet(t, platform, target, stylesheet) {
   stylesheet.properties = stylesheet.properties
     .filter(styleset => styleset.key.name !== 'css')
     .map(styleset => {
       const resolvedProperties = []
+      const pushProp = property => {
+        if (isZacsStyleSheetLiteral(t, property.value)) {
+          // strip ZACS_STYLESHEET_LITERAL(x)
+          const [wrappedValue] = property.value.arguments
+          property.value = wrappedValue
+        }
+        resolvedProperties.push(property)
+      }
       const pushFromInner = objectExpr => {
-        objectExpr.properties.forEach(innerProperty => {
-          resolvedProperties.push(innerProperty)
-        })
+        objectExpr.properties.forEach(pushProp)
       }
       styleset.value.properties.forEach(property => {
         if (property.type === 'SpreadElement') {
@@ -951,7 +963,7 @@ function resolveRNStylesheet(platform, target, stylesheet) {
             pushFromInner(property.value)
           }
         } else {
-          resolvedProperties.push(property)
+          pushProp(property)
         }
       })
       styleset.value.properties = resolvedProperties
@@ -1000,7 +1012,7 @@ function transformStyleSheet(t, state, path) {
 
     const target = getTarget(state)
 
-    const resolvedRules = resolveRNStylesheet(platform, target, stylesheet)
+    const resolvedRules = resolveRNStylesheet(t, platform, target, stylesheet)
     const rnStylesheet = t.callExpression(
       t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
       [resolvedRules],
@@ -1191,6 +1203,8 @@ exports.default = function(babel) {
       TaggedTemplateExpression(path) {
         const { node } = path
         const { tag } = node
+
+        // Strip zacs.css`` tag (only an annotation for editor highlighting)
         if (
           !(
             t.isMemberExpression(tag) &&

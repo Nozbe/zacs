@@ -46,6 +46,8 @@ const styles = zacs._experimentalStyleSheet({
     paddingLeft: 20,
     paddingRight: 20,
     opacity: 0.5,
+    // web-only postcss syntax
+    backgroundColor: '@theme(onSurface1)',
     css: `&:hover {
       opacity: .8;
       color: #abbaba;

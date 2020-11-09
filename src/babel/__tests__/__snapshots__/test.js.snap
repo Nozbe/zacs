@@ -36,7 +36,9 @@ const styles = ZACS_RN_StyleSheet.create({
     fontWeight: 'bold',
     paddingLeft: 20,
     paddingRight: 20,
-    opacity: 0.5
+    opacity: 0.5,
+    // web-only postcss syntax
+    backgroundColor: '@theme(onSurface1)'
   }
 });"
 `;
@@ -67,7 +69,24 @@ const styles = ZACS_RN_StyleSheet.create({
     fontWeight: 'bold',
     paddingLeft: 20,
     paddingRight: 20,
-    opacity: 0.5
+    opacity: 0.5,
+    // web-only postcss syntax
+    backgroundColor: '@theme(onSurface1)'
+  }
+});"
+`;
+
+exports[`zacs transforms experimental stylesheets (native, android) 2`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  text: {
+    // magic syntax for babel replacement plugins
+    backgroundColor: Styling.colors.onSurface1,
+    backgroundColor: Styling.colors.onSurface2
   }
 });"
 `;
@@ -99,7 +118,9 @@ const styles = ZACS_RN_StyleSheet.create({
     fontWeight: 'bold',
     paddingLeft: 20,
     paddingRight: 20,
-    opacity: 0.5
+    opacity: 0.5,
+    // web-only postcss syntax
+    backgroundColor: '@theme(onSurface1)'
   }
 });"
 `;
@@ -136,6 +157,7 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
   padding-left: 20px; \\\\n\\\\
   padding-right: 20px; \\\\n\\\\
   opacity: 0.5; \\\\n\\\\
+  background-color: @theme(onSurface1); \\\\n\\\\
   &:hover { \\\\n\\\\
       opacity: .8; \\\\n\\\\
       color: #abbaba; \\\\n\\\\
