@@ -103,7 +103,7 @@ declare export default {
   createText: ZacsCreateTextFunction,
   createStyled: ZacsCreateStyledFunction,
   _experimentalStyleSheet: ZacsStylesheetFunction,
-  css: string => string,
+  css: (_strings: string[], ..._exprs: Array<any>) => string,
 }
 
 type ReactNativeStyleAttributeName =
