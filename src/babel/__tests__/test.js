@@ -100,6 +100,7 @@ describe('zacs', () => {
   })
   it(`transforms experimental stylesheets (native, android)`, () => {
     expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
+    expect(transform(example('stylesheetNative'), 'native', { target: 'android' })).toMatchSnapshot()
   })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>
@@ -147,5 +148,8 @@ describe('zacs', () => {
     bad('{a: { width: null }}', 'strings or numbers')
     bad('{a: { width: false }}', 'strings or numbers')
     bad('{a: { width: foo(bar) }}', 'strings or numbers')
+
+    bad('{a: {native:{ios:{}}}}', 'nested')
+    bad('{a: {web:{web:{}}}}', 'nested')
   })
 })
