@@ -943,7 +943,13 @@ function resolveRNStylesheet(t, platform, target, stylesheet) {
         resolvedProperties.push(property)
       }
       const pushFromInner = objectExpr => {
-        objectExpr.properties.forEach(pushProp)
+        objectExpr.properties.forEach(property => {
+          if (property.type === 'ObjectProperty' && property.key.name === '_mixin' && property.value.type === 'ObjectExpression') {
+            pushFromInner(property.value)
+          } else {
+            pushProp(property)
+          }
+        })
       }
       styleset.value.properties.forEach(property => {
         if (property.type === 'SpreadElement') {

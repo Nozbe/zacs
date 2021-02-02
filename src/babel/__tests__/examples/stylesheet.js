@@ -18,6 +18,7 @@ const styles = zacs._experimentalStyleSheet({
       width: 1337,
       // check native-only expressions
       backgroundColor: foo ? rgba(a, b) : bar,
+      _mixin: { left: 0, right: 0 },
     },
     ios: {
       // check replacement by babel
