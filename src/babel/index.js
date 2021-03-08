@@ -179,8 +179,7 @@ function objectKey(t, key) {
   } else if (typeof key === 'number') {
     return t.numericLiteral(key)
   }
-    return t.stringLiteral(String(key))
-
+  return t.stringLiteral(String(key))
 }
 
 function objectExpressionFromPairs(t, keyValuePairs) {
