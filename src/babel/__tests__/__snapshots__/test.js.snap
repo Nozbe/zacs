@@ -250,6 +250,10 @@ const added1_two = <ZACS_RN_View style={{
 const added1_literals = <ZACS_RN_View style={{
   width: 500,
   backgroundColor: \\"#abcdef\\"
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_propKeys = <ZACS_RN_View style={{
+  \\"--background\\": \\"white\\",
+  1: 1
 }} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
 
 const addedNull = <ZACS_RN_View __zacs_original_name=\\"AddedStylesNull\\" onPress={onPress} />;
@@ -470,6 +474,10 @@ const added1_two = <div style={{
 const added1_literals = <div style={{
   width: 500,
   backgroundColor: \\"#abcdef\\"
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_propKeys = <div style={{
+  \\"--background\\": \\"white\\",
+  1: 1
 }} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
 
 const addedNull = <div __zacs_original_name=\\"AddedStylesNull\\" />;

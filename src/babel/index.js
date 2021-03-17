@@ -172,9 +172,19 @@ function jsxAttr(t, name, value) {
   return t.jSXAttribute(t.jSXIdentifier(name), t.jSXExpressionContainer(value))
 }
 
+const identifierRegex = /^[a-zA-Z][a-zA-Z0-9]*$/
+function objectKey(t, key) {
+  if (typeof key === 'string' && identifierRegex.test(key)) {
+    return t.identifier(key)
+  } else if (typeof key === 'number') {
+    return t.numericLiteral(key)
+  }
+  return t.stringLiteral(String(key))
+}
+
 function objectExpressionFromPairs(t, keyValuePairs) {
   return t.objectExpression(
-    keyValuePairs.map(([key, value]) => t.objectProperty(t.identifier(key), value)),
+    keyValuePairs.map(([key, value]) => t.objectProperty(objectKey(t, key), value)),
   )
 }
 
@@ -755,7 +765,9 @@ function isNumberLiteral(t, node) {
 // ZACS_STYLESHEET_LITERAL(xxx) - magic syntax that passes validation
 // for use by babel plugins that transform dynamic expressions into static literals
 function isZacsStyleSheetLiteral(t, node) {
-  return (t.isCallExpression(node) && t.isIdentifier(node.callee, { name: 'ZACS_STYLESHEET_LITERAL' }))
+  return (
+    t.isCallExpression(node) && t.isIdentifier(node.callee, { name: 'ZACS_STYLESHEET_LITERAL' })
+  )
 }
 
 function validateStyleset(t, styleset, nestedIn) {
@@ -821,7 +833,14 @@ function validateStyleset(t, styleset, nestedIn) {
       validateStyleset(t, valuePath, key)
     } else {
       const nestedInNative = nestedIn === 'native' || nestedIn === 'ios' || nestedIn === 'android'
-      if (!(t.isStringLiteral(value) || isNumberLiteral(t, value) || isZacsStyleSheetLiteral(t, value)) && !nestedInNative) {
+      if (
+        !(
+          t.isStringLiteral(value) ||
+          isNumberLiteral(t, value) ||
+          isZacsStyleSheetLiteral(t, value)
+        ) &&
+        !nestedInNative
+      ) {
         throw valuePath.buildCodeFrameError(
           'ZACS StyleSheet\'s style values must be simple literal strings or numbers, e.g.: `backgroundColor: \'red\'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed',
         )
