@@ -67,22 +67,30 @@ type ZacsCreateStyledFunction = <Props>(
 
 type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | 'zacs:style' | string>
 
-type ZacsStylesheetStylesetWeb = $Exact<{
+type ZacsStylesheetMixin = $ReadOnly<{
   [ReactNativeStyleAttributeName | CSSPropertyName]: string | number,
-  ... // TODO: web nested
+  ...
 }>
 
-type ZacsStylesheetStylesetNative = $Exact<{
+type ZacsStylesheetStylesetWeb = $ReadOnly<{
+  [ReactNativeStyleAttributeName | CSSPropertyName]: string | number,
+  _mixin?: ZacsStylesheetMixin,
+  css?: string,
+}>
+
+type ZacsStylesheetStylesetNative = $ReadOnly<{
   [ReactNativeStyleAttributeName]: string | number,
+  _mixin?: ZacsStylesheetMixin,
 }>
 
-type ZacsStylesheetStyleset = $Exact<{
-  [ReactNativeStyleAttributeName | CSSPropertyName]: string | number,
+type ZacsStylesheetStyleset = $ReadOnly<{
+  _mixin?: ZacsStylesheetMixin,
   native?: ZacsStylesheetStylesetNative,
   ios?: ZacsStylesheetStylesetNative,
   android?: ZacsStylesheetStylesetNative,
   web?: ZacsStylesheetStylesetWeb,
   css?: string,
+  [ReactNativeStyleAttributeName | CSSPropertyName]: string | number,
   ... // TODO: web nested
 }>
 
