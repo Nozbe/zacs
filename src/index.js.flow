@@ -1,1572 +1,1589 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
-declare module '@nozbe/flow' {
-  import type { ComponentType as React$Component } from 'react'
+import { type ComponentType as React$Component } from 'react'
 
-  // TODO: css/rn styles should be in .web.js/.native.js to be typechecked more strictly
-  declare type CSSClassName = string
-  declare type ReactNativeStyleSheetId = number
-  declare type ReactNativeStyleObject = Object
-  declare type PredefinedStyle = CSSClassName | ReactNativeStyleSheetId | ReactNativeStyleObject
+// TODO: css/rn styles should be in .web.js/.native.js to be typechecked more strictly
+type CSSClassName = string
+type ReactNativeStyleSheetId = number
+type ReactNativeStyleObject = Object
+type PredefinedStyle = CSSClassName | ReactNativeStyleSheetId | ReactNativeStyleObject
 
-  declare type UnconditionalStyles = PredefinedStyle | PredefinedStyle[]
+type UnconditionalStyles = PredefinedStyle | PredefinedStyle[]
 
-  declare type ConditionalStyles = { [propNameThatAddsConditionalStyleIfTruthy: string]: PredefinedStyle }
+type ConditionalStyles = { [propNameThatAddsConditionalStyleIfTruthy: string]: PredefinedStyle }
 
-  declare type StyleAttributeName = CSSPropertyName | ReactNativeStyleAttributeName
-  declare type StyleAttributes = { [propName: string]: StyleAttributeName }
+type StyleAttributeName = CSSPropertyName | ReactNativeStyleAttributeName
+type StyleAttributes = { [propName: string]: StyleAttributeName }
 
-  declare type ZacsViewFunction = (
-    unconditionalStyles: ?UnconditionalStyles,
-    conditionalStyles: ?ConditionalStyles,
-    literalStyles: ?StyleAttributes,
-  ) => React$Component<any> // TODO: Add more concrete types
+type ZacsViewFunction = (
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+) => React$Component<any> // TODO: Add more concrete types
 
-  declare type ZacsTextFunction = (
-    unconditionalStyles: ?UnconditionalStyles,
-    conditionalStyles: ?ConditionalStyles,
-    literalStyles: ?StyleAttributes,
-  ) => React$Component<any> // TODO: Add more concrete types
+type ZacsTextFunction = (
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+) => React$Component<any> // TODO: Add more concrete types
 
-  declare type BuiltinElementName = string
-  declare type ConcreteComponentToStyle<Props> = React$Component<Props> | BuiltinElementName
-  declare type ComponentPlatformSelect<Props> = $Exact<{
-    web: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
-    native: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
-  }>
-  declare type ComponentToStyle<Props> = ConcreteComponentToStyle<Props> | ComponentPlatformSelect<Props>
+type BuiltinElementName = string
+type ConcreteComponentToStyle<Props> = React$Component<Props> | BuiltinElementName
+type ComponentPlatformSelect<Props> = $Exact<{
+  web: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
+  native: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
+}>
+type ComponentToStyle<Props> = ConcreteComponentToStyle<Props> | ComponentPlatformSelect<Props>
 
-  declare type ZacsStyledFunction = <Props>(
-    componentToStyle: ComponentToStyle<Props>,
-    unconditionalStyles: ?UnconditionalStyles,
-    conditionalStyles: ?ConditionalStyles,
-    literalStyles: ?StyleAttributes,
-  ) => React$Component<any> // TODO: Add more concrete types
+type ZacsStyledFunction = <Props>(
+  componentToStyle: ComponentToStyle<Props>,
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+) => React$Component<any> // TODO: Add more concrete types
 
-  declare type ZacsCreateViewFunction = (
-    unconditionalStyles: ?UnconditionalStyles,
-    conditionalStyles: ?ConditionalStyles,
-    literalStyles: ?StyleAttributes,
-    whitelistedProps: ?WhitelistedPropNames,
-  ) => React$Component<any> // TODO: Add more concrete types
+type ZacsCreateViewFunction = (
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+  whitelistedProps: ?WhitelistedPropNames,
+) => React$Component<any> // TODO: Add more concrete types
 
-  declare type ZacsCreateTextFunction = (
-    unconditionalStyles: ?UnconditionalStyles,
-    conditionalStyles: ?ConditionalStyles,
-    literalStyles: ?StyleAttributes,
-    whitelistedProps: ?WhitelistedPropNames,
-  ) => React$Component<any> // TODO: Add more concrete types
+type ZacsCreateTextFunction = (
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+  whitelistedProps: ?WhitelistedPropNames,
+) => React$Component<any> // TODO: Add more concrete types
 
-  declare type ZacsCreateStyledFunction = <Props>(
-    componentToStyle: ComponentToStyle<Props>,
-    unconditionalStyles: ?UnconditionalStyles,
-    conditionalStyles: ?ConditionalStyles,
-    literalStyles: ?StyleAttributes,
-    whitelistedProps: ?WhitelistedPropNames,
-  ) => React$Component<any> // TODO: Add more concrete types
+type ZacsCreateStyledFunction = <Props>(
+  componentToStyle: ComponentToStyle<Props>,
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?StyleAttributes,
+  whitelistedProps: ?WhitelistedPropNames,
+) => React$Component<any> // TODO: Add more concrete types
 
-  declare type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | 'zacs:style' | string>
+type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | 'zacs:style' | string>
 
-  declare type BasicStylesheet = $ReadOnly<$Exact<{ ...ReactNativeBasicStylesheet, ...CSSBasicStylesheet }>>
+type BasicStylesheet = $ReadOnly<$Exact<{ ...CSSBasicStylesheet, ...ReactNativeBasicStylesheet }>>
 
-  declare type ZacsStylesheetMixin = BasicStylesheet
+type ZacsStylesheetMixin = BasicStylesheet
 
-  declare type ZacsStylesheetStylesetWeb = $ReadOnly<{
-    ...CSSBasicStylesheet,
-    _mixin?: ZacsStylesheetMixin,
-    css?: string,
-    // web nested
-    [string]: ZacsStylesheetStylesetWeb,
-  }>
+type ZacsStylesheetStylesetWeb = $ReadOnly<{
+  ...CSSBasicStylesheet,
+  _mixin?: ZacsStylesheetMixin,
+  css?: string,
+  // web nested
+  [string]: ZacsStylesheetStylesetWeb,
+}>
 
-  declare type ZacsStylesheetStylesetNative = $ReadOnly<{
-    ...ReactNativeBasicStylesheet,
-    _mixin?: ZacsStylesheetMixin,
-  }>
+type ZacsStylesheetStylesetNative = $ReadOnly<{
+  ...ReactNativeBasicStylesheet,
+  _mixin?: ZacsStylesheetMixin,
+}>
 
-  declare type ZacsStylesheetStyleset = $ReadOnly<{
-    _mixin?: ZacsStylesheetMixin,
-    native?: ZacsStylesheetStylesetNative,
-    ios?: ZacsStylesheetStylesetNative,
-    android?: ZacsStylesheetStylesetNative,
-    web?: ZacsStylesheetStylesetWeb,
-    css?: string,
-    ...BasicStylesheet,
-    // web nested
-    [string]: ZacsStylesheetStylesetWeb,
-  }>
+type ZacsStylesheetStyleset = $ReadOnly<{
+  _mixin?: ZacsStylesheetMixin,
+  native?: ZacsStylesheetStylesetNative,
+  ios?: ZacsStylesheetStylesetNative,
+  android?: ZacsStylesheetStylesetNative,
+  web?: ZacsStylesheetStylesetWeb,
+  css?: string,
+  ...BasicStylesheet,
+  // web nested
+  [string]: ZacsStylesheetStylesetWeb,
+}>
 
-  declare type ZacsStylesheet = $Exact<{
-    [string]: ZacsStylesheetStyleset,
-    css?: string,
-  }>
+type ZacsStylesheet = $Exact<{
+  [string]: ZacsStylesheetStyleset,
+  css?: string,
+}>
 
-  // TODO: Fix return type
-  declare type ZacsStylesheetFunction = (ZacsStylesheet) => $Exact<{ [string]: string }>
+// TODO: Fix return type
+type ZacsStylesheetFunction = (ZacsStylesheet) => $Exact<{ [string]: string }>
 
-  declare module.exports: {
-    // TODO: Return components with the right prop types typed out (inherit prop types from component being styles + add conditionalStyles & style attributes)
-    view: ZacsViewFunction,
-    text: ZacsTextFunction,
-    styled: ZacsStyledFunction,
-    createView: ZacsCreateViewFunction,
-    createText: ZacsCreateTextFunction,
-    createStyled: ZacsCreateStyledFunction,
-    stylesheet: ZacsStylesheetFunction,
-    css: (_strings: string[], ..._exprs: Array<any>) => string,
-  }
-
-  declare type ReactNativeBasicStylesheet = $Exact<{
-    alignContent?: string | number,
-    alignItems?: string | number,
-    alignSelf?: string | number,
-    aspectRatio?: string | number,
-    backfaceVisibility?: string | number,
-    backgroundColor?: string | number,
-    borderBottomColor?: string | number,
-    borderBottomLeftRadius?: string | number,
-    borderBottomRightRadius?: string | number,
-    borderBottomWidth?: string | number,
-    borderColor?: string | number,
-    borderLeftColor?: string | number,
-    borderLeftWidth?: string | number,
-    borderRadius?: string | number,
-    borderRightColor?: string | number,
-    borderRightWidth?: string | number,
-    borderStyle?: string | number,
-    borderTopColor?: string | number,
-    borderTopLeftRadius?: string | number,
-    borderTopRightRadius?: string | number,
-    borderTopWidth?: string | number,
-    borderWidth?: string | number,
-    bottom?: string | number,
-    color?: string | number,
-    decomposedMatrix?: string | number,
-    direction?: string | number,
-    display?: string | number,
-    elevation?: string | number,
-    flex?: string | number,
-    flexBasis?: string | number,
-    flexDirection?: string | number,
-    flexGrow?: string | number,
-    flexShrink?: string | number,
-    flexWrap?: string | number,
-    fontFamily?: string | number,
-    fontSize?: string | number,
-    fontStyle?: string | number,
-    fontVariant?: string[],
-    fontWeight?: string | number,
-    height?: string | number,
-    includeFontPadding?: string | number,
-    justifyContent?: string | number,
-    left?: string | number,
-    letterSpacing?: string | number,
-    lineHeight?: string | number,
-    margin?: string | number,
-    marginBottom?: string | number,
-    marginHorizontal?: string | number,
-    marginLeft?: string | number,
-    marginRight?: string | number,
-    marginTop?: string | number,
-    marginVertical?: string | number,
-    maxHeight?: string | number,
-    maxWidth?: string | number,
-    minHeight?: string | number,
-    minWidth?: string | number,
-    opacity?: string | number,
-    overflow?: string | number,
-    overlayColor?: string | number,
-    padding?: string | number,
-    paddingBottom?: string | number,
-    paddingHorizontal?: string | number,
-    paddingLeft?: string | number,
-    paddingRight?: string | number,
-    paddingTop?: string | number,
-    paddingVertical?: string | number,
-    position?: string | number,
-    resizeMode?: string | number,
-    right?: string | number,
-    rotation?: string | number,
-    scaleX?: string | number,
-    scaleY?: string | number,
-    shadowColor?: string | number,
-    shadowOffset?: $FlowFixMe,
-    shadowOpacity?: string | number,
-    shadowRadius?: string | number,
-    textAlign?: string | number,
-    textAlignVertical?: string | number,
-    textDecorationColor?: string | number,
-    textDecorationLine?: string | number,
-    textDecorationStyle?: string | number,
-    textShadowColor?: string | number,
-    textShadowOffset?: $FlowFixMe,
-    textShadowRadius?: string | number,
-    tintColor?: string | number,
-    top?: string | number,
-    transform?: $FlowFixMe,
-    transformMatrix?: string | number,
-    translateX?: string | number,
-    translateY?: string | number,
-    width?: string | number,
-    writingDirection?: string | number,
-    zIndex?: string | number,
-  }>
-
-  declare type ReactNativeStyleAttributeName =
-    | 'alignContent'
-    | 'alignItems'
-    | 'alignSelf'
-    | 'aspectRatio'
-    | 'backfaceVisibility'
-    | 'backgroundColor'
-    | 'borderBottomColor'
-    | 'borderBottomLeftRadius'
-    | 'borderBottomRightRadius'
-    | 'borderBottomWidth'
-    | 'borderColor'
-    | 'borderLeftColor'
-    | 'borderLeftWidth'
-    | 'borderRadius'
-    | 'borderRightColor'
-    | 'borderRightWidth'
-    | 'borderStyle'
-    | 'borderTopColor'
-    | 'borderTopLeftRadius'
-    | 'borderTopRightRadius'
-    | 'borderTopWidth'
-    | 'borderWidth'
-    | 'bottom'
-    | 'color'
-    | 'decomposedMatrix'
-    | 'direction'
-    | 'display'
-    | 'elevation'
-    | 'flex'
-    | 'flexBasis'
-    | 'flexDirection'
-    | 'flexGrow'
-    | 'flexShrink'
-    | 'flexWrap'
-    | 'fontFamily'
-    | 'fontSize'
-    | 'fontStyle'
-    | 'fontVariant'
-    | 'fontWeight'
-    | 'height'
-    | 'includeFontPadding'
-    | 'justifyContent'
-    | 'left'
-    | 'letterSpacing'
-    | 'lineHeight'
-    | 'margin'
-    | 'marginBottom'
-    | 'marginHorizontal'
-    | 'marginLeft'
-    | 'marginRight'
-    | 'marginTop'
-    | 'marginVertical'
-    | 'maxHeight'
-    | 'maxWidth'
-    | 'minHeight'
-    | 'minWidth'
-    | 'opacity'
-    | 'overflow'
-    | 'overlayColor'
-    | 'padding'
-    | 'paddingBottom'
-    | 'paddingHorizontal'
-    | 'paddingLeft'
-    | 'paddingRight'
-    | 'paddingTop'
-    | 'paddingVertical'
-    | 'position'
-    | 'resizeMode'
-    | 'right'
-    | 'rotation'
-    | 'scaleX'
-    | 'scaleY'
-    | 'shadowColor'
-    | 'shadowOffset'
-    | 'shadowOpacity'
-    | 'shadowRadius'
-    | 'textAlign'
-    | 'textAlignVertical'
-    | 'textDecorationColor'
-    | 'textDecorationLine'
-    | 'textDecorationStyle'
-    | 'textShadowColor'
-    | 'textShadowOffset'
-    | 'textShadowRadius'
-    | 'tintColor'
-    | 'top'
-    | 'transform'
-    | 'transformMatrix'
-    | 'translateX'
-    | 'translateY'
-    | 'width'
-    | 'writingDirection'
-    | 'zIndex'
-
-  // List from https://github.com/frenic/csstype
-  declare type CSSBasicStylesheet = $Exact<{
-    alignContent?: string | number,
-    alignItems?: string | number,
-    alignSelf?: string | number,
-    animationDelay?: string | number,
-    animationDirection?: string | number,
-    animationDuration?: string | number,
-    animationFillMode?: string | number,
-    animationIterationCount?: string | number,
-    animationName?: string | number,
-    animationPlayState?: string | number,
-    animationTimingFunction?: string | number,
-    appearance?: string | number,
-    backdropFilter?: string | number,
-    backfaceVisibility?: string | number,
-    backgroundAttachment?: string | number,
-    backgroundBlendMode?: string | number,
-    backgroundClip?: string | number,
-    backgroundColor?: string | number,
-    backgroundImage?: string | number,
-    backgroundOrigin?: string | number,
-    backgroundPosition?: string | number,
-    backgroundPositionX?: string | number,
-    backgroundPositionY?: string | number,
-    backgroundRepeat?: string | number,
-    backgroundSize?: string | number,
-    blockOverflow?: string | number,
-    blockSize?: string | number,
-    borderBlockColor?: string | number,
-    borderBlockEndColor?: string | number,
-    borderBlockEndStyle?: string | number,
-    borderBlockEndWidth?: string | number,
-    borderBlockStartColor?: string | number,
-    borderBlockStartStyle?: string | number,
-    borderBlockStartWidth?: string | number,
-    borderBlockStyle?: string | number,
-    borderBlockWidth?: string | number,
-    borderBottomColor?: string | number,
-    borderBottomLeftRadius?: string | number,
-    borderBottomRightRadius?: string | number,
-    borderBottomStyle?: string | number,
-    borderBottomWidth?: string | number,
-    borderCollapse?: string | number,
-    borderEndEndRadius?: string | number,
-    borderEndStartRadius?: string | number,
-    borderImageOutset?: string | number,
-    borderImageRepeat?: string | number,
-    borderImageSlice?: string | number,
-    borderImageSource?: string | number,
-    borderImageWidth?: string | number,
-    borderInlineColor?: string | number,
-    borderInlineEndColor?: string | number,
-    borderInlineEndStyle?: string | number,
-    borderInlineEndWidth?: string | number,
-    borderInlineStartColor?: string | number,
-    borderInlineStartStyle?: string | number,
-    borderInlineStartWidth?: string | number,
-    borderInlineStyle?: string | number,
-    borderInlineWidth?: string | number,
-    borderLeftColor?: string | number,
-    borderLeftStyle?: string | number,
-    borderLeftWidth?: string | number,
-    borderRightColor?: string | number,
-    borderRightStyle?: string | number,
-    borderRightWidth?: string | number,
-    borderSpacing?: string | number,
-    borderStartEndRadius?: string | number,
-    borderStartStartRadius?: string | number,
-    borderTopColor?: string | number,
-    borderTopLeftRadius?: string | number,
-    borderTopRightRadius?: string | number,
-    borderTopStyle?: string | number,
-    borderTopWidth?: string | number,
-    bottom?: string | number,
-    boxDecorationBreak?: string | number,
-    boxShadow?: string | number,
-    boxSizing?: string | number,
-    breakAfter?: string | number,
-    breakBefore?: string | number,
-    breakInside?: string | number,
-    captionSide?: string | number,
-    caretColor?: string | number,
-    clear?: string | number,
-    clipPath?: string | number,
-    color?: string | number,
-    colorAdjust?: string | number,
-    columnCount?: string | number,
-    columnFill?: string | number,
-    columnGap?: string | number,
-    columnRuleColor?: string | number,
-    columnRuleStyle?: string | number,
-    columnRuleWidth?: string | number,
-    columnSpan?: string | number,
-    columnWidth?: string | number,
-    contain?: string | number,
-    content?: string | number,
-    contentVisibility?: string,
-    counterIncrement?: string | number,
-    counterReset?: string | number,
-    counterSet?: string | number,
-    cursor?: string | number,
-    direction?: string | number,
-    display?: string | number,
-    emptyCells?: string | number,
-    filter?: string | number,
-    flexBasis?: string | number,
-    flexDirection?: string | number,
-    flexGrow?: string | number,
-    flexShrink?: string | number,
-    flexWrap?: string | number,
-    float?: string | number,
-    fontFamily?: string | number,
-    fontFeatureSettings?: string | number,
-    fontKerning?: string | number,
-    fontLanguageOverride?: string | number,
-    fontOpticalSizing?: string | number,
-    fontSize?: string | number,
-    fontSizeAdjust?: string | number,
-    fontStretch?: string | number,
-    fontStyle?: string | number,
-    fontSynthesis?: string | number,
-    fontVariant?: string | number,
-    fontVariantCaps?: string | number,
-    fontVariantEastAsian?: string | number,
-    fontVariantLigatures?: string | number,
-    fontVariantNumeric?: string | number,
-    fontVariantPosition?: string | number,
-    fontVariationSettings?: string | number,
-    fontWeight?: string | number,
-    gridAutoColumns?: string | number,
-    gridAutoFlow?: string | number,
-    gridAutoRows?: string | number,
-    gridColumnEnd?: string | number,
-    gridColumnStart?: string | number,
-    gridRowEnd?: string | number,
-    gridRowStart?: string | number,
-    gridTemplateAreas?: string | number,
-    gridTemplateColumns?: string | number,
-    gridTemplateRows?: string | number,
-    hangingPunctuation?: string | number,
-    height?: string | number,
-    hyphens?: string | number,
-    imageOrientation?: string | number,
-    imageRendering?: string | number,
-    imageResolution?: string | number,
-    initialLetter?: string | number,
-    inlineSize?: string | number,
-    inset?: string | number,
-    insetBlock?: string | number,
-    insetBlockEnd?: string | number,
-    insetBlockStart?: string | number,
-    insetInline?: string | number,
-    insetInlineEnd?: string | number,
-    insetInlineStart?: string | number,
-    isolation?: string | number,
-    justifyContent?: string | number,
-    justifyItems?: string | number,
-    justifySelf?: string | number,
-    left?: string | number,
-    letterSpacing?: string | number,
-    lineBreak?: string | number,
-    lineHeight?: string | number,
-    lineHeightStep?: string | number,
-    listStyleImage?: string | number,
-    listStylePosition?: string | number,
-    listStyleType?: string | number,
-    marginBlock?: string | number,
-    marginBlockEnd?: string | number,
-    marginBlockStart?: string | number,
-    marginBottom?: string | number,
-    marginInline?: string | number,
-    marginInlineEnd?: string | number,
-    marginInlineStart?: string | number,
-    marginLeft?: string | number,
-    marginRight?: string | number,
-    marginTop?: string | number,
-    maskBorderMode?: string | number,
-    maskBorderOutset?: string | number,
-    maskBorderRepeat?: string | number,
-    maskBorderSlice?: string | number,
-    maskBorderSource?: string | number,
-    maskBorderWidth?: string | number,
-    maskClip?: string | number,
-    maskComposite?: string | number,
-    maskImage?: string | number,
-    maskMode?: string | number,
-    maskOrigin?: string | number,
-    maskPosition?: string | number,
-    maskRepeat?: string | number,
-    maskSize?: string | number,
-    maskType?: string | number,
-    maxBlockSize?: string | number,
-    maxHeight?: string | number,
-    maxInlineSize?: string | number,
-    maxLines?: string | number,
-    maxWidth?: string | number,
-    minBlockSize?: string | number,
-    minHeight?: string | number,
-    minInlineSize?: string | number,
-    minWidth?: string | number,
-    mixBlendMode?: string | number,
-    motionDistance?: string | number,
-    motionPath?: string | number,
-    motionRotation?: string | number,
-    objectFit?: string | number,
-    objectPosition?: string | number,
-    offsetAnchor?: string | number,
-    offsetDistance?: string | number,
-    offsetPath?: string | number,
-    offsetPosition?: string | number,
-    offsetRotate?: string | number,
-    offsetRotation?: string | number,
-    opacity?: string | number,
-    order?: string | number,
-    orphans?: string | number,
-    outlineColor?: string | number,
-    outlineOffset?: string | number,
-    outlineStyle?: string | number,
-    outlineWidth?: string | number,
-    overflow?: string | number,
-    overflowAnchor?: string | number,
-    overflowBlock?: string | number,
-    overflowClipBox?: string | number,
-    overflowInline?: string | number,
-    overflowWrap?: string | number,
-    overflowX?: string | number,
-    overflowY?: string | number,
-    overscrollBehavior?: string | number,
-    overscrollBehaviorX?: string | number,
-    overscrollBehaviorY?: string | number,
-    paddingBlock?: string | number,
-    paddingBlockEnd?: string | number,
-    paddingBlockStart?: string | number,
-    paddingBottom?: string | number,
-    paddingInline?: string | number,
-    paddingInlineEnd?: string | number,
-    paddingInlineStart?: string | number,
-    paddingLeft?: string | number,
-    paddingRight?: string | number,
-    paddingTop?: string | number,
-    pageBreakAfter?: string | number,
-    pageBreakBefore?: string | number,
-    pageBreakInside?: string | number,
-    paintOrder?: string | number,
-    perspective?: string | number,
-    perspectiveOrigin?: string | number,
-    placeContent?: string | number,
-    pointerEvents?: string | number,
-    position?: string | number,
-    quotes?: string | number,
-    resize?: string | number,
-    right?: string | number,
-    rotate?: string | number,
-    rowGap?: string | number,
-    rubyAlign?: string | number,
-    rubyMerge?: string | number,
-    rubyPosition?: string | number,
-    scale?: string | number,
-    scrollBehavior?: string | number,
-    scrollMargin?: string | number,
-    scrollMarginBlock?: string | number,
-    scrollMarginBlockEnd?: string | number,
-    scrollMarginBlockStart?: string | number,
-    scrollMarginBottom?: string | number,
-    scrollMarginInline?: string | number,
-    scrollMarginInlineEnd?: string | number,
-    scrollMarginInlineStart?: string | number,
-    scrollMarginLeft?: string | number,
-    scrollMarginRight?: string | number,
-    scrollMarginTop?: string | number,
-    scrollPadding?: string | number,
-    scrollPaddingBlock?: string | number,
-    scrollPaddingBlockEnd?: string | number,
-    scrollPaddingBlockStart?: string | number,
-    scrollPaddingBottom?: string | number,
-    scrollPaddingInline?: string | number,
-    scrollPaddingInlineEnd?: string | number,
-    scrollPaddingInlineStart?: string | number,
-    scrollPaddingLeft?: string | number,
-    scrollPaddingRight?: string | number,
-    scrollPaddingTop?: string | number,
-    scrollSnapAlign?: string | number,
-    scrollSnapStop?: string | number,
-    scrollSnapType?: string | number,
-    scrollbarColor?: string | number,
-    scrollbarWidth?: string | number,
-    shapeImageThreshold?: string | number,
-    shapeMargin?: string | number,
-    shapeOutside?: string | number,
-    tabSize?: string | number,
-    tableLayout?: string | number,
-    textAlign?: string | number,
-    textAlignLast?: string | number,
-    textCombineUpright?: string | number,
-    textDecorationColor?: string | number,
-    textDecorationLine?: string | number,
-    textDecorationSkip?: string | number,
-    textDecorationSkipInk?: string | number,
-    textDecorationStyle?: string | number,
-    textEmphasisColor?: string | number,
-    textEmphasisPosition?: string | number,
-    textEmphasisStyle?: string | number,
-    textIndent?: string | number,
-    textJustify?: string | number,
-    textOrientation?: string | number,
-    textOverflow?: string | number,
-    textRendering?: string | number,
-    textShadow?: string | number,
-    textSizeAdjust?: string | number,
-    textTransform?: string | number,
-    textUnderlinePosition?: string | number,
-    top?: string | number,
-    touchAction?: string | number,
-    transform?: string | number,
-    transformBox?: string | number,
-    transformOrigin?: string | number,
-    transformStyle?: string | number,
-    transitionDelay?: string | number,
-    transitionDuration?: string | number,
-    transitionProperty?: string | number,
-    transitionTimingFunction?: string | number,
-    translate?: string | number,
-    unicodeBidi?: string | number,
-    userSelect?: string | number,
-    verticalAlign?: string | number,
-    visibility?: string | number,
-    whiteSpace?: string | number,
-    widows?: string | number,
-    width?: string | number,
-    willChange?: string | number,
-    wordBreak?: string | number,
-    wordSpacing?: string | number,
-    wordWrap?: string | number,
-    writingMode?: string | number,
-    zIndex?: string | number,
-    zoom?: string | number,
-    all?: string | number,
-    animation?: string | number,
-    background?: string | number,
-    border?: string | number,
-    borderBlock?: string | number,
-    borderBlockEnd?: string | number,
-    borderBlockStart?: string | number,
-    borderBottom?: string | number,
-    borderColor?: string | number,
-    borderImage?: string | number,
-    borderInline?: string | number,
-    borderInlineEnd?: string | number,
-    borderInlineStart?: string | number,
-    borderLeft?: string | number,
-    borderRadius?: string | number,
-    borderRight?: string | number,
-    borderStyle?: string | number,
-    borderTop?: string | number,
-    borderWidth?: string | number,
-    columnRule?: string | number,
-    columns?: string | number,
-    flex?: string | number,
-    flexFlow?: string | number,
-    font?: string | number,
-    gap?: string | number,
-    grid?: string | number,
-    gridArea?: string | number,
-    gridColumn?: string | number,
-    gridRow?: string | number,
-    gridTemplate?: string | number,
-    lineClamp?: string | number,
-    listStyle?: string | number,
-    margin?: string | number,
-    mask?: string | number,
-    maskBorder?: string | number,
-    motion?: string | number,
-    offset?: string | number,
-    outline?: string | number,
-    padding?: string | number,
-    placeItems?: string | number,
-    placeSelf?: string | number,
-    textDecoration?: string | number,
-    textEmphasis?: string | number,
-    transition?: string | number,
-    MozAnimationDelay?: string | number,
-    MozAnimationDirection?: string | number,
-    MozAnimationDuration?: string | number,
-    MozAnimationFillMode?: string | number,
-    MozAnimationIterationCount?: string | number,
-    MozAnimationName?: string | number,
-    MozAnimationPlayState?: string | number,
-    MozAnimationTimingFunction?: string | number,
-    MozAppearance?: string | number,
-    MozBackfaceVisibility?: string | number,
-    MozBorderBottomColors?: string | number,
-    MozBorderEndColor?: string | number,
-    MozBorderEndStyle?: string | number,
-    MozBorderEndWidth?: string | number,
-    MozBorderLeftColors?: string | number,
-    MozBorderRightColors?: string | number,
-    MozBorderStartColor?: string | number,
-    MozBorderStartStyle?: string | number,
-    MozBorderTopColors?: string | number,
-    MozBoxSizing?: string | number,
-    MozColumnCount?: string | number,
-    MozColumnFill?: string | number,
-    MozColumnGap?: string | number,
-    MozColumnRuleColor?: string | number,
-    MozColumnRuleStyle?: string | number,
-    MozColumnRuleWidth?: string | number,
-    MozColumnWidth?: string | number,
-    MozContextProperties?: string | number,
-    MozFloatEdge?: string | number,
-    MozFontFeatureSettings?: string | number,
-    MozFontLanguageOverride?: string | number,
-    MozForceBrokenImageIcon?: string | number,
-    MozHyphens?: string | number,
-    MozImageRegion?: string | number,
-    MozMarginEnd?: string | number,
-    MozMarginStart?: string | number,
-    MozOrient?: string | number,
-    MozOutlineRadiusBottomleft?: string | number,
-    MozOutlineRadiusBottomright?: string | number,
-    MozOutlineRadiusTopleft?: string | number,
-    MozOutlineRadiusTopright?: string | number,
-    MozPaddingEnd?: string | number,
-    MozPaddingStart?: string | number,
-    MozPerspective?: string | number,
-    MozPerspectiveOrigin?: string | number,
-    MozStackSizing?: string | number,
-    MozTabSize?: string | number,
-    MozTextSizeAdjust?: string | number,
-    MozTransformOrigin?: string | number,
-    MozTransformStyle?: string | number,
-    MozTransitionDelay?: string | number,
-    MozTransitionDuration?: string | number,
-    MozTransitionProperty?: string | number,
-    MozTransitionTimingFunction?: string | number,
-    MozUserFocus?: string | number,
-    MozUserModify?: string | number,
-    MozUserSelect?: string | number,
-    MozWindowDragging?: string | number,
-    msAccelerator?: string | number,
-    msAlignSelf?: string | number,
-    msBlockProgression?: string | number,
-    msContentZoomChaining?: string | number,
-    msContentZoomLimitMax?: string | number,
-    msContentZoomLimitMin?: string | number,
-    msContentZoomSnapPoints?: string | number,
-    msContentZoomSnapType?: string | number,
-    msContentZooming?: string | number,
-    msFilter?: string | number,
-    msFlexDirection?: string | number,
-    msFlexPositive?: string | number,
-    msFlowFrom?: string | number,
-    msFlowInto?: string | number,
-    msGridColumns?: string | number,
-    msGridRows?: string | number,
-    msHighContrastAdjust?: string | number,
-    msHyphenateLimitChars?: string | number,
-    msHyphenateLimitLines?: string | number,
-    msHyphenateLimitZone?: string | number,
-    msHyphens?: string | number,
-    msImeAlign?: string | number,
-    msLineBreak?: string | number,
-    msOrder?: string | number,
-    msOverflowStyle?: string | number,
-    msOverflowX?: string | number,
-    msOverflowY?: string | number,
-    msScrollChaining?: string | number,
-    msScrollLimitXMax?: string | number,
-    msScrollLimitXMin?: string | number,
-    msScrollLimitYMax?: string | number,
-    msScrollLimitYMin?: string | number,
-    msScrollRails?: string | number,
-    msScrollSnapPointsX?: string | number,
-    msScrollSnapPointsY?: string | number,
-    msScrollSnapType?: string | number,
-    msScrollTranslation?: string | number,
-    msScrollbar3dlightColor?: string | number,
-    msScrollbarArrowColor?: string | number,
-    msScrollbarBaseColor?: string | number,
-    msScrollbarDarkshadowColor?: string | number,
-    msScrollbarFaceColor?: string | number,
-    msScrollbarHighlightColor?: string | number,
-    msScrollbarShadowColor?: string | number,
-    msScrollbarTrackColor?: string | number,
-    msTextAutospace?: string | number,
-    msTextCombineHorizontal?: string | number,
-    msTextOverflow?: string | number,
-    msTouchAction?: string | number,
-    msTouchSelect?: string | number,
-    msTransform?: string | number,
-    msTransformOrigin?: string | number,
-    msTransitionDelay?: string | number,
-    msTransitionDuration?: string | number,
-    msTransitionProperty?: string | number,
-    msTransitionTimingFunction?: string | number,
-    msUserSelect?: string | number,
-    msWordBreak?: string | number,
-    msWrapFlow?: string | number,
-    msWrapMargin?: string | number,
-    msWrapThrough?: string | number,
-    msWritingMode?: string | number,
-    OObjectFit?: string | number,
-    OObjectPosition?: string | number,
-    OTabSize?: string | number,
-    OTextOverflow?: string | number,
-    OTransformOrigin?: string | number,
-    WebkitAlignContent?: string | number,
-    WebkitAlignItems?: string | number,
-    WebkitAlignSelf?: string | number,
-    WebkitAnimationDelay?: string | number,
-    WebkitAnimationDirection?: string | number,
-    WebkitAnimationDuration?: string | number,
-    WebkitAnimationFillMode?: string | number,
-    WebkitAnimationIterationCount?: string | number,
-    WebkitAnimationName?: string | number,
-    WebkitAnimationPlayState?: string | number,
-    WebkitAnimationTimingFunction?: string | number,
-    WebkitAppearance?: string | number,
-    WebkitBackdropFilter?: string | number,
-    WebkitBackfaceVisibility?: string | number,
-    WebkitBackgroundClip?: string | number,
-    WebkitBackgroundOrigin?: string | number,
-    WebkitBackgroundSize?: string | number,
-    WebkitBorderBeforeColor?: string | number,
-    WebkitBorderBeforeStyle?: string | number,
-    WebkitBorderBeforeWidth?: string | number,
-    WebkitBorderBottomLeftRadius?: string | number,
-    WebkitBorderBottomRightRadius?: string | number,
-    WebkitBorderImageSlice?: string | number,
-    WebkitBorderTopLeftRadius?: string | number,
-    WebkitBorderTopRightRadius?: string | number,
-    WebkitBoxDecorationBreak?: string | number,
-    WebkitBoxReflect?: string | number,
-    WebkitBoxShadow?: string | number,
-    WebkitBoxSizing?: string | number,
-    WebkitClipPath?: string | number,
-    WebkitColorAdjust?: string | number,
-    WebkitColumnCount?: string | number,
-    WebkitColumnFill?: string | number,
-    WebkitColumnGap?: string | number,
-    WebkitColumnRuleColor?: string | number,
-    WebkitColumnRuleStyle?: string | number,
-    WebkitColumnRuleWidth?: string | number,
-    WebkitColumnSpan?: string | number,
-    WebkitColumnWidth?: string | number,
-    WebkitFilter?: string | number,
-    WebkitFlexBasis?: string | number,
-    WebkitFlexDirection?: string | number,
-    WebkitFlexGrow?: string | number,
-    WebkitFlexShrink?: string | number,
-    WebkitFlexWrap?: string | number,
-    WebkitFontFeatureSettings?: string | number,
-    WebkitFontKerning?: string | number,
-    WebkitFontVariantLigatures?: string | number,
-    WebkitHyphens?: string | number,
-    WebkitJustifyContent?: string | number,
-    WebkitLineBreak?: string | number,
-    WebkitLineClamp?: string | number,
-    WebkitMarginEnd?: string | number,
-    WebkitMarginStart?: string | number,
-    WebkitMaskAttachment?: string | number,
-    WebkitMaskClip?: string | number,
-    WebkitMaskComposite?: string | number,
-    WebkitMaskImage?: string | number,
-    WebkitMaskOrigin?: string | number,
-    WebkitMaskPosition?: string | number,
-    WebkitMaskPositionX?: string | number,
-    WebkitMaskPositionY?: string | number,
-    WebkitMaskRepeat?: string | number,
-    WebkitMaskRepeatX?: string | number,
-    WebkitMaskRepeatY?: string | number,
-    WebkitMaskSize?: string | number,
-    WebkitMaxInlineSize?: string | number,
-    WebkitOrder?: string | number,
-    WebkitOverflowScrolling?: string | number,
-    WebkitPaddingEnd?: string | number,
-    WebkitPaddingStart?: string | number,
-    WebkitPerspective?: string | number,
-    WebkitPerspectiveOrigin?: string | number,
-    WebkitScrollSnapType?: string | number,
-    WebkitShapeMargin?: string | number,
-    WebkitTapHighlightColor?: string | number,
-    WebkitTextCombine?: string | number,
-    WebkitTextDecorationColor?: string | number,
-    WebkitTextDecorationLine?: string | number,
-    WebkitTextDecorationSkip?: string | number,
-    WebkitTextDecorationStyle?: string | number,
-    WebkitTextEmphasisColor?: string | number,
-    WebkitTextEmphasisPosition?: string | number,
-    WebkitTextEmphasisStyle?: string | number,
-    WebkitTextFillColor?: string | number,
-    WebkitTextOrientation?: string | number,
-    WebkitTextSizeAdjust?: string | number,
-    WebkitTextStrokeColor?: string | number,
-    WebkitTextStrokeWidth?: string | number,
-    WebkitTouchCallout?: string | number,
-    WebkitTransform?: string | number,
-    WebkitTransformOrigin?: string | number,
-    WebkitTransformStyle?: string | number,
-    WebkitTransitionDelay?: string | number,
-    WebkitTransitionDuration?: string | number,
-    WebkitTransitionProperty?: string | number,
-    WebkitTransitionTimingFunction?: string | number,
-    WebkitUserModify?: string | number,
-    WebkitUserSelect?: string | number,
-    WebkitWritingMode?: string | number,
-    MozAnimation?: string | number,
-    MozBorderImage?: string | number,
-    MozColumnRule?: string | number,
-    MozColumns?: string | number,
-    MozTransition?: string | number,
-    msContentZoomLimit?: string | number,
-    msContentZoomSnap?: string | number,
-    msFlex?: string | number,
-    msScrollLimit?: string | number,
-    msScrollSnapX?: string | number,
-    msScrollSnapY?: string | number,
-    msTransition?: string | number,
-    WebkitAnimation?: string | number,
-    WebkitBorderBefore?: string | number,
-    WebkitBorderImage?: string | number,
-    WebkitBorderRadius?: string | number,
-    WebkitColumnRule?: string | number,
-    WebkitColumns?: string | number,
-    WebkitFlex?: string | number,
-    WebkitFlexFlow?: string | number,
-    WebkitMask?: string | number,
-    WebkitTextEmphasis?: string | number,
-    WebkitTextStroke?: string | number,
-    WebkitTransition?: string | number,
-  }>
-
-  declare type CSSPropertyName =
-    | 'alignContent'
-    | 'alignItems'
-    | 'alignSelf'
-    | 'animationDelay'
-    | 'animationDirection'
-    | 'animationDuration'
-    | 'animationFillMode'
-    | 'animationIterationCount'
-    | 'animationName'
-    | 'animationPlayState'
-    | 'animationTimingFunction'
-    | 'appearance'
-    | 'backdropFilter'
-    | 'backfaceVisibility'
-    | 'backgroundAttachment'
-    | 'backgroundBlendMode'
-    | 'backgroundClip'
-    | 'backgroundColor'
-    | 'backgroundImage'
-    | 'backgroundOrigin'
-    | 'backgroundPosition'
-    | 'backgroundPositionX'
-    | 'backgroundPositionY'
-    | 'backgroundRepeat'
-    | 'backgroundSize'
-    | 'blockOverflow'
-    | 'blockSize'
-    | 'borderBlockColor'
-    | 'borderBlockEndColor'
-    | 'borderBlockEndStyle'
-    | 'borderBlockEndWidth'
-    | 'borderBlockStartColor'
-    | 'borderBlockStartStyle'
-    | 'borderBlockStartWidth'
-    | 'borderBlockStyle'
-    | 'borderBlockWidth'
-    | 'borderBottomColor'
-    | 'borderBottomLeftRadius'
-    | 'borderBottomRightRadius'
-    | 'borderBottomStyle'
-    | 'borderBottomWidth'
-    | 'borderCollapse'
-    | 'borderEndEndRadius'
-    | 'borderEndStartRadius'
-    | 'borderImageOutset'
-    | 'borderImageRepeat'
-    | 'borderImageSlice'
-    | 'borderImageSource'
-    | 'borderImageWidth'
-    | 'borderInlineColor'
-    | 'borderInlineEndColor'
-    | 'borderInlineEndStyle'
-    | 'borderInlineEndWidth'
-    | 'borderInlineStartColor'
-    | 'borderInlineStartStyle'
-    | 'borderInlineStartWidth'
-    | 'borderInlineStyle'
-    | 'borderInlineWidth'
-    | 'borderLeftColor'
-    | 'borderLeftStyle'
-    | 'borderLeftWidth'
-    | 'borderRightColor'
-    | 'borderRightStyle'
-    | 'borderRightWidth'
-    | 'borderSpacing'
-    | 'borderStartEndRadius'
-    | 'borderStartStartRadius'
-    | 'borderTopColor'
-    | 'borderTopLeftRadius'
-    | 'borderTopRightRadius'
-    | 'borderTopStyle'
-    | 'borderTopWidth'
-    | 'bottom'
-    | 'boxDecorationBreak'
-    | 'boxShadow'
-    | 'boxSizing'
-    | 'breakAfter'
-    | 'breakBefore'
-    | 'breakInside'
-    | 'captionSide'
-    | 'caretColor'
-    | 'clear'
-    | 'clipPath'
-    | 'color'
-    | 'colorAdjust'
-    | 'columnCount'
-    | 'columnFill'
-    | 'columnGap'
-    | 'columnRuleColor'
-    | 'columnRuleStyle'
-    | 'columnRuleWidth'
-    | 'columnSpan'
-    | 'columnWidth'
-    | 'contain'
-    | 'content'
-    | 'contentVisibility'
-    | 'counterIncrement'
-    | 'counterReset'
-    | 'counterSet'
-    | 'cursor'
-    | 'direction'
-    | 'display'
-    | 'emptyCells'
-    | 'filter'
-    | 'flexBasis'
-    | 'flexDirection'
-    | 'flexGrow'
-    | 'flexShrink'
-    | 'flexWrap'
-    | 'float'
-    | 'fontFamily'
-    | 'fontFeatureSettings'
-    | 'fontKerning'
-    | 'fontLanguageOverride'
-    | 'fontOpticalSizing'
-    | 'fontSize'
-    | 'fontSizeAdjust'
-    | 'fontStretch'
-    | 'fontStyle'
-    | 'fontSynthesis'
-    | 'fontVariant'
-    | 'fontVariantCaps'
-    | 'fontVariantEastAsian'
-    | 'fontVariantLigatures'
-    | 'fontVariantNumeric'
-    | 'fontVariantPosition'
-    | 'fontVariationSettings'
-    | 'fontWeight'
-    | 'gridAutoColumns'
-    | 'gridAutoFlow'
-    | 'gridAutoRows'
-    | 'gridColumnEnd'
-    | 'gridColumnStart'
-    | 'gridRowEnd'
-    | 'gridRowStart'
-    | 'gridTemplateAreas'
-    | 'gridTemplateColumns'
-    | 'gridTemplateRows'
-    | 'hangingPunctuation'
-    | 'height'
-    | 'hyphens'
-    | 'imageOrientation'
-    | 'imageRendering'
-    | 'imageResolution'
-    | 'initialLetter'
-    | 'inlineSize'
-    | 'inset'
-    | 'insetBlock'
-    | 'insetBlockEnd'
-    | 'insetBlockStart'
-    | 'insetInline'
-    | 'insetInlineEnd'
-    | 'insetInlineStart'
-    | 'isolation'
-    | 'justifyContent'
-    | 'justifyItems'
-    | 'justifySelf'
-    | 'left'
-    | 'letterSpacing'
-    | 'lineBreak'
-    | 'lineHeight'
-    | 'lineHeightStep'
-    | 'listStyleImage'
-    | 'listStylePosition'
-    | 'listStyleType'
-    | 'marginBlock'
-    | 'marginBlockEnd'
-    | 'marginBlockStart'
-    | 'marginBottom'
-    | 'marginInline'
-    | 'marginInlineEnd'
-    | 'marginInlineStart'
-    | 'marginLeft'
-    | 'marginRight'
-    | 'marginTop'
-    | 'maskBorderMode'
-    | 'maskBorderOutset'
-    | 'maskBorderRepeat'
-    | 'maskBorderSlice'
-    | 'maskBorderSource'
-    | 'maskBorderWidth'
-    | 'maskClip'
-    | 'maskComposite'
-    | 'maskImage'
-    | 'maskMode'
-    | 'maskOrigin'
-    | 'maskPosition'
-    | 'maskRepeat'
-    | 'maskSize'
-    | 'maskType'
-    | 'maxBlockSize'
-    | 'maxHeight'
-    | 'maxInlineSize'
-    | 'maxLines'
-    | 'maxWidth'
-    | 'minBlockSize'
-    | 'minHeight'
-    | 'minInlineSize'
-    | 'minWidth'
-    | 'mixBlendMode'
-    | 'motionDistance'
-    | 'motionPath'
-    | 'motionRotation'
-    | 'objectFit'
-    | 'objectPosition'
-    | 'offsetAnchor'
-    | 'offsetDistance'
-    | 'offsetPath'
-    | 'offsetPosition'
-    | 'offsetRotate'
-    | 'offsetRotation'
-    | 'opacity'
-    | 'order'
-    | 'orphans'
-    | 'outlineColor'
-    | 'outlineOffset'
-    | 'outlineStyle'
-    | 'outlineWidth'
-    | 'overflow'
-    | 'overflowAnchor'
-    | 'overflowBlock'
-    | 'overflowClipBox'
-    | 'overflowInline'
-    | 'overflowWrap'
-    | 'overflowX'
-    | 'overflowY'
-    | 'overscrollBehavior'
-    | 'overscrollBehaviorX'
-    | 'overscrollBehaviorY'
-    | 'paddingBlock'
-    | 'paddingBlockEnd'
-    | 'paddingBlockStart'
-    | 'paddingBottom'
-    | 'paddingInline'
-    | 'paddingInlineEnd'
-    | 'paddingInlineStart'
-    | 'paddingLeft'
-    | 'paddingRight'
-    | 'paddingTop'
-    | 'pageBreakAfter'
-    | 'pageBreakBefore'
-    | 'pageBreakInside'
-    | 'paintOrder'
-    | 'perspective'
-    | 'perspectiveOrigin'
-    | 'placeContent'
-    | 'pointerEvents'
-    | 'position'
-    | 'quotes'
-    | 'resize'
-    | 'right'
-    | 'rotate'
-    | 'rowGap'
-    | 'rubyAlign'
-    | 'rubyMerge'
-    | 'rubyPosition'
-    | 'scale'
-    | 'scrollBehavior'
-    | 'scrollMargin'
-    | 'scrollMarginBlock'
-    | 'scrollMarginBlockEnd'
-    | 'scrollMarginBlockStart'
-    | 'scrollMarginBottom'
-    | 'scrollMarginInline'
-    | 'scrollMarginInlineEnd'
-    | 'scrollMarginInlineStart'
-    | 'scrollMarginLeft'
-    | 'scrollMarginRight'
-    | 'scrollMarginTop'
-    | 'scrollPadding'
-    | 'scrollPaddingBlock'
-    | 'scrollPaddingBlockEnd'
-    | 'scrollPaddingBlockStart'
-    | 'scrollPaddingBottom'
-    | 'scrollPaddingInline'
-    | 'scrollPaddingInlineEnd'
-    | 'scrollPaddingInlineStart'
-    | 'scrollPaddingLeft'
-    | 'scrollPaddingRight'
-    | 'scrollPaddingTop'
-    | 'scrollSnapAlign'
-    | 'scrollSnapStop'
-    | 'scrollSnapType'
-    | 'scrollbarColor'
-    | 'scrollbarWidth'
-    | 'shapeImageThreshold'
-    | 'shapeMargin'
-    | 'shapeOutside'
-    | 'tabSize'
-    | 'tableLayout'
-    | 'textAlign'
-    | 'textAlignLast'
-    | 'textCombineUpright'
-    | 'textDecorationColor'
-    | 'textDecorationLine'
-    | 'textDecorationSkip'
-    | 'textDecorationSkipInk'
-    | 'textDecorationStyle'
-    | 'textEmphasisColor'
-    | 'textEmphasisPosition'
-    | 'textEmphasisStyle'
-    | 'textIndent'
-    | 'textJustify'
-    | 'textOrientation'
-    | 'textOverflow'
-    | 'textRendering'
-    | 'textShadow'
-    | 'textSizeAdjust'
-    | 'textTransform'
-    | 'textUnderlinePosition'
-    | 'top'
-    | 'touchAction'
-    | 'transform'
-    | 'transformBox'
-    | 'transformOrigin'
-    | 'transformStyle'
-    | 'transitionDelay'
-    | 'transitionDuration'
-    | 'transitionProperty'
-    | 'transitionTimingFunction'
-    | 'translate'
-    | 'unicodeBidi'
-    | 'userSelect'
-    | 'verticalAlign'
-    | 'visibility'
-    | 'whiteSpace'
-    | 'widows'
-    | 'width'
-    | 'willChange'
-    | 'wordBreak'
-    | 'wordSpacing'
-    | 'wordWrap'
-    | 'writingMode'
-    | 'zIndex'
-    | 'zoom'
-    | 'all'
-    | 'animation'
-    | 'background'
-    | 'border'
-    | 'borderBlock'
-    | 'borderBlockEnd'
-    | 'borderBlockStart'
-    | 'borderBottom'
-    | 'borderColor'
-    | 'borderImage'
-    | 'borderInline'
-    | 'borderInlineEnd'
-    | 'borderInlineStart'
-    | 'borderLeft'
-    | 'borderRadius'
-    | 'borderRight'
-    | 'borderStyle'
-    | 'borderTop'
-    | 'borderWidth'
-    | 'columnRule'
-    | 'columns'
-    | 'flex'
-    | 'flexFlow'
-    | 'font'
-    | 'gap'
-    | 'grid'
-    | 'gridArea'
-    | 'gridColumn'
-    | 'gridRow'
-    | 'gridTemplate'
-    | 'lineClamp'
-    | 'listStyle'
-    | 'margin'
-    | 'mask'
-    | 'maskBorder'
-    | 'motion'
-    | 'offset'
-    | 'outline'
-    | 'padding'
-    | 'placeItems'
-    | 'placeSelf'
-    | 'textDecoration'
-    | 'textEmphasis'
-    | 'transition'
-    | 'MozAnimationDelay'
-    | 'MozAnimationDirection'
-    | 'MozAnimationDuration'
-    | 'MozAnimationFillMode'
-    | 'MozAnimationIterationCount'
-    | 'MozAnimationName'
-    | 'MozAnimationPlayState'
-    | 'MozAnimationTimingFunction'
-    | 'MozAppearance'
-    | 'MozBackfaceVisibility'
-    | 'MozBorderBottomColors'
-    | 'MozBorderEndColor'
-    | 'MozBorderEndStyle'
-    | 'MozBorderEndWidth'
-    | 'MozBorderLeftColors'
-    | 'MozBorderRightColors'
-    | 'MozBorderStartColor'
-    | 'MozBorderStartStyle'
-    | 'MozBorderTopColors'
-    | 'MozBoxSizing'
-    | 'MozColumnCount'
-    | 'MozColumnFill'
-    | 'MozColumnGap'
-    | 'MozColumnRuleColor'
-    | 'MozColumnRuleStyle'
-    | 'MozColumnRuleWidth'
-    | 'MozColumnWidth'
-    | 'MozContextProperties'
-    | 'MozFloatEdge'
-    | 'MozFontFeatureSettings'
-    | 'MozFontLanguageOverride'
-    | 'MozForceBrokenImageIcon'
-    | 'MozHyphens'
-    | 'MozImageRegion'
-    | 'MozMarginEnd'
-    | 'MozMarginStart'
-    | 'MozOrient'
-    | 'MozOutlineRadiusBottomleft'
-    | 'MozOutlineRadiusBottomright'
-    | 'MozOutlineRadiusTopleft'
-    | 'MozOutlineRadiusTopright'
-    | 'MozPaddingEnd'
-    | 'MozPaddingStart'
-    | 'MozPerspective'
-    | 'MozPerspectiveOrigin'
-    | 'MozStackSizing'
-    | 'MozTabSize'
-    | 'MozTextSizeAdjust'
-    | 'MozTransformOrigin'
-    | 'MozTransformStyle'
-    | 'MozTransitionDelay'
-    | 'MozTransitionDuration'
-    | 'MozTransitionProperty'
-    | 'MozTransitionTimingFunction'
-    | 'MozUserFocus'
-    | 'MozUserModify'
-    | 'MozUserSelect'
-    | 'MozWindowDragging'
-    | 'msAccelerator'
-    | 'msAlignSelf'
-    | 'msBlockProgression'
-    | 'msContentZoomChaining'
-    | 'msContentZoomLimitMax'
-    | 'msContentZoomLimitMin'
-    | 'msContentZoomSnapPoints'
-    | 'msContentZoomSnapType'
-    | 'msContentZooming'
-    | 'msFilter'
-    | 'msFlexDirection'
-    | 'msFlexPositive'
-    | 'msFlowFrom'
-    | 'msFlowInto'
-    | 'msGridColumns'
-    | 'msGridRows'
-    | 'msHighContrastAdjust'
-    | 'msHyphenateLimitChars'
-    | 'msHyphenateLimitLines'
-    | 'msHyphenateLimitZone'
-    | 'msHyphens'
-    | 'msImeAlign'
-    | 'msLineBreak'
-    | 'msOrder'
-    | 'msOverflowStyle'
-    | 'msOverflowX'
-    | 'msOverflowY'
-    | 'msScrollChaining'
-    | 'msScrollLimitXMax'
-    | 'msScrollLimitXMin'
-    | 'msScrollLimitYMax'
-    | 'msScrollLimitYMin'
-    | 'msScrollRails'
-    | 'msScrollSnapPointsX'
-    | 'msScrollSnapPointsY'
-    | 'msScrollSnapType'
-    | 'msScrollTranslation'
-    | 'msScrollbar3dlightColor'
-    | 'msScrollbarArrowColor'
-    | 'msScrollbarBaseColor'
-    | 'msScrollbarDarkshadowColor'
-    | 'msScrollbarFaceColor'
-    | 'msScrollbarHighlightColor'
-    | 'msScrollbarShadowColor'
-    | 'msScrollbarTrackColor'
-    | 'msTextAutospace'
-    | 'msTextCombineHorizontal'
-    | 'msTextOverflow'
-    | 'msTouchAction'
-    | 'msTouchSelect'
-    | 'msTransform'
-    | 'msTransformOrigin'
-    | 'msTransitionDelay'
-    | 'msTransitionDuration'
-    | 'msTransitionProperty'
-    | 'msTransitionTimingFunction'
-    | 'msUserSelect'
-    | 'msWordBreak'
-    | 'msWrapFlow'
-    | 'msWrapMargin'
-    | 'msWrapThrough'
-    | 'msWritingMode'
-    | 'OObjectFit'
-    | 'OObjectPosition'
-    | 'OTabSize'
-    | 'OTextOverflow'
-    | 'OTransformOrigin'
-    | 'WebkitAlignContent'
-    | 'WebkitAlignItems'
-    | 'WebkitAlignSelf'
-    | 'WebkitAnimationDelay'
-    | 'WebkitAnimationDirection'
-    | 'WebkitAnimationDuration'
-    | 'WebkitAnimationFillMode'
-    | 'WebkitAnimationIterationCount'
-    | 'WebkitAnimationName'
-    | 'WebkitAnimationPlayState'
-    | 'WebkitAnimationTimingFunction'
-    | 'WebkitAppearance'
-    | 'WebkitBackdropFilter'
-    | 'WebkitBackfaceVisibility'
-    | 'WebkitBackgroundClip'
-    | 'WebkitBackgroundOrigin'
-    | 'WebkitBackgroundSize'
-    | 'WebkitBorderBeforeColor'
-    | 'WebkitBorderBeforeStyle'
-    | 'WebkitBorderBeforeWidth'
-    | 'WebkitBorderBottomLeftRadius'
-    | 'WebkitBorderBottomRightRadius'
-    | 'WebkitBorderImageSlice'
-    | 'WebkitBorderTopLeftRadius'
-    | 'WebkitBorderTopRightRadius'
-    | 'WebkitBoxDecorationBreak'
-    | 'WebkitBoxReflect'
-    | 'WebkitBoxShadow'
-    | 'WebkitBoxSizing'
-    | 'WebkitClipPath'
-    | 'WebkitColorAdjust'
-    | 'WebkitColumnCount'
-    | 'WebkitColumnFill'
-    | 'WebkitColumnGap'
-    | 'WebkitColumnRuleColor'
-    | 'WebkitColumnRuleStyle'
-    | 'WebkitColumnRuleWidth'
-    | 'WebkitColumnSpan'
-    | 'WebkitColumnWidth'
-    | 'WebkitFilter'
-    | 'WebkitFlexBasis'
-    | 'WebkitFlexDirection'
-    | 'WebkitFlexGrow'
-    | 'WebkitFlexShrink'
-    | 'WebkitFlexWrap'
-    | 'WebkitFontFeatureSettings'
-    | 'WebkitFontKerning'
-    | 'WebkitFontVariantLigatures'
-    | 'WebkitHyphens'
-    | 'WebkitJustifyContent'
-    | 'WebkitLineBreak'
-    | 'WebkitLineClamp'
-    | 'WebkitMarginEnd'
-    | 'WebkitMarginStart'
-    | 'WebkitMaskAttachment'
-    | 'WebkitMaskClip'
-    | 'WebkitMaskComposite'
-    | 'WebkitMaskImage'
-    | 'WebkitMaskOrigin'
-    | 'WebkitMaskPosition'
-    | 'WebkitMaskPositionX'
-    | 'WebkitMaskPositionY'
-    | 'WebkitMaskRepeat'
-    | 'WebkitMaskRepeatX'
-    | 'WebkitMaskRepeatY'
-    | 'WebkitMaskSize'
-    | 'WebkitMaxInlineSize'
-    | 'WebkitOrder'
-    | 'WebkitOverflowScrolling'
-    | 'WebkitPaddingEnd'
-    | 'WebkitPaddingStart'
-    | 'WebkitPerspective'
-    | 'WebkitPerspectiveOrigin'
-    | 'WebkitScrollSnapType'
-    | 'WebkitShapeMargin'
-    | 'WebkitTapHighlightColor'
-    | 'WebkitTextCombine'
-    | 'WebkitTextDecorationColor'
-    | 'WebkitTextDecorationLine'
-    | 'WebkitTextDecorationSkip'
-    | 'WebkitTextDecorationStyle'
-    | 'WebkitTextEmphasisColor'
-    | 'WebkitTextEmphasisPosition'
-    | 'WebkitTextEmphasisStyle'
-    | 'WebkitTextFillColor'
-    | 'WebkitTextOrientation'
-    | 'WebkitTextSizeAdjust'
-    | 'WebkitTextStrokeColor'
-    | 'WebkitTextStrokeWidth'
-    | 'WebkitTouchCallout'
-    | 'WebkitTransform'
-    | 'WebkitTransformOrigin'
-    | 'WebkitTransformStyle'
-    | 'WebkitTransitionDelay'
-    | 'WebkitTransitionDuration'
-    | 'WebkitTransitionProperty'
-    | 'WebkitTransitionTimingFunction'
-    | 'WebkitUserModify'
-    | 'WebkitUserSelect'
-    | 'WebkitWritingMode'
-    | 'MozAnimation'
-    | 'MozBorderImage'
-    | 'MozColumnRule'
-    | 'MozColumns'
-    | 'MozTransition'
-    | 'msContentZoomLimit'
-    | 'msContentZoomSnap'
-    | 'msFlex'
-    | 'msScrollLimit'
-    | 'msScrollSnapX'
-    | 'msScrollSnapY'
-    | 'msTransition'
-    | 'WebkitAnimation'
-    | 'WebkitBorderBefore'
-    | 'WebkitBorderImage'
-    | 'WebkitBorderRadius'
-    | 'WebkitColumnRule'
-    | 'WebkitColumns'
-    | 'WebkitFlex'
-    | 'WebkitFlexFlow'
-    | 'WebkitMask'
-    | 'WebkitTextEmphasis'
-    | 'WebkitTextStroke'
-    | 'WebkitTransition'
+declare export default {
+  // TODO: Return components with the right prop types typed out (inherit prop types from component being styles + add conditionalStyles & style attributes)
+  view: ZacsViewFunction,
+  text: ZacsTextFunction,
+  styled: ZacsStyledFunction,
+  createView: ZacsCreateViewFunction,
+  createText: ZacsCreateTextFunction,
+  createStyled: ZacsCreateStyledFunction,
+  stylesheet: ZacsStylesheetFunction,
+  css: (_strings: string[], ..._exprs: Array<any>) => string,
 }
+
+type ReactNativeBasicStylesheet = $Exact<{
+  // https://github.com/facebook/react-native/blob/master/Libraries/StyleSheet/StyleSheetTypes.js
+  alignContent?:
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'stretch'
+  | 'space-between'
+  | 'space-around',
+  alignItems?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline',
+  alignSelf?:
+  | 'auto'
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'stretch'
+  | 'baseline',
+  aspectRatio?: number,
+  backfaceVisibility?: string | number,
+  backgroundColor?: string | number,
+  borderBottomColor?: string | number,
+  borderBottomLeftRadius?: number,
+  borderBottomRightRadius?: number,
+  borderBottomWidth?: number,
+  borderColor?: string | number,
+  borderLeftColor?: string | number,
+  borderLeftWidth?: number,
+  borderRadius?: number,
+  borderRightColor?: string | number,
+  borderRightWidth?: number,
+  borderStyle?: string | number,
+  borderTopColor?: string | number,
+  borderTopLeftRadius?: number,
+  borderTopRightRadius?: number,
+  borderTopWidth?: number,
+  borderWidth?: number,
+  bottom?: string | number,
+  color?: string | number,
+  decomposedMatrix?: string | number,
+  direction?: string | number,
+  display?: string | number,
+  elevation?: string | number,
+  flex?: number,
+  flexBasis?: string | number,
+  flexDirection?: string | number,
+  flexGrow?: number,
+  flexShrink?: number,
+  flexWrap?: string | number,
+  fontFamily?: string,
+  fontSize?: number,
+  fontStyle?: 'normal' | 'italic',
+  fontVariant?: $ReadOnlyArray<
+    | 'small-caps'
+    | 'oldstyle-nums'
+    | 'lining-nums'
+    | 'tabular-nums'
+    | 'proportional-nums',
+  >,
+  fontWeight?: string | number,
+  height?: string | number,
+  includeFontPadding?: string | number,
+  justifyContent?: string | number,
+  left?: string | number,
+  letterSpacing?: number,
+  lineHeight?: number,
+  margin?: string | number,
+  marginBottom?: string | number,
+  marginHorizontal?: string | number,
+  marginLeft?: string | number,
+  marginRight?: string | number,
+  marginTop?: string | number,
+  marginVertical?: string | number,
+  maxHeight?: string | number,
+  maxWidth?: string | number,
+  minHeight?: string | number,
+  minWidth?: string | number,
+  opacity?: string | number,
+  overflow?: 'visible' | 'hidden' | 'scroll',
+  overlayColor?: string | number,
+  padding?: string | number,
+  paddingBottom?: string | number,
+  paddingHorizontal?: string | number,
+  paddingLeft?: string | number,
+  paddingRight?: string | number,
+  paddingTop?: string | number,
+  paddingVertical?: string | number,
+  position?: string | number,
+  resizeMode?: string | number,
+  right?: string | number,
+  rotation?: string | number,
+  scaleX?: number,
+  scaleY?: number,
+  shadowColor?: string | number,
+  shadowOffset?: $FlowFixMe,
+  shadowOpacity?: number,
+  shadowRadius?: number,
+  textAlign?: 'auto' | 'left' | 'right' | 'center' | 'justify',
+  textAlignVertical?: 'auto' | 'top' | 'bottom' | 'center',
+  textDecorationColor?: string | number,
+  textDecorationLine?: string | number,
+  textDecorationStyle?: string | number,
+  textShadowColor?: string | number,
+  textShadowOffset?: $FlowFixMe,
+  textShadowRadius?: number,
+  tintColor?: string | number,
+  top?: string | number,
+  transform?: $FlowFixMe,
+  transformMatrix?: string | number,
+  translateX?: number,
+  translateY?: number,
+  width?: string | number,
+  writingDirection?: 'auto' | 'ltr' | 'rtl',
+  zIndex?: number,
+}>
+
+type ReactNativeStyleAttributeName =
+  | 'alignContent'
+  | 'alignItems'
+  | 'alignSelf'
+  | 'aspectRatio'
+  | 'backfaceVisibility'
+  | 'backgroundColor'
+  | 'borderBottomColor'
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderBottomWidth'
+  | 'borderColor'
+  | 'borderLeftColor'
+  | 'borderLeftWidth'
+  | 'borderRadius'
+  | 'borderRightColor'
+  | 'borderRightWidth'
+  | 'borderStyle'
+  | 'borderTopColor'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'borderTopWidth'
+  | 'borderWidth'
+  | 'bottom'
+  | 'color'
+  | 'decomposedMatrix'
+  | 'direction'
+  | 'display'
+  | 'elevation'
+  | 'flex'
+  | 'flexBasis'
+  | 'flexDirection'
+  | 'flexGrow'
+  | 'flexShrink'
+  | 'flexWrap'
+  | 'fontFamily'
+  | 'fontSize'
+  | 'fontStyle'
+  | 'fontVariant'
+  | 'fontWeight'
+  | 'height'
+  | 'includeFontPadding'
+  | 'justifyContent'
+  | 'left'
+  | 'letterSpacing'
+  | 'lineHeight'
+  | 'margin'
+  | 'marginBottom'
+  | 'marginHorizontal'
+  | 'marginLeft'
+  | 'marginRight'
+  | 'marginTop'
+  | 'marginVertical'
+  | 'maxHeight'
+  | 'maxWidth'
+  | 'minHeight'
+  | 'minWidth'
+  | 'opacity'
+  | 'overflow'
+  | 'overlayColor'
+  | 'padding'
+  | 'paddingBottom'
+  | 'paddingHorizontal'
+  | 'paddingLeft'
+  | 'paddingRight'
+  | 'paddingTop'
+  | 'paddingVertical'
+  | 'position'
+  | 'resizeMode'
+  | 'right'
+  | 'rotation'
+  | 'scaleX'
+  | 'scaleY'
+  | 'shadowColor'
+  | 'shadowOffset'
+  | 'shadowOpacity'
+  | 'shadowRadius'
+  | 'textAlign'
+  | 'textAlignVertical'
+  | 'textDecorationColor'
+  | 'textDecorationLine'
+  | 'textDecorationStyle'
+  | 'textShadowColor'
+  | 'textShadowOffset'
+  | 'textShadowRadius'
+  | 'tintColor'
+  | 'top'
+  | 'transform'
+  | 'transformMatrix'
+  | 'translateX'
+  | 'translateY'
+  | 'width'
+  | 'writingDirection'
+  | 'zIndex'
+
+// List from https://github.com/frenic/csstype
+type CSSBasicStylesheet = $Exact<{
+  alignContent?: string | number,
+  alignItems?: string | number,
+  alignSelf?: string | number,
+  animationDelay?: string | number,
+  animationDirection?: string | number,
+  animationDuration?: string | number,
+  animationFillMode?: string | number,
+  animationIterationCount?: string | number,
+  animationName?: string | number,
+  animationPlayState?: string | number,
+  animationTimingFunction?: string | number,
+  appearance?: string | number,
+  backdropFilter?: string | number,
+  backfaceVisibility?: string | number,
+  backgroundAttachment?: string | number,
+  backgroundBlendMode?: string | number,
+  backgroundClip?: string | number,
+  backgroundColor?: string | number,
+  backgroundImage?: string | number,
+  backgroundOrigin?: string | number,
+  backgroundPosition?: string | number,
+  backgroundPositionX?: string | number,
+  backgroundPositionY?: string | number,
+  backgroundRepeat?: string | number,
+  backgroundSize?: string | number,
+  blockOverflow?: string | number,
+  blockSize?: string | number,
+  borderBlockColor?: string | number,
+  borderBlockEndColor?: string | number,
+  borderBlockEndStyle?: string | number,
+  borderBlockEndWidth?: string | number,
+  borderBlockStartColor?: string | number,
+  borderBlockStartStyle?: string | number,
+  borderBlockStartWidth?: string | number,
+  borderBlockStyle?: string | number,
+  borderBlockWidth?: string | number,
+  borderBottomColor?: string | number,
+  borderBottomLeftRadius?: string | number,
+  borderBottomRightRadius?: string | number,
+  borderBottomStyle?: string | number,
+  borderBottomWidth?: string | number,
+  borderCollapse?: string | number,
+  borderEndEndRadius?: string | number,
+  borderEndStartRadius?: string | number,
+  borderImageOutset?: string | number,
+  borderImageRepeat?: string | number,
+  borderImageSlice?: string | number,
+  borderImageSource?: string | number,
+  borderImageWidth?: string | number,
+  borderInlineColor?: string | number,
+  borderInlineEndColor?: string | number,
+  borderInlineEndStyle?: string | number,
+  borderInlineEndWidth?: string | number,
+  borderInlineStartColor?: string | number,
+  borderInlineStartStyle?: string | number,
+  borderInlineStartWidth?: string | number,
+  borderInlineStyle?: string | number,
+  borderInlineWidth?: string | number,
+  borderLeftColor?: string | number,
+  borderLeftStyle?: string | number,
+  borderLeftWidth?: string | number,
+  borderRightColor?: string | number,
+  borderRightStyle?: string | number,
+  borderRightWidth?: string | number,
+  borderSpacing?: string | number,
+  borderStartEndRadius?: string | number,
+  borderStartStartRadius?: string | number,
+  borderTopColor?: string | number,
+  borderTopLeftRadius?: string | number,
+  borderTopRightRadius?: string | number,
+  borderTopStyle?: string | number,
+  borderTopWidth?: string | number,
+  bottom?: string | number,
+  boxDecorationBreak?: string | number,
+  boxShadow?: string | number,
+  boxSizing?: string | number,
+  breakAfter?: string | number,
+  breakBefore?: string | number,
+  breakInside?: string | number,
+  captionSide?: string | number,
+  caretColor?: string | number,
+  clear?: string | number,
+  clipPath?: string | number,
+  color?: string | number,
+  colorAdjust?: string | number,
+  columnCount?: string | number,
+  columnFill?: string | number,
+  columnGap?: string | number,
+  columnRuleColor?: string | number,
+  columnRuleStyle?: string | number,
+  columnRuleWidth?: string | number,
+  columnSpan?: string | number,
+  columnWidth?: string | number,
+  contain?: string | number,
+  content?: string | number,
+  contentVisibility?: string,
+  counterIncrement?: string | number,
+  counterReset?: string | number,
+  counterSet?: string | number,
+  cursor?: string | number,
+  direction?: string | number,
+  display?: string | number,
+  emptyCells?: string | number,
+  filter?: string | number,
+  flexBasis?: string | number,
+  flexDirection?: string | number,
+  flexGrow?: string | number,
+  flexShrink?: string | number,
+  flexWrap?: string | number,
+  float?: string | number,
+  fontFamily?: string | number,
+  fontFeatureSettings?: string | number,
+  fontKerning?: string | number,
+  fontLanguageOverride?: string | number,
+  fontOpticalSizing?: string | number,
+  fontSize?: string | number,
+  fontSizeAdjust?: string | number,
+  fontStretch?: string | number,
+  fontStyle?: string | number,
+  fontSynthesis?: string | number,
+  fontVariant?: string | number,
+  fontVariantCaps?: string | number,
+  fontVariantEastAsian?: string | number,
+  fontVariantLigatures?: string | number,
+  fontVariantNumeric?: string | number,
+  fontVariantPosition?: string | number,
+  fontVariationSettings?: string | number,
+  fontWeight?: string | number,
+  gridAutoColumns?: string | number,
+  gridAutoFlow?: string | number,
+  gridAutoRows?: string | number,
+  gridColumnEnd?: string | number,
+  gridColumnStart?: string | number,
+  gridRowEnd?: string | number,
+  gridRowStart?: string | number,
+  gridTemplateAreas?: string | number,
+  gridTemplateColumns?: string | number,
+  gridTemplateRows?: string | number,
+  hangingPunctuation?: string | number,
+  height?: string | number,
+  hyphens?: string | number,
+  imageOrientation?: string | number,
+  imageRendering?: string | number,
+  imageResolution?: string | number,
+  initialLetter?: string | number,
+  inlineSize?: string | number,
+  inset?: string | number,
+  insetBlock?: string | number,
+  insetBlockEnd?: string | number,
+  insetBlockStart?: string | number,
+  insetInline?: string | number,
+  insetInlineEnd?: string | number,
+  insetInlineStart?: string | number,
+  isolation?: string | number,
+  justifyContent?: string | number,
+  justifyItems?: string | number,
+  justifySelf?: string | number,
+  left?: string | number,
+  letterSpacing?: string | number,
+  lineBreak?: string | number,
+  lineHeight?: string | number,
+  lineHeightStep?: string | number,
+  listStyleImage?: string | number,
+  listStylePosition?: string | number,
+  listStyleType?: string | number,
+  marginBlock?: string | number,
+  marginBlockEnd?: string | number,
+  marginBlockStart?: string | number,
+  marginBottom?: string | number,
+  marginInline?: string | number,
+  marginInlineEnd?: string | number,
+  marginInlineStart?: string | number,
+  marginLeft?: string | number,
+  marginRight?: string | number,
+  marginTop?: string | number,
+  maskBorderMode?: string | number,
+  maskBorderOutset?: string | number,
+  maskBorderRepeat?: string | number,
+  maskBorderSlice?: string | number,
+  maskBorderSource?: string | number,
+  maskBorderWidth?: string | number,
+  maskClip?: string | number,
+  maskComposite?: string | number,
+  maskImage?: string | number,
+  maskMode?: string | number,
+  maskOrigin?: string | number,
+  maskPosition?: string | number,
+  maskRepeat?: string | number,
+  maskSize?: string | number,
+  maskType?: string | number,
+  maxBlockSize?: string | number,
+  maxHeight?: string | number,
+  maxInlineSize?: string | number,
+  maxLines?: string | number,
+  maxWidth?: string | number,
+  minBlockSize?: string | number,
+  minHeight?: string | number,
+  minInlineSize?: string | number,
+  minWidth?: string | number,
+  mixBlendMode?: string | number,
+  motionDistance?: string | number,
+  motionPath?: string | number,
+  motionRotation?: string | number,
+  objectFit?: string | number,
+  objectPosition?: string | number,
+  offsetAnchor?: string | number,
+  offsetDistance?: string | number,
+  offsetPath?: string | number,
+  offsetPosition?: string | number,
+  offsetRotate?: string | number,
+  offsetRotation?: string | number,
+  opacity?: string | number,
+  order?: string | number,
+  orphans?: string | number,
+  outlineColor?: string | number,
+  outlineOffset?: string | number,
+  outlineStyle?: string | number,
+  outlineWidth?: string | number,
+  overflow?: string | number,
+  overflowAnchor?: string | number,
+  overflowBlock?: string | number,
+  overflowClipBox?: string | number,
+  overflowInline?: string | number,
+  overflowWrap?: string | number,
+  overflowX?: string | number,
+  overflowY?: string | number,
+  overscrollBehavior?: string | number,
+  overscrollBehaviorX?: string | number,
+  overscrollBehaviorY?: string | number,
+  paddingBlock?: string | number,
+  paddingBlockEnd?: string | number,
+  paddingBlockStart?: string | number,
+  paddingBottom?: string | number,
+  paddingInline?: string | number,
+  paddingInlineEnd?: string | number,
+  paddingInlineStart?: string | number,
+  paddingLeft?: string | number,
+  paddingRight?: string | number,
+  paddingTop?: string | number,
+  pageBreakAfter?: string | number,
+  pageBreakBefore?: string | number,
+  pageBreakInside?: string | number,
+  paintOrder?: string | number,
+  perspective?: string | number,
+  perspectiveOrigin?: string | number,
+  placeContent?: string | number,
+  pointerEvents?: string | number,
+  position?: string | number,
+  quotes?: string | number,
+  resize?: string | number,
+  right?: string | number,
+  rotate?: string | number,
+  rowGap?: string | number,
+  rubyAlign?: string | number,
+  rubyMerge?: string | number,
+  rubyPosition?: string | number,
+  scale?: string | number,
+  scrollBehavior?: string | number,
+  scrollMargin?: string | number,
+  scrollMarginBlock?: string | number,
+  scrollMarginBlockEnd?: string | number,
+  scrollMarginBlockStart?: string | number,
+  scrollMarginBottom?: string | number,
+  scrollMarginInline?: string | number,
+  scrollMarginInlineEnd?: string | number,
+  scrollMarginInlineStart?: string | number,
+  scrollMarginLeft?: string | number,
+  scrollMarginRight?: string | number,
+  scrollMarginTop?: string | number,
+  scrollPadding?: string | number,
+  scrollPaddingBlock?: string | number,
+  scrollPaddingBlockEnd?: string | number,
+  scrollPaddingBlockStart?: string | number,
+  scrollPaddingBottom?: string | number,
+  scrollPaddingInline?: string | number,
+  scrollPaddingInlineEnd?: string | number,
+  scrollPaddingInlineStart?: string | number,
+  scrollPaddingLeft?: string | number,
+  scrollPaddingRight?: string | number,
+  scrollPaddingTop?: string | number,
+  scrollSnapAlign?: string | number,
+  scrollSnapStop?: string | number,
+  scrollSnapType?: string | number,
+  scrollbarColor?: string | number,
+  scrollbarWidth?: string | number,
+  shapeImageThreshold?: string | number,
+  shapeMargin?: string | number,
+  shapeOutside?: string | number,
+  tabSize?: string | number,
+  tableLayout?: string | number,
+  textAlign?: string | number,
+  textAlignLast?: string | number,
+  textCombineUpright?: string | number,
+  textDecorationColor?: string | number,
+  textDecorationLine?: string | number,
+  textDecorationSkip?: string | number,
+  textDecorationSkipInk?: string | number,
+  textDecorationStyle?: string | number,
+  textEmphasisColor?: string | number,
+  textEmphasisPosition?: string | number,
+  textEmphasisStyle?: string | number,
+  textIndent?: string | number,
+  textJustify?: string | number,
+  textOrientation?: string | number,
+  textOverflow?: string | number,
+  textRendering?: string | number,
+  textShadow?: string | number,
+  textSizeAdjust?: string | number,
+  textTransform?: string | number,
+  textUnderlinePosition?: string | number,
+  top?: string | number,
+  touchAction?: string | number,
+  transform?: string | number,
+  transformBox?: string | number,
+  transformOrigin?: string | number,
+  transformStyle?: string | number,
+  transitionDelay?: string | number,
+  transitionDuration?: string | number,
+  transitionProperty?: string | number,
+  transitionTimingFunction?: string | number,
+  translate?: string | number,
+  unicodeBidi?: string | number,
+  userSelect?: string | number,
+  verticalAlign?: string | number,
+  visibility?: string | number,
+  whiteSpace?: string | number,
+  widows?: string | number,
+  width?: string | number,
+  willChange?: string | number,
+  wordBreak?: string | number,
+  wordSpacing?: string | number,
+  wordWrap?: string | number,
+  writingMode?: string | number,
+  zIndex?: string | number,
+  zoom?: string | number,
+  all?: string | number,
+  animation?: string | number,
+  background?: string | number,
+  border?: string | number,
+  borderBlock?: string | number,
+  borderBlockEnd?: string | number,
+  borderBlockStart?: string | number,
+  borderBottom?: string | number,
+  borderColor?: string | number,
+  borderImage?: string | number,
+  borderInline?: string | number,
+  borderInlineEnd?: string | number,
+  borderInlineStart?: string | number,
+  borderLeft?: string | number,
+  borderRadius?: string | number,
+  borderRight?: string | number,
+  borderStyle?: string | number,
+  borderTop?: string | number,
+  borderWidth?: string | number,
+  columnRule?: string | number,
+  columns?: string | number,
+  flex?: string | number,
+  flexFlow?: string | number,
+  font?: string | number,
+  gap?: string | number,
+  grid?: string | number,
+  gridArea?: string | number,
+  gridColumn?: string | number,
+  gridRow?: string | number,
+  gridTemplate?: string | number,
+  lineClamp?: string | number,
+  listStyle?: string | number,
+  margin?: string | number,
+  mask?: string | number,
+  maskBorder?: string | number,
+  motion?: string | number,
+  offset?: string | number,
+  outline?: string | number,
+  padding?: string | number,
+  placeItems?: string | number,
+  placeSelf?: string | number,
+  textDecoration?: string | number,
+  textEmphasis?: string | number,
+  transition?: string | number,
+  MozAnimationDelay?: string | number,
+  MozAnimationDirection?: string | number,
+  MozAnimationDuration?: string | number,
+  MozAnimationFillMode?: string | number,
+  MozAnimationIterationCount?: string | number,
+  MozAnimationName?: string | number,
+  MozAnimationPlayState?: string | number,
+  MozAnimationTimingFunction?: string | number,
+  MozAppearance?: string | number,
+  MozBackfaceVisibility?: string | number,
+  MozBorderBottomColors?: string | number,
+  MozBorderEndColor?: string | number,
+  MozBorderEndStyle?: string | number,
+  MozBorderEndWidth?: string | number,
+  MozBorderLeftColors?: string | number,
+  MozBorderRightColors?: string | number,
+  MozBorderStartColor?: string | number,
+  MozBorderStartStyle?: string | number,
+  MozBorderTopColors?: string | number,
+  MozBoxSizing?: string | number,
+  MozColumnCount?: string | number,
+  MozColumnFill?: string | number,
+  MozColumnGap?: string | number,
+  MozColumnRuleColor?: string | number,
+  MozColumnRuleStyle?: string | number,
+  MozColumnRuleWidth?: string | number,
+  MozColumnWidth?: string | number,
+  MozContextProperties?: string | number,
+  MozFloatEdge?: string | number,
+  MozFontFeatureSettings?: string | number,
+  MozFontLanguageOverride?: string | number,
+  MozForceBrokenImageIcon?: string | number,
+  MozHyphens?: string | number,
+  MozImageRegion?: string | number,
+  MozMarginEnd?: string | number,
+  MozMarginStart?: string | number,
+  MozOrient?: string | number,
+  MozOutlineRadiusBottomleft?: string | number,
+  MozOutlineRadiusBottomright?: string | number,
+  MozOutlineRadiusTopleft?: string | number,
+  MozOutlineRadiusTopright?: string | number,
+  MozPaddingEnd?: string | number,
+  MozPaddingStart?: string | number,
+  MozPerspective?: string | number,
+  MozPerspectiveOrigin?: string | number,
+  MozStackSizing?: string | number,
+  MozTabSize?: string | number,
+  MozTextSizeAdjust?: string | number,
+  MozTransformOrigin?: string | number,
+  MozTransformStyle?: string | number,
+  MozTransitionDelay?: string | number,
+  MozTransitionDuration?: string | number,
+  MozTransitionProperty?: string | number,
+  MozTransitionTimingFunction?: string | number,
+  MozUserFocus?: string | number,
+  MozUserModify?: string | number,
+  MozUserSelect?: string | number,
+  MozWindowDragging?: string | number,
+  msAccelerator?: string | number,
+  msAlignSelf?: string | number,
+  msBlockProgression?: string | number,
+  msContentZoomChaining?: string | number,
+  msContentZoomLimitMax?: string | number,
+  msContentZoomLimitMin?: string | number,
+  msContentZoomSnapPoints?: string | number,
+  msContentZoomSnapType?: string | number,
+  msContentZooming?: string | number,
+  msFilter?: string | number,
+  msFlexDirection?: string | number,
+  msFlexPositive?: string | number,
+  msFlowFrom?: string | number,
+  msFlowInto?: string | number,
+  msGridColumns?: string | number,
+  msGridRows?: string | number,
+  msHighContrastAdjust?: string | number,
+  msHyphenateLimitChars?: string | number,
+  msHyphenateLimitLines?: string | number,
+  msHyphenateLimitZone?: string | number,
+  msHyphens?: string | number,
+  msImeAlign?: string | number,
+  msLineBreak?: string | number,
+  msOrder?: string | number,
+  msOverflowStyle?: string | number,
+  msOverflowX?: string | number,
+  msOverflowY?: string | number,
+  msScrollChaining?: string | number,
+  msScrollLimitXMax?: string | number,
+  msScrollLimitXMin?: string | number,
+  msScrollLimitYMax?: string | number,
+  msScrollLimitYMin?: string | number,
+  msScrollRails?: string | number,
+  msScrollSnapPointsX?: string | number,
+  msScrollSnapPointsY?: string | number,
+  msScrollSnapType?: string | number,
+  msScrollTranslation?: string | number,
+  msScrollbar3dlightColor?: string | number,
+  msScrollbarArrowColor?: string | number,
+  msScrollbarBaseColor?: string | number,
+  msScrollbarDarkshadowColor?: string | number,
+  msScrollbarFaceColor?: string | number,
+  msScrollbarHighlightColor?: string | number,
+  msScrollbarShadowColor?: string | number,
+  msScrollbarTrackColor?: string | number,
+  msTextAutospace?: string | number,
+  msTextCombineHorizontal?: string | number,
+  msTextOverflow?: string | number,
+  msTouchAction?: string | number,
+  msTouchSelect?: string | number,
+  msTransform?: string | number,
+  msTransformOrigin?: string | number,
+  msTransitionDelay?: string | number,
+  msTransitionDuration?: string | number,
+  msTransitionProperty?: string | number,
+  msTransitionTimingFunction?: string | number,
+  msUserSelect?: string | number,
+  msWordBreak?: string | number,
+  msWrapFlow?: string | number,
+  msWrapMargin?: string | number,
+  msWrapThrough?: string | number,
+  msWritingMode?: string | number,
+  OObjectFit?: string | number,
+  OObjectPosition?: string | number,
+  OTabSize?: string | number,
+  OTextOverflow?: string | number,
+  OTransformOrigin?: string | number,
+  WebkitAlignContent?: string | number,
+  WebkitAlignItems?: string | number,
+  WebkitAlignSelf?: string | number,
+  WebkitAnimationDelay?: string | number,
+  WebkitAnimationDirection?: string | number,
+  WebkitAnimationDuration?: string | number,
+  WebkitAnimationFillMode?: string | number,
+  WebkitAnimationIterationCount?: string | number,
+  WebkitAnimationName?: string | number,
+  WebkitAnimationPlayState?: string | number,
+  WebkitAnimationTimingFunction?: string | number,
+  WebkitAppearance?: string | number,
+  WebkitBackdropFilter?: string | number,
+  WebkitBackfaceVisibility?: string | number,
+  WebkitBackgroundClip?: string | number,
+  WebkitBackgroundOrigin?: string | number,
+  WebkitBackgroundSize?: string | number,
+  WebkitBorderBeforeColor?: string | number,
+  WebkitBorderBeforeStyle?: string | number,
+  WebkitBorderBeforeWidth?: string | number,
+  WebkitBorderBottomLeftRadius?: string | number,
+  WebkitBorderBottomRightRadius?: string | number,
+  WebkitBorderImageSlice?: string | number,
+  WebkitBorderTopLeftRadius?: string | number,
+  WebkitBorderTopRightRadius?: string | number,
+  WebkitBoxDecorationBreak?: string | number,
+  WebkitBoxReflect?: string | number,
+  WebkitBoxShadow?: string | number,
+  WebkitBoxSizing?: string | number,
+  WebkitClipPath?: string | number,
+  WebkitColorAdjust?: string | number,
+  WebkitColumnCount?: string | number,
+  WebkitColumnFill?: string | number,
+  WebkitColumnGap?: string | number,
+  WebkitColumnRuleColor?: string | number,
+  WebkitColumnRuleStyle?: string | number,
+  WebkitColumnRuleWidth?: string | number,
+  WebkitColumnSpan?: string | number,
+  WebkitColumnWidth?: string | number,
+  WebkitFilter?: string | number,
+  WebkitFlexBasis?: string | number,
+  WebkitFlexDirection?: string | number,
+  WebkitFlexGrow?: string | number,
+  WebkitFlexShrink?: string | number,
+  WebkitFlexWrap?: string | number,
+  WebkitFontFeatureSettings?: string | number,
+  WebkitFontKerning?: string | number,
+  WebkitFontVariantLigatures?: string | number,
+  WebkitHyphens?: string | number,
+  WebkitJustifyContent?: string | number,
+  WebkitLineBreak?: string | number,
+  WebkitLineClamp?: string | number,
+  WebkitMarginEnd?: string | number,
+  WebkitMarginStart?: string | number,
+  WebkitMaskAttachment?: string | number,
+  WebkitMaskClip?: string | number,
+  WebkitMaskComposite?: string | number,
+  WebkitMaskImage?: string | number,
+  WebkitMaskOrigin?: string | number,
+  WebkitMaskPosition?: string | number,
+  WebkitMaskPositionX?: string | number,
+  WebkitMaskPositionY?: string | number,
+  WebkitMaskRepeat?: string | number,
+  WebkitMaskRepeatX?: string | number,
+  WebkitMaskRepeatY?: string | number,
+  WebkitMaskSize?: string | number,
+  WebkitMaxInlineSize?: string | number,
+  WebkitOrder?: string | number,
+  WebkitOverflowScrolling?: string | number,
+  WebkitPaddingEnd?: string | number,
+  WebkitPaddingStart?: string | number,
+  WebkitPerspective?: string | number,
+  WebkitPerspectiveOrigin?: string | number,
+  WebkitScrollSnapType?: string | number,
+  WebkitShapeMargin?: string | number,
+  WebkitTapHighlightColor?: string | number,
+  WebkitTextCombine?: string | number,
+  WebkitTextDecorationColor?: string | number,
+  WebkitTextDecorationLine?: string | number,
+  WebkitTextDecorationSkip?: string | number,
+  WebkitTextDecorationStyle?: string | number,
+  WebkitTextEmphasisColor?: string | number,
+  WebkitTextEmphasisPosition?: string | number,
+  WebkitTextEmphasisStyle?: string | number,
+  WebkitTextFillColor?: string | number,
+  WebkitTextOrientation?: string | number,
+  WebkitTextSizeAdjust?: string | number,
+  WebkitTextStrokeColor?: string | number,
+  WebkitTextStrokeWidth?: string | number,
+  WebkitTouchCallout?: string | number,
+  WebkitTransform?: string | number,
+  WebkitTransformOrigin?: string | number,
+  WebkitTransformStyle?: string | number,
+  WebkitTransitionDelay?: string | number,
+  WebkitTransitionDuration?: string | number,
+  WebkitTransitionProperty?: string | number,
+  WebkitTransitionTimingFunction?: string | number,
+  WebkitUserModify?: string | number,
+  WebkitUserSelect?: string | number,
+  WebkitWritingMode?: string | number,
+  MozAnimation?: string | number,
+  MozBorderImage?: string | number,
+  MozColumnRule?: string | number,
+  MozColumns?: string | number,
+  MozTransition?: string | number,
+  msContentZoomLimit?: string | number,
+  msContentZoomSnap?: string | number,
+  msFlex?: string | number,
+  msScrollLimit?: string | number,
+  msScrollSnapX?: string | number,
+  msScrollSnapY?: string | number,
+  msTransition?: string | number,
+  WebkitAnimation?: string | number,
+  WebkitBorderBefore?: string | number,
+  WebkitBorderImage?: string | number,
+  WebkitBorderRadius?: string | number,
+  WebkitColumnRule?: string | number,
+  WebkitColumns?: string | number,
+  WebkitFlex?: string | number,
+  WebkitFlexFlow?: string | number,
+  WebkitMask?: string | number,
+  WebkitTextEmphasis?: string | number,
+  WebkitTextStroke?: string | number,
+  WebkitTransition?: string | number,
+}>
+
+type CSSPropertyName =
+  | 'alignContent'
+  | 'alignItems'
+  | 'alignSelf'
+  | 'animationDelay'
+  | 'animationDirection'
+  | 'animationDuration'
+  | 'animationFillMode'
+  | 'animationIterationCount'
+  | 'animationName'
+  | 'animationPlayState'
+  | 'animationTimingFunction'
+  | 'appearance'
+  | 'backdropFilter'
+  | 'backfaceVisibility'
+  | 'backgroundAttachment'
+  | 'backgroundBlendMode'
+  | 'backgroundClip'
+  | 'backgroundColor'
+  | 'backgroundImage'
+  | 'backgroundOrigin'
+  | 'backgroundPosition'
+  | 'backgroundPositionX'
+  | 'backgroundPositionY'
+  | 'backgroundRepeat'
+  | 'backgroundSize'
+  | 'blockOverflow'
+  | 'blockSize'
+  | 'borderBlockColor'
+  | 'borderBlockEndColor'
+  | 'borderBlockEndStyle'
+  | 'borderBlockEndWidth'
+  | 'borderBlockStartColor'
+  | 'borderBlockStartStyle'
+  | 'borderBlockStartWidth'
+  | 'borderBlockStyle'
+  | 'borderBlockWidth'
+  | 'borderBottomColor'
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderBottomStyle'
+  | 'borderBottomWidth'
+  | 'borderCollapse'
+  | 'borderEndEndRadius'
+  | 'borderEndStartRadius'
+  | 'borderImageOutset'
+  | 'borderImageRepeat'
+  | 'borderImageSlice'
+  | 'borderImageSource'
+  | 'borderImageWidth'
+  | 'borderInlineColor'
+  | 'borderInlineEndColor'
+  | 'borderInlineEndStyle'
+  | 'borderInlineEndWidth'
+  | 'borderInlineStartColor'
+  | 'borderInlineStartStyle'
+  | 'borderInlineStartWidth'
+  | 'borderInlineStyle'
+  | 'borderInlineWidth'
+  | 'borderLeftColor'
+  | 'borderLeftStyle'
+  | 'borderLeftWidth'
+  | 'borderRightColor'
+  | 'borderRightStyle'
+  | 'borderRightWidth'
+  | 'borderSpacing'
+  | 'borderStartEndRadius'
+  | 'borderStartStartRadius'
+  | 'borderTopColor'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'borderTopStyle'
+  | 'borderTopWidth'
+  | 'bottom'
+  | 'boxDecorationBreak'
+  | 'boxShadow'
+  | 'boxSizing'
+  | 'breakAfter'
+  | 'breakBefore'
+  | 'breakInside'
+  | 'captionSide'
+  | 'caretColor'
+  | 'clear'
+  | 'clipPath'
+  | 'color'
+  | 'colorAdjust'
+  | 'columnCount'
+  | 'columnFill'
+  | 'columnGap'
+  | 'columnRuleColor'
+  | 'columnRuleStyle'
+  | 'columnRuleWidth'
+  | 'columnSpan'
+  | 'columnWidth'
+  | 'contain'
+  | 'content'
+  | 'contentVisibility'
+  | 'counterIncrement'
+  | 'counterReset'
+  | 'counterSet'
+  | 'cursor'
+  | 'direction'
+  | 'display'
+  | 'emptyCells'
+  | 'filter'
+  | 'flexBasis'
+  | 'flexDirection'
+  | 'flexGrow'
+  | 'flexShrink'
+  | 'flexWrap'
+  | 'float'
+  | 'fontFamily'
+  | 'fontFeatureSettings'
+  | 'fontKerning'
+  | 'fontLanguageOverride'
+  | 'fontOpticalSizing'
+  | 'fontSize'
+  | 'fontSizeAdjust'
+  | 'fontStretch'
+  | 'fontStyle'
+  | 'fontSynthesis'
+  | 'fontVariant'
+  | 'fontVariantCaps'
+  | 'fontVariantEastAsian'
+  | 'fontVariantLigatures'
+  | 'fontVariantNumeric'
+  | 'fontVariantPosition'
+  | 'fontVariationSettings'
+  | 'fontWeight'
+  | 'gridAutoColumns'
+  | 'gridAutoFlow'
+  | 'gridAutoRows'
+  | 'gridColumnEnd'
+  | 'gridColumnStart'
+  | 'gridRowEnd'
+  | 'gridRowStart'
+  | 'gridTemplateAreas'
+  | 'gridTemplateColumns'
+  | 'gridTemplateRows'
+  | 'hangingPunctuation'
+  | 'height'
+  | 'hyphens'
+  | 'imageOrientation'
+  | 'imageRendering'
+  | 'imageResolution'
+  | 'initialLetter'
+  | 'inlineSize'
+  | 'inset'
+  | 'insetBlock'
+  | 'insetBlockEnd'
+  | 'insetBlockStart'
+  | 'insetInline'
+  | 'insetInlineEnd'
+  | 'insetInlineStart'
+  | 'isolation'
+  | 'justifyContent'
+  | 'justifyItems'
+  | 'justifySelf'
+  | 'left'
+  | 'letterSpacing'
+  | 'lineBreak'
+  | 'lineHeight'
+  | 'lineHeightStep'
+  | 'listStyleImage'
+  | 'listStylePosition'
+  | 'listStyleType'
+  | 'marginBlock'
+  | 'marginBlockEnd'
+  | 'marginBlockStart'
+  | 'marginBottom'
+  | 'marginInline'
+  | 'marginInlineEnd'
+  | 'marginInlineStart'
+  | 'marginLeft'
+  | 'marginRight'
+  | 'marginTop'
+  | 'maskBorderMode'
+  | 'maskBorderOutset'
+  | 'maskBorderRepeat'
+  | 'maskBorderSlice'
+  | 'maskBorderSource'
+  | 'maskBorderWidth'
+  | 'maskClip'
+  | 'maskComposite'
+  | 'maskImage'
+  | 'maskMode'
+  | 'maskOrigin'
+  | 'maskPosition'
+  | 'maskRepeat'
+  | 'maskSize'
+  | 'maskType'
+  | 'maxBlockSize'
+  | 'maxHeight'
+  | 'maxInlineSize'
+  | 'maxLines'
+  | 'maxWidth'
+  | 'minBlockSize'
+  | 'minHeight'
+  | 'minInlineSize'
+  | 'minWidth'
+  | 'mixBlendMode'
+  | 'motionDistance'
+  | 'motionPath'
+  | 'motionRotation'
+  | 'objectFit'
+  | 'objectPosition'
+  | 'offsetAnchor'
+  | 'offsetDistance'
+  | 'offsetPath'
+  | 'offsetPosition'
+  | 'offsetRotate'
+  | 'offsetRotation'
+  | 'opacity'
+  | 'order'
+  | 'orphans'
+  | 'outlineColor'
+  | 'outlineOffset'
+  | 'outlineStyle'
+  | 'outlineWidth'
+  | 'overflow'
+  | 'overflowAnchor'
+  | 'overflowBlock'
+  | 'overflowClipBox'
+  | 'overflowInline'
+  | 'overflowWrap'
+  | 'overflowX'
+  | 'overflowY'
+  | 'overscrollBehavior'
+  | 'overscrollBehaviorX'
+  | 'overscrollBehaviorY'
+  | 'paddingBlock'
+  | 'paddingBlockEnd'
+  | 'paddingBlockStart'
+  | 'paddingBottom'
+  | 'paddingInline'
+  | 'paddingInlineEnd'
+  | 'paddingInlineStart'
+  | 'paddingLeft'
+  | 'paddingRight'
+  | 'paddingTop'
+  | 'pageBreakAfter'
+  | 'pageBreakBefore'
+  | 'pageBreakInside'
+  | 'paintOrder'
+  | 'perspective'
+  | 'perspectiveOrigin'
+  | 'placeContent'
+  | 'pointerEvents'
+  | 'position'
+  | 'quotes'
+  | 'resize'
+  | 'right'
+  | 'rotate'
+  | 'rowGap'
+  | 'rubyAlign'
+  | 'rubyMerge'
+  | 'rubyPosition'
+  | 'scale'
+  | 'scrollBehavior'
+  | 'scrollMargin'
+  | 'scrollMarginBlock'
+  | 'scrollMarginBlockEnd'
+  | 'scrollMarginBlockStart'
+  | 'scrollMarginBottom'
+  | 'scrollMarginInline'
+  | 'scrollMarginInlineEnd'
+  | 'scrollMarginInlineStart'
+  | 'scrollMarginLeft'
+  | 'scrollMarginRight'
+  | 'scrollMarginTop'
+  | 'scrollPadding'
+  | 'scrollPaddingBlock'
+  | 'scrollPaddingBlockEnd'
+  | 'scrollPaddingBlockStart'
+  | 'scrollPaddingBottom'
+  | 'scrollPaddingInline'
+  | 'scrollPaddingInlineEnd'
+  | 'scrollPaddingInlineStart'
+  | 'scrollPaddingLeft'
+  | 'scrollPaddingRight'
+  | 'scrollPaddingTop'
+  | 'scrollSnapAlign'
+  | 'scrollSnapStop'
+  | 'scrollSnapType'
+  | 'scrollbarColor'
+  | 'scrollbarWidth'
+  | 'shapeImageThreshold'
+  | 'shapeMargin'
+  | 'shapeOutside'
+  | 'tabSize'
+  | 'tableLayout'
+  | 'textAlign'
+  | 'textAlignLast'
+  | 'textCombineUpright'
+  | 'textDecorationColor'
+  | 'textDecorationLine'
+  | 'textDecorationSkip'
+  | 'textDecorationSkipInk'
+  | 'textDecorationStyle'
+  | 'textEmphasisColor'
+  | 'textEmphasisPosition'
+  | 'textEmphasisStyle'
+  | 'textIndent'
+  | 'textJustify'
+  | 'textOrientation'
+  | 'textOverflow'
+  | 'textRendering'
+  | 'textShadow'
+  | 'textSizeAdjust'
+  | 'textTransform'
+  | 'textUnderlinePosition'
+  | 'top'
+  | 'touchAction'
+  | 'transform'
+  | 'transformBox'
+  | 'transformOrigin'
+  | 'transformStyle'
+  | 'transitionDelay'
+  | 'transitionDuration'
+  | 'transitionProperty'
+  | 'transitionTimingFunction'
+  | 'translate'
+  | 'unicodeBidi'
+  | 'userSelect'
+  | 'verticalAlign'
+  | 'visibility'
+  | 'whiteSpace'
+  | 'widows'
+  | 'width'
+  | 'willChange'
+  | 'wordBreak'
+  | 'wordSpacing'
+  | 'wordWrap'
+  | 'writingMode'
+  | 'zIndex'
+  | 'zoom'
+  | 'all'
+  | 'animation'
+  | 'background'
+  | 'border'
+  | 'borderBlock'
+  | 'borderBlockEnd'
+  | 'borderBlockStart'
+  | 'borderBottom'
+  | 'borderColor'
+  | 'borderImage'
+  | 'borderInline'
+  | 'borderInlineEnd'
+  | 'borderInlineStart'
+  | 'borderLeft'
+  | 'borderRadius'
+  | 'borderRight'
+  | 'borderStyle'
+  | 'borderTop'
+  | 'borderWidth'
+  | 'columnRule'
+  | 'columns'
+  | 'flex'
+  | 'flexFlow'
+  | 'font'
+  | 'gap'
+  | 'grid'
+  | 'gridArea'
+  | 'gridColumn'
+  | 'gridRow'
+  | 'gridTemplate'
+  | 'lineClamp'
+  | 'listStyle'
+  | 'margin'
+  | 'mask'
+  | 'maskBorder'
+  | 'motion'
+  | 'offset'
+  | 'outline'
+  | 'padding'
+  | 'placeItems'
+  | 'placeSelf'
+  | 'textDecoration'
+  | 'textEmphasis'
+  | 'transition'
+  | 'MozAnimationDelay'
+  | 'MozAnimationDirection'
+  | 'MozAnimationDuration'
+  | 'MozAnimationFillMode'
+  | 'MozAnimationIterationCount'
+  | 'MozAnimationName'
+  | 'MozAnimationPlayState'
+  | 'MozAnimationTimingFunction'
+  | 'MozAppearance'
+  | 'MozBackfaceVisibility'
+  | 'MozBorderBottomColors'
+  | 'MozBorderEndColor'
+  | 'MozBorderEndStyle'
+  | 'MozBorderEndWidth'
+  | 'MozBorderLeftColors'
+  | 'MozBorderRightColors'
+  | 'MozBorderStartColor'
+  | 'MozBorderStartStyle'
+  | 'MozBorderTopColors'
+  | 'MozBoxSizing'
+  | 'MozColumnCount'
+  | 'MozColumnFill'
+  | 'MozColumnGap'
+  | 'MozColumnRuleColor'
+  | 'MozColumnRuleStyle'
+  | 'MozColumnRuleWidth'
+  | 'MozColumnWidth'
+  | 'MozContextProperties'
+  | 'MozFloatEdge'
+  | 'MozFontFeatureSettings'
+  | 'MozFontLanguageOverride'
+  | 'MozForceBrokenImageIcon'
+  | 'MozHyphens'
+  | 'MozImageRegion'
+  | 'MozMarginEnd'
+  | 'MozMarginStart'
+  | 'MozOrient'
+  | 'MozOutlineRadiusBottomleft'
+  | 'MozOutlineRadiusBottomright'
+  | 'MozOutlineRadiusTopleft'
+  | 'MozOutlineRadiusTopright'
+  | 'MozPaddingEnd'
+  | 'MozPaddingStart'
+  | 'MozPerspective'
+  | 'MozPerspectiveOrigin'
+  | 'MozStackSizing'
+  | 'MozTabSize'
+  | 'MozTextSizeAdjust'
+  | 'MozTransformOrigin'
+  | 'MozTransformStyle'
+  | 'MozTransitionDelay'
+  | 'MozTransitionDuration'
+  | 'MozTransitionProperty'
+  | 'MozTransitionTimingFunction'
+  | 'MozUserFocus'
+  | 'MozUserModify'
+  | 'MozUserSelect'
+  | 'MozWindowDragging'
+  | 'msAccelerator'
+  | 'msAlignSelf'
+  | 'msBlockProgression'
+  | 'msContentZoomChaining'
+  | 'msContentZoomLimitMax'
+  | 'msContentZoomLimitMin'
+  | 'msContentZoomSnapPoints'
+  | 'msContentZoomSnapType'
+  | 'msContentZooming'
+  | 'msFilter'
+  | 'msFlexDirection'
+  | 'msFlexPositive'
+  | 'msFlowFrom'
+  | 'msFlowInto'
+  | 'msGridColumns'
+  | 'msGridRows'
+  | 'msHighContrastAdjust'
+  | 'msHyphenateLimitChars'
+  | 'msHyphenateLimitLines'
+  | 'msHyphenateLimitZone'
+  | 'msHyphens'
+  | 'msImeAlign'
+  | 'msLineBreak'
+  | 'msOrder'
+  | 'msOverflowStyle'
+  | 'msOverflowX'
+  | 'msOverflowY'
+  | 'msScrollChaining'
+  | 'msScrollLimitXMax'
+  | 'msScrollLimitXMin'
+  | 'msScrollLimitYMax'
+  | 'msScrollLimitYMin'
+  | 'msScrollRails'
+  | 'msScrollSnapPointsX'
+  | 'msScrollSnapPointsY'
+  | 'msScrollSnapType'
+  | 'msScrollTranslation'
+  | 'msScrollbar3dlightColor'
+  | 'msScrollbarArrowColor'
+  | 'msScrollbarBaseColor'
+  | 'msScrollbarDarkshadowColor'
+  | 'msScrollbarFaceColor'
+  | 'msScrollbarHighlightColor'
+  | 'msScrollbarShadowColor'
+  | 'msScrollbarTrackColor'
+  | 'msTextAutospace'
+  | 'msTextCombineHorizontal'
+  | 'msTextOverflow'
+  | 'msTouchAction'
+  | 'msTouchSelect'
+  | 'msTransform'
+  | 'msTransformOrigin'
+  | 'msTransitionDelay'
+  | 'msTransitionDuration'
+  | 'msTransitionProperty'
+  | 'msTransitionTimingFunction'
+  | 'msUserSelect'
+  | 'msWordBreak'
+  | 'msWrapFlow'
+  | 'msWrapMargin'
+  | 'msWrapThrough'
+  | 'msWritingMode'
+  | 'OObjectFit'
+  | 'OObjectPosition'
+  | 'OTabSize'
+  | 'OTextOverflow'
+  | 'OTransformOrigin'
+  | 'WebkitAlignContent'
+  | 'WebkitAlignItems'
+  | 'WebkitAlignSelf'
+  | 'WebkitAnimationDelay'
+  | 'WebkitAnimationDirection'
+  | 'WebkitAnimationDuration'
+  | 'WebkitAnimationFillMode'
+  | 'WebkitAnimationIterationCount'
+  | 'WebkitAnimationName'
+  | 'WebkitAnimationPlayState'
+  | 'WebkitAnimationTimingFunction'
+  | 'WebkitAppearance'
+  | 'WebkitBackdropFilter'
+  | 'WebkitBackfaceVisibility'
+  | 'WebkitBackgroundClip'
+  | 'WebkitBackgroundOrigin'
+  | 'WebkitBackgroundSize'
+  | 'WebkitBorderBeforeColor'
+  | 'WebkitBorderBeforeStyle'
+  | 'WebkitBorderBeforeWidth'
+  | 'WebkitBorderBottomLeftRadius'
+  | 'WebkitBorderBottomRightRadius'
+  | 'WebkitBorderImageSlice'
+  | 'WebkitBorderTopLeftRadius'
+  | 'WebkitBorderTopRightRadius'
+  | 'WebkitBoxDecorationBreak'
+  | 'WebkitBoxReflect'
+  | 'WebkitBoxShadow'
+  | 'WebkitBoxSizing'
+  | 'WebkitClipPath'
+  | 'WebkitColorAdjust'
+  | 'WebkitColumnCount'
+  | 'WebkitColumnFill'
+  | 'WebkitColumnGap'
+  | 'WebkitColumnRuleColor'
+  | 'WebkitColumnRuleStyle'
+  | 'WebkitColumnRuleWidth'
+  | 'WebkitColumnSpan'
+  | 'WebkitColumnWidth'
+  | 'WebkitFilter'
+  | 'WebkitFlexBasis'
+  | 'WebkitFlexDirection'
+  | 'WebkitFlexGrow'
+  | 'WebkitFlexShrink'
+  | 'WebkitFlexWrap'
+  | 'WebkitFontFeatureSettings'
+  | 'WebkitFontKerning'
+  | 'WebkitFontVariantLigatures'
+  | 'WebkitHyphens'
+  | 'WebkitJustifyContent'
+  | 'WebkitLineBreak'
+  | 'WebkitLineClamp'
+  | 'WebkitMarginEnd'
+  | 'WebkitMarginStart'
+  | 'WebkitMaskAttachment'
+  | 'WebkitMaskClip'
+  | 'WebkitMaskComposite'
+  | 'WebkitMaskImage'
+  | 'WebkitMaskOrigin'
+  | 'WebkitMaskPosition'
+  | 'WebkitMaskPositionX'
+  | 'WebkitMaskPositionY'
+  | 'WebkitMaskRepeat'
+  | 'WebkitMaskRepeatX'
+  | 'WebkitMaskRepeatY'
+  | 'WebkitMaskSize'
+  | 'WebkitMaxInlineSize'
+  | 'WebkitOrder'
+  | 'WebkitOverflowScrolling'
+  | 'WebkitPaddingEnd'
+  | 'WebkitPaddingStart'
+  | 'WebkitPerspective'
+  | 'WebkitPerspectiveOrigin'
+  | 'WebkitScrollSnapType'
+  | 'WebkitShapeMargin'
+  | 'WebkitTapHighlightColor'
+  | 'WebkitTextCombine'
+  | 'WebkitTextDecorationColor'
+  | 'WebkitTextDecorationLine'
+  | 'WebkitTextDecorationSkip'
+  | 'WebkitTextDecorationStyle'
+  | 'WebkitTextEmphasisColor'
+  | 'WebkitTextEmphasisPosition'
+  | 'WebkitTextEmphasisStyle'
+  | 'WebkitTextFillColor'
+  | 'WebkitTextOrientation'
+  | 'WebkitTextSizeAdjust'
+  | 'WebkitTextStrokeColor'
+  | 'WebkitTextStrokeWidth'
+  | 'WebkitTouchCallout'
+  | 'WebkitTransform'
+  | 'WebkitTransformOrigin'
+  | 'WebkitTransformStyle'
+  | 'WebkitTransitionDelay'
+  | 'WebkitTransitionDuration'
+  | 'WebkitTransitionProperty'
+  | 'WebkitTransitionTimingFunction'
+  | 'WebkitUserModify'
+  | 'WebkitUserSelect'
+  | 'WebkitWritingMode'
+  | 'MozAnimation'
+  | 'MozBorderImage'
+  | 'MozColumnRule'
+  | 'MozColumns'
+  | 'MozTransition'
+  | 'msContentZoomLimit'
+  | 'msContentZoomSnap'
+  | 'msFlex'
+  | 'msScrollLimit'
+  | 'msScrollSnapX'
+  | 'msScrollSnapY'
+  | 'msTransition'
+  | 'WebkitAnimation'
+  | 'WebkitBorderBefore'
+  | 'WebkitBorderImage'
+  | 'WebkitBorderRadius'
+  | 'WebkitColumnRule'
+  | 'WebkitColumns'
+  | 'WebkitFlex'
+  | 'WebkitFlexFlow'
+  | 'WebkitMask'
+  | 'WebkitTextEmphasis'
+  | 'WebkitTextStroke'
+  | 'WebkitTransition'
