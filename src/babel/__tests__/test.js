@@ -104,7 +104,7 @@ describe('zacs', () => {
   })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>
-      expect(() => transform(`const _ = zacs._experimentalStyleSheet(${syntax})`, 'web')).toThrow(
+      expect(() => transform(`const _ = zacs.stylesheet(${syntax})`, 'web')).toThrow(
         error,
       )
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-const styles = zacs._experimentalStyleSheet({
+const styles = zacs.stylesheet({
   root: {
     backgroundColor: 'red',
     height: 50,

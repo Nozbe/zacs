@@ -602,7 +602,7 @@ function validateZacsDeclaration(t, path) {
       'createText',
       'createView',
       'createStyled',
-      '_experimentalStyleSheet',
+      'stylesheet',
     ].includes(zacsMethod)
   ) {
     throw path.buildCodeFrameError(
@@ -610,7 +610,7 @@ function validateZacsDeclaration(t, path) {
     )
   }
 
-  if (zacsMethod === '_experimentalStyleSheet') {
+  if (zacsMethod === 'stylesheet') {
     return
   }
 
@@ -1068,7 +1068,7 @@ exports.default = function(babel) {
           const { init } = node
           const zacsMethod = init.callee.property.name
 
-          if (zacsMethod === '_experimentalStyleSheet') {
+          if (zacsMethod === 'stylesheet') {
             // do nothing, will process on exit
             // eslint-disable-next-line no-useless-return
             return
@@ -1096,7 +1096,7 @@ exports.default = function(babel) {
           }
 
           const zacsMethod = path.node.init.callee.property.name
-          if (zacsMethod !== '_experimentalStyleSheet') {
+          if (zacsMethod !== 'stylesheet') {
             return
           }
           transformStyleSheet(t, state, path)

@@ -102,7 +102,7 @@ declare export default {
   createView: ZacsCreateViewFunction,
   createText: ZacsCreateTextFunction,
   createStyled: ZacsCreateStyledFunction,
-  _experimentalStyleSheet: ZacsStylesheetFunction,
+  stylesheet: ZacsStylesheetFunction,
   css: (_strings: string[], ..._exprs: Array<any>) => string,
 }
 
