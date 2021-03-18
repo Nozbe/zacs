@@ -1,7 +1,7 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-const styles = zacs._experimentalStyleSheet({
+const styles = zacs.stylesheet({
   text: {
     // magic syntax for babel replacement plugins
     backgroundColor: ZACS_STYLESHEET_LITERAL(Styling.colors.onSurface1),
