@@ -4,6 +4,7 @@ import type { ZacsStyledFunction, Component } from '../styled'
 
 // TODO: update to zacs.styled after this moves to index
 const styled: ZacsStyledFunction = (null: any)
+const createStyled = styled
 
 const styles = { root: '.root' }
 const noop = (..._args: any[]): void => {}
@@ -205,5 +206,96 @@ function StylingWithConditionalAndLiteralStyles(): void {
     <StyledFoo x="x" y={1} a={true} b={false} extra="nono" extra2={true} />,
     // $FlowExpectedError[prop-missing]
     <StyledFoo x="x" y={1} a={true} b={false} extra2={true} />,
+  ])
+}
+
+// NOTE: Simplified tests for zacs.createStyled, which is basically the same (type-wise) but with extra prop
+
+function CreateStyled(): void {
+  const StyledFoo = createStyled(Foo, styles.root, null, null, ['a', 'b'])
+
+  noop([
+    // GOOD:
+    <StyledFoo x="x" y={1} />,
+    // BAD:
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo />,
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo x="x" y={1} extra2={true} />,
+  ])
+}
+
+function CreateStyledWithConditionalStyles(): void {
+  const StyledFoo = createStyled(
+    Foo,
+    styles.root,
+    {
+      a: styles.root,
+      b: styles.root,
+    },
+    null,
+    ['a', 'b'],
+  )
+
+  noop([
+    // GOOD:
+    <StyledFoo x="x" y={1} />,
+    <StyledFoo x="x" y={1} b={true} />,
+    // BAD:
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo />,
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo x="x" y={1} extra2={true} />,
+  ])
+}
+
+function CreateStyledWithLiteralStyles(): void {
+  const StyledFoo = createStyled(
+    Foo,
+    styles.root,
+    null,
+    {
+      j: 'marginBottom',
+      k: 'paddingTop',
+    },
+    ['a', 'b'],
+  )
+
+  noop([
+    // GOOD:
+    <StyledFoo x="x" y={1} />,
+    <StyledFoo x="x" y={1} j={10} />,
+    // BAD:
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo />,
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo x="x" y={1} extra2={true} />,
+  ])
+}
+
+function CreateStyledWithConditionalAndLiteralStyles(): void {
+  const StyledFoo = createStyled(
+    Foo,
+    styles.root,
+    {
+      a: styles.root,
+      b: styles.root,
+    },
+    {
+      j: 'marginBottom',
+      k: 'paddingTop',
+    },
+    ['a', 'b'],
+  )
+
+  noop([
+    // GOOD:
+    <StyledFoo x="x" y={1} />,
+    <StyledFoo x="x" y={1} b={false} j={10} />,
+    // BAD:
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo />,
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo x="x" y={1} extra2={true} />,
   ])
 }

@@ -20,7 +20,7 @@ type StyleAttributeName = CSSPropertyName | ReactNativeStyleAttributeName
 export type LiteralStylesSpec = { [propName: string]: StyleAttributeName }
 
 // zacs.text / zacs.view
-type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | 'zacs:style' | string>
+export type WhitelistedPropNames = Array<'ref' | 'zacs:inherit' | 'zacs:style' | string>
 
 export type ZacsViewFunction = (
   unconditionalStyles: ?UnconditionalStyles,
