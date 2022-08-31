@@ -13,6 +13,7 @@ type StyledFnWithConditionalLiteralStyles = <
   LiteralStyles: {},
 >(
   component: Component<OriginalProps>,
+  unconditionalStyles: ?UnconditionalStyles,
   conditionalStyles: ConditionalStyles,
   literalStyles: LiteralStyles,
 ) => Component<
@@ -25,6 +26,7 @@ type StyledFnWithConditionalLiteralStyles = <
 
 type StyledFnWithConditionalStyles = <OriginalProps, ConditionalStyles: {}, LiteralStyles: {}>(
   component: Component<OriginalProps>,
+  unconditionalStyles: ?UnconditionalStyles,
   conditionalStyles: ConditionalStyles,
 ) => Component<
   $Exact<{
@@ -35,6 +37,7 @@ type StyledFnWithConditionalStyles = <OriginalProps, ConditionalStyles: {}, Lite
 
 type StyledFnWithLiteralStyles = <OriginalProps, ConditionalStyles: {}, LiteralStyles: {}>(
   component: Component<OriginalProps>,
+  unconditionalStyles: ?UnconditionalStyles,
   conditionalStyles: null,
   literalStyles: LiteralStyles,
 ) => Component<
@@ -46,6 +49,7 @@ type StyledFnWithLiteralStyles = <OriginalProps, ConditionalStyles: {}, LiteralS
 
 type StyledFnEmpty = <OriginalProps, ConditionalStyles: {}, LiteralStyles: {}>(
   component: Component<OriginalProps>,
+  unconditionalStyles?: ?UnconditionalStyles,
 ) => Component<
   $Exact<{
     ...$Exact<OriginalProps>,

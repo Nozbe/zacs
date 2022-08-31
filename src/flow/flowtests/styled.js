@@ -15,7 +15,7 @@ type Props = $Exact<{
 const Foo: Component<Props> = () => null
 
 function BasicStyling(): void {
-  const StyledFoo = styled(Foo)
+  const StyledFoo = styled(Foo, styles.root)
   noop(
     (StyledFoo: React$ComponentType<
       $Exact<{
@@ -42,8 +42,30 @@ function BasicStyling(): void {
 }
 noop(BasicStyling)
 
+function BasicStyling2(): void {
+  const StyledFoo = styled(Foo)
+  noop(
+    (StyledFoo: React$ComponentType<
+      $Exact<{
+        x: string,
+        y: number,
+        z?: ?number,
+      }>,
+    >),
+  )
+
+  noop([
+    // GOOD:
+    <StyledFoo x="x" y={1} />,
+    // BAD:
+    // $FlowExpectedError[prop-missing]
+    <StyledFoo />,
+  ])
+}
+noop(BasicStyling2)
+
 function StylingWithConditionalStyles(): void {
-  const StyledFoo = styled(Foo, {
+  const StyledFoo = styled(Foo, styles.root, {
     a: 123, // fake style reference
     b: 1233,
   })
@@ -80,7 +102,7 @@ function StylingWithConditionalStyles(): void {
 noop(StylingWithConditionalStyles)
 
 function StylingWithLiteralStyles(): void {
-  const StyledFoo = styled(Foo, null, {
+  const StyledFoo = styled(Foo, styles.root, null, {
     j: 'marginBottom',
     k: 'paddingTop',
   })
@@ -119,6 +141,7 @@ noop(StylingWithLiteralStyles)
 function StylingWithConditionalAndLiteralStyles(): void {
   const StyledFoo = styled(
     Foo,
+    [styles.root, styles.root],
     {
       a: 123, // fake style reference
       b: 1233,
