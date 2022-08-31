@@ -72,7 +72,7 @@ const stylesheet = zacs.stylesheet({
 noop(stylesheet)
 noop((stylesheet: zacs.Stylesheet))
 noop(stylesheet.root)
-noop((stylesheet.root: string | { [string]: any } | number))
+noop((stylesheet.root: string | { [string]: mixed } | number))
 
 // $FlowExpectedError[incompatible-cast]
 noop((stylesheet.root: Date))

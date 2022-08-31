@@ -1,13 +1,10 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
-import type { ReactNativeStyleAttributeName } from './platform/attributes.native'
-import type { CSSPropertyName } from './platform/attributes.web'
-import type { ReactNativePredefinedStyle } from './platform/style.native'
-import type { WebPredefinedStyle } from './platform/style.web'
+import type { StyleAttributeName } from './platform/attributes'
+import type { PredefinedStyle } from './platform/style'
 
 // Predefined/unconditional styles (always applying to the component)
-export type PredefinedStyle = ReactNativePredefinedStyle | WebPredefinedStyle
 export type UnconditionalStyles = PredefinedStyle | PredefinedStyle[]
 
 // Conditional styles (applying to the component only if the prop is truthy)
@@ -16,7 +13,6 @@ export type ConditionalStylesSpec = {
 }
 
 // Literal styles (passed from prop to styles unconditionally)
-type StyleAttributeName = CSSPropertyName | ReactNativeStyleAttributeName
 export type LiteralStylesSpec = { [propName: string]: StyleAttributeName }
 
 // zacs.text / zacs.view

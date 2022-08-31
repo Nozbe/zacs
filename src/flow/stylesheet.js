@@ -1,10 +1,11 @@
 // @flow
 
-import type { ReactNativeBasicStylesheet } from './platform/stylesheet.native'
-import type { CSSBasicStylesheet } from './platform/stylesheet.web'
-import type { PredefinedStyle } from './components'
-
-type BasicStylesheet = $ReadOnly<$Exact<{ ...CSSBasicStylesheet, ...ReactNativeBasicStylesheet }>>
+import type {
+  BasicStylesheet,
+  ReactNativeBasicStylesheet,
+  CSSBasicStylesheet,
+} from './platform/stylesheet'
+import type { PredefinedStyle } from './platform/style'
 
 type ZacsStylesheetMixin = BasicStylesheet
 
