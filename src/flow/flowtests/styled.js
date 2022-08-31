@@ -95,8 +95,8 @@ function StylingWithConditionalStyles(): void {
         x: string,
         y: number,
         z?: ?number,
-        a?: ?boolean,
-        b?: ?boolean,
+        a?: mixed,
+        b?: mixed,
       }>,
     >),
   )
@@ -105,14 +105,14 @@ function StylingWithConditionalStyles(): void {
     // GOOD:
     <StyledFoo x="x" y={1} />,
     <StyledFoo x="x" y={1} a={true} />,
+    <StyledFoo x="x" y={1} b={true} />,
     <StyledFoo x="x" y={1} a={true} b={false} />,
+    <StyledFoo x="x" y={1} a={null} b={'hello' && 'bar'} />,
     <StyledFoo x="x" y={1} z={2} a={true} b={false} />,
     <StyledFoo x="x" y={1} z={2} a={true} b={false} zacs:style={{}} zacs:inherit={{}} />,
     // BAD:
     // $FlowExpectedError[prop-missing]
     <StyledFoo />,
-    // $FlowExpectedError[incompatible-type]
-    <StyledFoo x="x" y={1} a="asd" />,
     // $FlowExpectedError[prop-missing]
     <StyledFoo x="x" y={1} a={true} b={false} extra="nono" extra2={true} />,
     // $FlowExpectedError[prop-missing]
@@ -175,8 +175,8 @@ function StylingWithConditionalAndLiteralStyles(): void {
         x: string,
         y: number,
         z?: ?number,
-        a?: ?boolean,
-        b?: ?boolean,
+        a?: mixed,
+        b?: mixed,
         j?: string | number,
         k?: string | number,
       }>,

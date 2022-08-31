@@ -11,8 +11,13 @@ import type {
 export type Component<T> = React$ComponentType<T>
 
 // NOTE: $Partial is ncessary to make the new props optional. $Shape doesn't do what you think it does
-// and using { [string]: sth } doesn't work either
-type GetConditionalProps<ConditionalStyles> = $Partial<$ObjMapConst<ConditionalStyles, ?boolean>>
+// and using { [string]: style } doesn't work either
+type GetConditionalProps<ConditionalStyles> = $Partial<
+  $ObjMapConst<
+    ConditionalStyles,
+    mixed /* we're using mixed here because any truthy value is acceptable here */,
+  >,
+>
 // TODO: We could get fancy here and get the correct expected type based on style attribute
 type GetLiteralProps<LiteralStyles> = $Partial<$ObjMapConst<LiteralStyles, number | string>>
 
