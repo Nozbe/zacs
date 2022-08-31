@@ -5,7 +5,7 @@ import type {
   ReactNativeBasicStylesheet,
   CSSBasicStylesheet,
 } from './platform/stylesheet'
-import type { PredefinedStyle } from './platform/style'
+import type { ZacsStylesheet } from './platform/stylesheetOutput'
 
 type ZacsStylesheetMixin = BasicStylesheet
 
@@ -43,7 +43,7 @@ type ZacsStylesheetSpec = $Exact<{
   css?: string,
 }>
 
-export type ZacsStylesheet = { [string]: PredefinedStyle }
+export type { ZacsStylesheet }
 
 export type ZacsStylesheetFunction = ZacsStylesheetSpec => ZacsStylesheet
 
