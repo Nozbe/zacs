@@ -3,11 +3,19 @@ import type { ZacsStylesheetFunction, CSSStringTemplateTag } from './flow/styles
 import type {
   ZacsViewFunction,
   ZacsTextFunction,
-  ZacsStyledFunction,
   ZacsCreateViewFunction,
   ZacsCreateTextFunction,
-  ZacsCreateStyledFunction,
 } from './flow/components'
+import type { Component, ZacsStyledFunction, ZacsCreateStyledFunction } from './flow/styled'
+
+declare export var view: ZacsViewFunction
+declare export var text: ZacsTextFunction
+declare export var styled: ZacsStyledFunction
+declare export var createView: ZacsCreateViewFunction
+declare export var createText: ZacsCreateTextFunction
+declare export var createStyled: ZacsCreateStyledFunction
+declare export var stylesheet: ZacsStylesheetFunction
+declare export var css: CSSStringTemplateTag
 
 declare export default {
   view: ZacsViewFunction,
@@ -19,3 +27,4 @@ declare export default {
   stylesheet: ZacsStylesheetFunction,
   css: CSSStringTemplateTag,
 }
+export type { Component }

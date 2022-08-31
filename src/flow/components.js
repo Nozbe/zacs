@@ -47,27 +47,3 @@ export type ZacsCreateTextFunction = (
   literalStyles: ?LiteralStylesSpec,
   whitelistedProps: ?WhitelistedPropNames,
 ) => React$ComponentType<any> // TODO: Add more concrete types
-
-// zacs.styled
-type BuiltinElementName = string
-type ConcreteComponentToStyle<Props> = React$ComponentType<Props> | BuiltinElementName
-type ComponentPlatformSelect<Props> = $Exact<{
-  web: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
-  native: ConcreteComponentToStyle<Props> | ZacsViewFunction | ZacsTextFunction,
-}>
-type ComponentToStyle<Props> = ConcreteComponentToStyle<Props> | ComponentPlatformSelect<Props>
-
-export type ZacsStyledFunction = <Props>(
-  componentToStyle: ComponentToStyle<Props>,
-  unconditionalStyles: ?UnconditionalStyles,
-  conditionalStyles: ?ConditionalStylesSpec,
-  literalStyles: ?LiteralStylesSpec,
-) => React$ComponentType<any> // TODO: Add more concrete types
-
-export type ZacsCreateStyledFunction = <Props>(
-  componentToStyle: ComponentToStyle<Props>,
-  unconditionalStyles: ?UnconditionalStyles,
-  conditionalStyles: ?ConditionalStylesSpec,
-  literalStyles: ?LiteralStylesSpec,
-  whitelistedProps: ?WhitelistedPropNames,
-) => React$ComponentType<any> // TODO: Add more concrete types

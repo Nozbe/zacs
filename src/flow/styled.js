@@ -4,6 +4,8 @@ import type {
   ConditionalStylesSpec,
   LiteralStylesSpec,
   WhitelistedPropNames,
+  ZacsViewFunction,
+  ZacsTextFunction,
 } from './components'
 
 export type Component<T> = React$ComponentType<T>
@@ -84,10 +86,32 @@ type StyledFnEmpty = <
   }>,
 >
 
+// NOTE: These fallback types are for compatibility, but we can't reasonably type them out.
+// I think maybe we should consider abandoning {web:, native:} syntax
+type BuiltinElementName = string
+type ComponentPlatformSelect<Props> = $Exact<{
+  web: React$ComponentType<Props> | BuiltinElementName | ZacsViewFunction | ZacsTextFunction,
+  native: React$ComponentType<Props> | BuiltinElementName | ZacsViewFunction | ZacsTextFunction,
+}>
+type ComponentToStyle<Props> = BuiltinElementName | ComponentPlatformSelect<Props>
+
+type StyledFnUntyped = <
+  OriginalProps,
+  ConditionalStyles: ConditionalStylesSpec,
+  LiteralStyles: LiteralStylesSpec,
+>(
+  component: ComponentToStyle<OriginalProps>,
+  unconditionalStyles: ?UnconditionalStyles,
+  conditionalStyles: ?ConditionalStyles,
+  literalStyles: ?LiteralStyles,
+  whitelistedProps: ?WhitelistedPropNames,
+) => Component<any> // TODO: Add more concrete types
+
 export type ZacsStyledFunction = StyledFnWithConditionalLiteralStyles &
   StyledFnWithConditionalStyles &
   StyledFnEmpty &
-  StyledFnWithLiteralStyles
+  StyledFnWithLiteralStyles &
+  StyledFnUntyped
 
 // NOTE: out of laziness (ahem, for maintainability), we're pretending that zacs.styled also has whitelistedProps argument to share the type definition
 export type ZacsCreateStyledFunction = ZacsStyledFunction

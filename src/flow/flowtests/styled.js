@@ -1,10 +1,6 @@
 // @flow
 /* eslint-disable no-unused-vars */
-import type { ZacsStyledFunction, Component } from '../styled'
-
-// TODO: update to zacs.styled after this moves to index
-const styled: ZacsStyledFunction = (null: any)
-const createStyled = styled
+import * as zacs from '../../index'
 
 const styles = { root: '.root' }
 const noop = (..._args: any[]): void => {}
@@ -14,34 +10,34 @@ type Props = $Exact<{
   y: number,
   z?: ?number,
 }>
-const Foo: Component<Props> = () => null
+const Foo: zacs.Component<Props> = () => null
 
 function ChecksProps(): void {
   noop([
     // GOOD:
-    styled(Foo),
-    styled(Foo, null),
-    styled(Foo, styles.root),
-    styled(Foo, [styles.root, styles.root]),
-    styled(Foo, null, {}),
-    styled(Foo, null, { x: styles.root }),
-    styled(Foo, styles.root, { x: styles.root, y: styles.root }),
-    styled(Foo, null, null, { k: 'marginTop' }),
-    styled(Foo, null, null, { k: 'marginTop', j: 'borderColor' }),
-    styled(Foo, null, { x: styles.root }, { k: 'marginTop', j: 'borderColor' }),
-    styled(Foo, styles.root, { x: styles.root }, { k: 'marginTop', j: 'borderColor' }),
+    zacs.styled(Foo),
+    zacs.styled(Foo, null),
+    zacs.styled(Foo, styles.root),
+    zacs.styled(Foo, [styles.root, styles.root]),
+    zacs.styled(Foo, null, {}),
+    zacs.styled(Foo, null, { x: styles.root }),
+    zacs.styled(Foo, styles.root, { x: styles.root, y: styles.root }),
+    zacs.styled(Foo, null, null, { k: 'marginTop' }),
+    zacs.styled(Foo, null, null, { k: 'marginTop', j: 'borderColor' }),
+    zacs.styled(Foo, null, { x: styles.root }, { k: 'marginTop', j: 'borderColor' }),
+    zacs.styled(Foo, styles.root, { x: styles.root }, { k: 'marginTop', j: 'borderColor' }),
     // BAD:
     // $FlowExpectedError[incompatible-call]
-    styled(Foo, null, { x: null }),
+    zacs.styled(Foo, null, { x: null }),
     // $FlowExpectedError[incompatible-call]
-    styled(Foo, null, null, { k: 'thisDoesNotExist' }),
+    zacs.styled(Foo, null, null, { k: 'thisDoesNotExist' }),
     // $FlowExpectedError[incompatible-call]
-    styled(Foo, null, { x: styles.root }, { k: 'thisDoesNotExist' }),
+    zacs.styled(Foo, null, { x: styles.root }, { k: 'thisDoesNotExist' }),
   ])
 }
 
 function BasicStyling(): void {
-  const StyledFoo = styled(Foo, styles.root)
+  const StyledFoo = zacs.styled(Foo, styles.root)
   noop(
     (StyledFoo: React$ComponentType<
       $Exact<{
@@ -68,7 +64,7 @@ function BasicStyling(): void {
 }
 
 function BasicStyling2(): void {
-  const StyledFoo = styled(Foo)
+  const StyledFoo = zacs.styled(Foo)
   noop(
     (StyledFoo: React$ComponentType<
       $Exact<{
@@ -89,7 +85,7 @@ function BasicStyling2(): void {
 }
 
 function StylingWithConditionalStyles(): void {
-  const StyledFoo = styled(Foo, styles.root, {
+  const StyledFoo = zacs.styled(Foo, styles.root, {
     a: styles.root,
     b: styles.root,
   })
@@ -125,7 +121,7 @@ function StylingWithConditionalStyles(): void {
 }
 
 function StylingWithLiteralStyles(): void {
-  const StyledFoo = styled(Foo, styles.root, null, {
+  const StyledFoo = zacs.styled(Foo, styles.root, null, {
     j: 'marginBottom',
     k: 'paddingTop',
   })
@@ -161,7 +157,7 @@ function StylingWithLiteralStyles(): void {
 }
 
 function StylingWithConditionalAndLiteralStyles(): void {
-  const StyledFoo = styled(
+  const StyledFoo = zacs.styled(
     Foo,
     [styles.root, styles.root],
     {
@@ -212,7 +208,7 @@ function StylingWithConditionalAndLiteralStyles(): void {
 // NOTE: Simplified tests for zacs.createStyled, which is basically the same (type-wise) but with extra prop
 
 function CreateStyled(): void {
-  const StyledFoo = createStyled(Foo, styles.root, null, null, ['a', 'b'])
+  const StyledFoo = zacs.createStyled(Foo, styles.root, null, null, ['a', 'b'])
 
   noop([
     // GOOD:
@@ -226,7 +222,7 @@ function CreateStyled(): void {
 }
 
 function CreateStyledWithConditionalStyles(): void {
-  const StyledFoo = createStyled(
+  const StyledFoo = zacs.createStyled(
     Foo,
     styles.root,
     {
@@ -250,7 +246,7 @@ function CreateStyledWithConditionalStyles(): void {
 }
 
 function CreateStyledWithLiteralStyles(): void {
-  const StyledFoo = createStyled(
+  const StyledFoo = zacs.createStyled(
     Foo,
     styles.root,
     null,
@@ -274,7 +270,7 @@ function CreateStyledWithLiteralStyles(): void {
 }
 
 function CreateStyledWithConditionalAndLiteralStyles(): void {
-  const StyledFoo = createStyled(
+  const StyledFoo = zacs.createStyled(
     Foo,
     styles.root,
     {
@@ -298,4 +294,21 @@ function CreateStyledWithConditionalAndLiteralStyles(): void {
     // $FlowExpectedError[prop-missing]
     <StyledFoo x="x" y={1} extra2={true} />,
   ])
+}
+
+// Untyped zacs.styled variants
+function StyledWithoutProperTyping(): void {
+  noop([
+    zacs.styled('a'),
+    zacs.styled({ web: 'a', native: Foo }),
+    zacs.styled(
+      { web: 'a', native: zacs.view },
+      styles.root,
+      { a: styles.root },
+      { j: 'marginTop' },
+    ),
+    zacs.styled({ web: zacs.text, native: 'RCTText' }, styles.root, { a: styles.root }),
+    zacs.styled({ web: Foo, native: Foo }, styles.root, { a: styles.root }),
+  ])
+  noop((zacs.createStyled('a'): React$ComponentType<any>))
 }
