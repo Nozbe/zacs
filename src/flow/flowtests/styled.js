@@ -16,6 +16,15 @@ const Foo: Component<Props> = () => null
 
 function BasicStyling(): void {
   const StyledFoo = styled(Foo)
+  noop(
+    (StyledFoo: React$ComponentType<
+      $Exact<{
+        x: string,
+        y: number,
+        z?: ?number,
+      }>,
+    >),
+  )
 
   noop([
     // GOOD:
@@ -38,6 +47,17 @@ function StylingWithConditionalStyles(): void {
     a: 123, // fake style reference
     b: 1233,
   })
+  noop(
+    (StyledFoo: React$ComponentType<
+      $Exact<{
+        x: string,
+        y: number,
+        z?: ?number,
+        a?: ?boolean,
+        b?: ?boolean,
+      }>,
+    >),
+  )
 
   noop([
     // GOOD:
@@ -64,6 +84,17 @@ function StylingWithLiteralStyles(): void {
     j: 'marginBottom',
     k: 'paddingTop',
   })
+  noop(
+    (StyledFoo: React$ComponentType<
+      $Exact<{
+        x: string,
+        y: number,
+        z?: ?number,
+        j?: string | number,
+        k?: string | number,
+      }>,
+    >),
+  )
 
   noop([
     // GOOD:
@@ -96,6 +127,19 @@ function StylingWithConditionalAndLiteralStyles(): void {
       j: 'marginBottom',
       k: 'paddingTop',
     },
+  )
+  noop(
+    (StyledFoo: React$ComponentType<
+      $Exact<{
+        x: string,
+        y: number,
+        z?: ?number,
+        a?: ?boolean,
+        b?: ?boolean,
+        j?: string | number,
+        k?: string | number,
+      }>,
+    >),
   )
 
   noop([

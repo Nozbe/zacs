@@ -14,7 +14,7 @@ type StyledFnWithConditionalLiteralStyles = <
 >(
   component: Component<OriginalProps>,
   conditionalStyles: ConditionalStyles,
-  unconditionalStyles: LiteralStyles,
+  literalStyles: LiteralStyles,
 ) => Component<
   $Exact<{
     ...GetConditionalProps<ConditionalStyles>,
@@ -36,7 +36,7 @@ type StyledFnWithConditionalStyles = <OriginalProps, ConditionalStyles: {}, Lite
 type StyledFnWithLiteralStyles = <OriginalProps, ConditionalStyles: {}, LiteralStyles: {}>(
   component: Component<OriginalProps>,
   conditionalStyles: null,
-  unconditionalStyles: LiteralStyles,
+  literalStyles: LiteralStyles,
 ) => Component<
   $Exact<{
     ...$Exact<OriginalProps>,
