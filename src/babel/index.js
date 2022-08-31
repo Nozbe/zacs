@@ -685,12 +685,15 @@ function validateZacsImport(t, path) {
   if (
     !(
       node.specifiers.length === 1 &&
-      t.isImportDefaultSpecifier(node.specifiers[0]) &&
-      node.specifiers[0].local.name === 'zacs'
+      node.specifiers[0].local.name === 'zacs' &&
+      // import zacs from 'zacs'
+      (t.isImportDefaultSpecifier(node.specifiers[0]) ||
+        // import * as zacs from 'zacs'
+        t.isImportNamespaceSpecifier(node.specifiers[0]))
     )
   ) {
     throw path.buildCodeFrameError(
-      'ZACS import must say exactly `import zacs from \'@nozbe/zacs\'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.',
+      "ZACS import must say exactly `import zacs from '@nozbe/zacs'` or `import * as zacs from '@nozbe/zacs'`. Other forms such as `import { view, text }`, `require` are not allowed.",
     )
   }
 }

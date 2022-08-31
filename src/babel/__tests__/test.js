@@ -18,7 +18,6 @@ function testBabelPlugin(pluginBabel) {
   }
 }
 
-
 function transform(input, platform, extra = {}) {
   const { code } = babel.transform(input, {
     configFile: false,
@@ -81,7 +80,7 @@ describe('zacs', () => {
     const badForms = [
       `import Zacs from '@nozbe/zacs'`,
       `import {text,createView} from '@nozbe/zacs'`,
-      `import * as zacs from '@nozbe/zacs'`,
+      `import * as ZACS from '@nozbe/zacs'`,
       `import ZACS from 'zacs'`,
     ]
     badForms.forEach(js => {
@@ -100,13 +99,13 @@ describe('zacs', () => {
   })
   it(`transforms experimental stylesheets (native, android)`, () => {
     expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
-    expect(transform(example('stylesheetNative'), 'native', { target: 'android' })).toMatchSnapshot()
+    expect(
+      transform(example('stylesheetNative'), 'native', { target: 'android' }),
+    ).toMatchSnapshot()
   })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>
-      expect(() => transform(`const _ = zacs.stylesheet(${syntax})`, 'web')).toThrow(
-        error,
-      )
+      expect(() => transform(`const _ = zacs.stylesheet(${syntax})`, 'web')).toThrow(error)
 
     bad('', 'single Object')
     bad('[]', 'single Object')
