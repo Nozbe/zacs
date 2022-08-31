@@ -17,6 +17,8 @@
     "src/babel/index.js",
     "babel.js",
     "src/webpack/loader.js",
+    "src/flow/*.js",
+    "src/flow/plaform/*.js",
     "loader.js",
     "README.md",
     "LICENSE",
