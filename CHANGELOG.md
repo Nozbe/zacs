@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - BREAKING: If you use Flow, you need to upgrade to >=0.185.2
 - Officially release `zacs.stylesheet({})`
-- Flow typing improvements
+- Flow typing improvements - `zacs.styled()` now returns correctly typed React component in most cases
 
 ## 1.1.0 (2020-10-09)
 
