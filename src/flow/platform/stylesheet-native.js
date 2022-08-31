@@ -14,22 +14,31 @@ export type ReactNativeBasicStylesheet = $Exact<{
   aspectRatio?: number,
   backfaceVisibility?: string | number,
   backgroundColor?: string | number,
-  borderBottomColor?: string | number,
-  borderBottomLeftRadius?: number,
-  borderBottomRightRadius?: number,
-  borderBottomWidth?: number,
-  borderColor?: string | number,
-  borderLeftColor?: string | number,
-  borderLeftWidth?: number,
-  borderRadius?: number,
-  borderRightColor?: string | number,
-  borderRightWidth?: number,
-  borderStyle?: string | number,
-  borderTopColor?: string | number,
-  borderTopLeftRadius?: number,
-  borderTopRightRadius?: number,
-  borderTopWidth?: number,
-  borderWidth?: number,
+  borderColor?: string,
+  borderCurve?: 'circular' | 'continuous',
+  borderBottomColor?: string,
+  borderEndColor?: string,
+  borderLeftColor?: string,
+  borderRightColor?: string,
+  borderStartColor?: string,
+  borderTopColor?: string,
+  borderRadius?: number | string,
+  borderBottomEndRadius?: number | string,
+  borderBottomLeftRadius?: number | string,
+  borderBottomRightRadius?: number | string,
+  borderBottomStartRadius?: number | string,
+  borderTopEndRadius?: number | string,
+  borderTopLeftRadius?: number | string,
+  borderTopRightRadius?: number | string,
+  borderTopStartRadius?: number | string,
+  borderStyle?: 'solid' | 'dotted' | 'dashed',
+  borderWidth?: number | string,
+  borderBottomWidth?: number | string,
+  borderEndWidth?: number | string,
+  borderLeftWidth?: number | string,
+  borderRightWidth?: number | string,
+  borderStartWidth?: number | string,
+  borderTopWidth?: number | string,
   bottom?: string | number,
   color?: string | number,
   decomposedMatrix?: string | number,
@@ -46,7 +55,31 @@ export type ReactNativeBasicStylesheet = $Exact<{
   fontSize?: number,
   fontStyle?: 'normal' | 'italic',
   fontVariant?: $ReadOnlyArray<
-    'small-caps' | 'oldstyle-nums' | 'lining-nums' | 'tabular-nums' | 'proportional-nums',
+    | 'small-caps'
+    | 'oldstyle-nums'
+    | 'lining-nums'
+    | 'tabular-nums'
+    | 'proportional-nums'
+    | 'stylistic-one'
+    | 'stylistic-two'
+    | 'stylistic-three'
+    | 'stylistic-four'
+    | 'stylistic-five'
+    | 'stylistic-six'
+    | 'stylistic-seven'
+    | 'stylistic-eight'
+    | 'stylistic-nine'
+    | 'stylistic-ten'
+    | 'stylistic-eleven'
+    | 'stylistic-twelve'
+    | 'stylistic-thirteen'
+    | 'stylistic-fourteen'
+    | 'stylistic-fifteen'
+    | 'stylistic-sixteen'
+    | 'stylistic-seventeen'
+    | 'stylistic-eighteen'
+    | 'stylistic-nineteen'
+    | 'stylistic-twenty',
   >,
   fontWeight?: string | number,
   height?: string | number,
@@ -68,16 +101,18 @@ export type ReactNativeBasicStylesheet = $Exact<{
   minWidth?: string | number,
   opacity?: string | number,
   overflow?: 'visible' | 'hidden' | 'scroll',
-  overlayColor?: string | number,
+  overlayColor?: string,
   padding?: string | number,
   paddingBottom?: string | number,
+  paddingEnd?: string | number,
   paddingHorizontal?: string | number,
   paddingLeft?: string | number,
   paddingRight?: string | number,
+  paddingStart?: string | number,
   paddingTop?: string | number,
   paddingVertical?: string | number,
   position?: string | number,
-  resizeMode?: string | number,
+  resizeMode?: 'contain' | 'cover' | 'stretch' | 'center' | 'repeat',
   right?: string | number,
   rotation?: string | number,
   scaleX?: number,
@@ -88,19 +123,40 @@ export type ReactNativeBasicStylesheet = $Exact<{
   shadowRadius?: number,
   textAlign?: 'auto' | 'left' | 'right' | 'center' | 'justify',
   textAlignVertical?: 'auto' | 'top' | 'bottom' | 'center',
+  includeFontPadding?: boolean,
   textDecorationColor?: string | number,
   textDecorationLine?: string | number,
   textDecorationStyle?: string | number,
+  textTransform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase',
+  writingDirection?: 'auto' | 'ltr' | 'rtl',
   textShadowColor?: string | number,
   textShadowOffset?: $FlowFixMe,
   textShadowRadius?: number,
-  tintColor?: string | number,
+  tintColor?: string,
   top?: string | number,
-  transform?: $FlowFixMe,
+  transform?: $ReadOnlyArray<
+    | {| +perspective: number |}
+    | {| +rotate: string |}
+    | {| +rotateX: string |}
+    | {| +rotateY: string |}
+    | {| +rotateZ: string |}
+    | {| +scale: number |}
+    | {| +scaleX: number |}
+    | {| +scaleY: number |}
+    | {| +translateX: number |}
+    | {| +translateY: number |}
+    | {|
+        +translate: [number, number],
+      |}
+    | {| +skewX: string |}
+    | {| +skewY: string |}
+    | {|
+        +matrix: $ReadOnlyArray<number>,
+      |},
+  >,
   transformMatrix?: string | number,
   translateX?: number,
   translateY?: number,
   width?: string | number,
-  writingDirection?: 'auto' | 'ltr' | 'rtl',
   zIndex?: number,
 }>
