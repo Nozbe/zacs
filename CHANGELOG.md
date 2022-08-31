@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- BREAKING: If you use Flow, you need to upgrade to >=0.185.2
 - Officially release `zacs.stylesheet({})`
+- Flow typing improvements
 
 ## 1.1.0 (2020-10-09)
 

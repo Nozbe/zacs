@@ -1,9 +1,5 @@
 // @flow
-import type {
-  ZacsStylesheet,
-  ZacsStylesheetFunction,
-  CSSStringTemplateTag,
-} from './flow/stylesheet'
+import type { ZacsStylesheetFunction, CSSStringTemplateTag } from './flow/stylesheet'
 import type {
   ZacsViewFunction,
   ZacsTextFunction,
@@ -12,8 +8,6 @@ import type {
   ZacsCreateTextFunction,
   ZacsCreateStyledFunction,
 } from './flow/components'
-
-export type { ZacsStylesheet }
 
 declare export default {
   view: ZacsViewFunction,

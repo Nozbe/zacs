@@ -13,7 +13,6 @@
 ; flow-typed/
 
 [options]
-esproposal.optional_chaining=enable
 emoji=true
 module.ignore_non_literal_requires=true
 module.file_ext=.js
@@ -22,4 +21,4 @@ module.file_ext=.js
 sharedmemory.heap_size=4000000000
 
 [version]
->=0.146
+>=0.185.2

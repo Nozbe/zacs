@@ -7,6 +7,8 @@ type BasicStylesheet = $ReadOnly<$Exact<{ ...CSSBasicStylesheet, ...ReactNativeB
 
 type ZacsStylesheetMixin = BasicStylesheet
 
+opaque type ThisPropertyIsUnknown = any
+
 type ZacsStylesheetStylesetWeb = $ReadOnly<{
   ...CSSBasicStylesheet,
   _mixin?: ZacsStylesheetMixin,
@@ -18,6 +20,8 @@ type ZacsStylesheetStylesetWeb = $ReadOnly<{
 type ZacsStylesheetStylesetNative = $ReadOnly<{
   ...ReactNativeBasicStylesheet,
   _mixin?: ZacsStylesheetMixin,
+  // HACK: raise error if unknown style property is used
+  [string]: ThisPropertyIsUnknown,
 }>
 
 type ZacsStylesheetStyleset = $ReadOnly<{
@@ -32,7 +36,7 @@ type ZacsStylesheetStyleset = $ReadOnly<{
   [string]: ZacsStylesheetStylesetWeb,
 }>
 
-export type ZacsStylesheet = $Exact<{
+type ZacsStylesheet = $Exact<{
   [string]: ZacsStylesheetStyleset,
   css?: string,
 }>
