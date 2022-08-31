@@ -161,8 +161,8 @@ function StylingWithConditionalAndLiteralStyles(): void {
     Foo,
     [styles.root, styles.root],
     {
-      a: 123, // fake style reference
-      b: 1233,
+      a: styles.root,
+      b: styles.root,
     },
     {
       j: 'marginBottom',
