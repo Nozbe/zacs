@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable no-unused-vars */
 import type { ZacsStyledFunction, Component } from '../styled'
 
 // TODO: update to zacs.styled after this moves to index
@@ -13,6 +14,30 @@ type Props = $Exact<{
   z?: ?number,
 }>
 const Foo: Component<Props> = () => null
+
+function ChecksProps(): void {
+  noop([
+    // GOOD:
+    styled(Foo),
+    styled(Foo, null),
+    styled(Foo, styles.root),
+    styled(Foo, [styles.root, styles.root]),
+    styled(Foo, null, {}),
+    styled(Foo, null, { x: styles.root }),
+    styled(Foo, styles.root, { x: styles.root, y: styles.root }),
+    styled(Foo, null, null, { k: 'marginTop' }),
+    styled(Foo, null, null, { k: 'marginTop', j: 'borderColor' }),
+    styled(Foo, null, { x: styles.root }, { k: 'marginTop', j: 'borderColor' }),
+    styled(Foo, styles.root, { x: styles.root }, { k: 'marginTop', j: 'borderColor' }),
+    // BAD:
+    // $FlowExpectedError[incompatible-call]
+    styled(Foo, null, { x: null }),
+    // $FlowExpectedError[incompatible-call]
+    styled(Foo, null, null, { k: 'thisDoesNotExist' }),
+    // $FlowExpectedError[incompatible-call]
+    styled(Foo, null, { x: styles.root }, { k: 'thisDoesNotExist' }),
+  ])
+}
 
 function BasicStyling(): void {
   const StyledFoo = styled(Foo, styles.root)
@@ -40,7 +65,6 @@ function BasicStyling(): void {
     <StyledFoo x="x" y={1} extra2={true} />,
   ])
 }
-noop(BasicStyling)
 
 function BasicStyling2(): void {
   const StyledFoo = styled(Foo)
@@ -62,12 +86,11 @@ function BasicStyling2(): void {
     <StyledFoo />,
   ])
 }
-noop(BasicStyling2)
 
 function StylingWithConditionalStyles(): void {
   const StyledFoo = styled(Foo, styles.root, {
-    a: 123, // fake style reference
-    b: 1233,
+    a: styles.root,
+    b: styles.root,
   })
   noop(
     (StyledFoo: React$ComponentType<
@@ -99,7 +122,6 @@ function StylingWithConditionalStyles(): void {
     <StyledFoo x="x" y={1} a={true} b={false} extra2={true} />,
   ])
 }
-noop(StylingWithConditionalStyles)
 
 function StylingWithLiteralStyles(): void {
   const StyledFoo = styled(Foo, styles.root, null, {
@@ -136,7 +158,6 @@ function StylingWithLiteralStyles(): void {
     <StyledFoo x="x" y={1} k={4} extra2={true} />,
   ])
 }
-noop(StylingWithLiteralStyles)
 
 function StylingWithConditionalAndLiteralStyles(): void {
   const StyledFoo = styled(
@@ -186,4 +207,3 @@ function StylingWithConditionalAndLiteralStyles(): void {
     <StyledFoo x="x" y={1} a={true} b={false} extra2={true} />,
   ])
 }
-noop(StylingWithConditionalAndLiteralStyles)

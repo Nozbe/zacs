@@ -9,8 +9,8 @@ type GetLiteralProps<LiteralStyles> = $Partial<$ObjMapConst<LiteralStyles, numbe
 
 type StyledFnWithConditionalLiteralStyles = <
   OriginalProps,
-  ConditionalStyles: {},
-  LiteralStyles: {},
+  ConditionalStyles: ConditionalStylesSpec,
+  LiteralStyles: LiteralStylesSpec,
 >(
   component: Component<OriginalProps>,
   unconditionalStyles: ?UnconditionalStyles,
@@ -24,7 +24,11 @@ type StyledFnWithConditionalLiteralStyles = <
   }>,
 >
 
-type StyledFnWithConditionalStyles = <OriginalProps, ConditionalStyles: {}, LiteralStyles: {}>(
+type StyledFnWithConditionalStyles = <
+  OriginalProps,
+  ConditionalStyles: ConditionalStylesSpec,
+  LiteralStyles: LiteralStylesSpec,
+>(
   component: Component<OriginalProps>,
   unconditionalStyles: ?UnconditionalStyles,
   conditionalStyles: ConditionalStyles,
@@ -35,7 +39,11 @@ type StyledFnWithConditionalStyles = <OriginalProps, ConditionalStyles: {}, Lite
   }>,
 >
 
-type StyledFnWithLiteralStyles = <OriginalProps, ConditionalStyles: {}, LiteralStyles: {}>(
+type StyledFnWithLiteralStyles = <
+  OriginalProps,
+  ConditionalStyles: ConditionalStylesSpec,
+  LiteralStyles: LiteralStylesSpec,
+>(
   component: Component<OriginalProps>,
   unconditionalStyles: ?UnconditionalStyles,
   conditionalStyles: null,
@@ -47,7 +55,11 @@ type StyledFnWithLiteralStyles = <OriginalProps, ConditionalStyles: {}, LiteralS
   }>,
 >
 
-type StyledFnEmpty = <OriginalProps, ConditionalStyles: {}, LiteralStyles: {}>(
+type StyledFnEmpty = <
+  OriginalProps,
+  ConditionalStyles: ConditionalStylesSpec,
+  LiteralStyles: LiteralStylesSpec,
+>(
   component: Component<OriginalProps>,
   unconditionalStyles?: ?UnconditionalStyles,
 ) => Component<
