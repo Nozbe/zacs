@@ -58,7 +58,7 @@ rules:
 
   # react
   # react/prop-types: 0
-  # react/jsx-filename-extension: 0
+  react/jsx-filename-extension: 0
   # react/jsx-no-bind:
   #   - 2
   #   - ignoreRefs: true
@@ -75,9 +75,8 @@ rules:
   # react/prefer-stateless-function:
   #   - 1
   #   - ignorePureComponents: true
-  # react/jsx-boolean-value:
-  #   - 2
-  #   - always
+  react/jsx-boolean-value: off
+  react/react-in-jsx-scope: off
   # react/no-unused-prop-types: 0
   # react/destructuring-assignment: 0
   # react/jsx-one-expression-per-line: 0
