@@ -2,6 +2,7 @@
 
 import type { ReactNativeBasicStylesheet } from './platform/stylesheet.native'
 import type { CSSBasicStylesheet } from './platform/stylesheet.web'
+import type { PredefinedStyle } from './components'
 
 type BasicStylesheet = $ReadOnly<$Exact<{ ...CSSBasicStylesheet, ...ReactNativeBasicStylesheet }>>
 
@@ -36,12 +37,13 @@ type ZacsStylesheetStyleset = $ReadOnly<{
   [string]: ZacsStylesheetStylesetWeb,
 }>
 
-type ZacsStylesheet = $Exact<{
+type ZacsStylesheetSpec = $Exact<{
   [string]: ZacsStylesheetStyleset,
   css?: string,
 }>
 
-// TODO: Fix return type
-export type ZacsStylesheetFunction = ZacsStylesheet => $Exact<{ [string]: string }>
+export type ZacsStylesheet = { [string]: PredefinedStyle }
+
+export type ZacsStylesheetFunction = ZacsStylesheetSpec => ZacsStylesheet
 
 export type CSSStringTemplateTag = (_strings: string[], ..._exprs: Array<any>) => string

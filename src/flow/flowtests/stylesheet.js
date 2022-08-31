@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable no-dupe-keys */
-import zacs from '../../index'
+import * as zacs from '../../index'
 
 const noop = (..._args: any[]): void => {}
 
@@ -9,7 +9,7 @@ const centered = {
   justifyContent: 'center',
 }
 
-const stylesheet: { [string]: string } = zacs.stylesheet({
+const stylesheet = zacs.stylesheet({
   root: {
     _mixin: centered,
     margin: 0,
@@ -70,3 +70,9 @@ const stylesheet: { [string]: string } = zacs.stylesheet({
 })
 
 noop(stylesheet)
+noop((stylesheet: zacs.Stylesheet))
+noop(stylesheet.root)
+noop((stylesheet.root: string | { [string]: any } | number))
+
+// $FlowExpectedError[incompatible-cast]
+noop((stylesheet.root: Date))

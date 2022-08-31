@@ -7,7 +7,7 @@ import type { ReactNativePredefinedStyle } from './platform/style.native'
 import type { WebPredefinedStyle } from './platform/style.web'
 
 // Predefined/unconditional styles (always applying to the component)
-type PredefinedStyle = ReactNativePredefinedStyle | WebPredefinedStyle
+export type PredefinedStyle = ReactNativePredefinedStyle | WebPredefinedStyle
 export type UnconditionalStyles = PredefinedStyle | PredefinedStyle[]
 
 // Conditional styles (applying to the component only if the prop is truthy)
