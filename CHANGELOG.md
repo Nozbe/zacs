@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+- Officially release `zacs.stylesheet({})`
+
 ## 1.1.0 (2020-10-09)
 
 - You can now declare multiple unconditional styles by passing an array of stylesets/class names
