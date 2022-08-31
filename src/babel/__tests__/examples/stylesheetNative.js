@@ -7,6 +7,6 @@ const styles = zacs.stylesheet({
     backgroundColor: ZACS_STYLESHEET_LITERAL(Styling.colors.onSurface1),
     android: {
       backgroundColor: ZACS_STYLESHEET_LITERAL(Styling.colors.onSurface2),
-    }
+    },
   },
 })
