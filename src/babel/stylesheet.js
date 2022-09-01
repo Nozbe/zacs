@@ -26,7 +26,7 @@ function isNumberLiteral(t, node) {
 
 // ZACS_STYLESHEET_LITERAL(xxx) - magic syntax that passes validation
 // for use by babel plugins that transform dynamic expressions into static literals
-function isZacsStyleSheetLiteral(t, node) {
+function isZacsStylesheetLiteral(t, node) {
   return (
     t.isCallExpression(node) && t.isIdentifier(node.callee, { name: 'ZACS_STYLESHEET_LITERAL' })
   )
@@ -35,7 +35,7 @@ function isZacsStyleSheetLiteral(t, node) {
 function validateStyleset(t, styleset, nestedIn) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
-      "ZACS StyleSheets must be simple object literals, like so: `text: { backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
+      "ZACS Stylesheets must be simple object literals, like so: `text: { backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
     )
   }
 
@@ -51,7 +51,7 @@ function validateStyleset(t, styleset, nestedIn) {
     // if (t.isSpreadElement(property.node)) {
     //   const spreadArg = property.get('argument')
     //   if (!t.isObjectExpression(spreadArg.node)) {
-    //     throw spreadArg.buildCodeFrameError("Spread element in a ZACS StyleSheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
+    //     throw spreadArg.buildCodeFrameError("Spread element in a ZACS Stylesheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
     //   }
     //   validateStyleset(t, spreadArg, nestedIn)
     //   return
@@ -59,7 +59,7 @@ function validateStyleset(t, styleset, nestedIn) {
 
     if (!isPlainObjectProperty(t, property.node, true)) {
       throw property.buildCodeFrameError(
-        "ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `[propName]:` are not allowed.",
+        "ZACS Stylesheets style attributes must be simple strings, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `[propName]:` are not allowed.",
       )
     }
     const valuePath = property.get('value')
@@ -68,7 +68,7 @@ function validateStyleset(t, styleset, nestedIn) {
     if (t.isStringLiteral(property.node.key)) {
       if (!t.isObjectExpression(value)) {
         throw styleset.buildCodeFrameError(
-          'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Quoted keys are only allowed for web inner styles, e.g. `{ "& > span": { opacity: 0.5 } }`',
+          'ZACS Stylesheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Quoted keys are only allowed for web inner styles, e.g. `{ "& > span": { opacity: 0.5 } }`',
         )
       }
       validateStyleset(t, valuePath, 'web')
@@ -80,7 +80,7 @@ function validateStyleset(t, styleset, nestedIn) {
     if (key === 'css') {
       if (!(t.isStringLiteral(value) || isPlainTemplateLiteral(t, value))) {
         throw valuePath.buildCodeFrameError(
-          "ZACS StyleSheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
+          "ZACS Stylesheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
         )
       }
     } else if (key === '_mixin') {
@@ -88,7 +88,7 @@ function validateStyleset(t, styleset, nestedIn) {
     } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
       if (nestedIn) {
         throw property.buildCodeFrameError(
-          'ZACS StyleSheets cannot have platform-specific blocks nested within a platform-specific block',
+          'ZACS Stylesheets cannot have platform-specific blocks nested within a platform-specific block',
         )
       }
 
@@ -99,29 +99,29 @@ function validateStyleset(t, styleset, nestedIn) {
         !(
           t.isStringLiteral(value) ||
           isNumberLiteral(t, value) ||
-          isZacsStyleSheetLiteral(t, value)
+          isZacsStylesheetLiteral(t, value)
         ) &&
         !nestedInNative
       ) {
         throw valuePath.buildCodeFrameError(
-          "ZACS StyleSheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
+          "ZACS Stylesheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
         )
       }
     }
   })
 }
 
-function validateStyleSheet(t, path) {
+function validateStylesheet(t, path) {
   const args = path.get('init.arguments')
   const stylesheet = args[0]
   if (!(args.length === 1 && t.isObjectExpression(stylesheet.node))) {
-    throw path.buildCodeFrameError('ZACS StyleSheet accepts a single Object argument')
+    throw path.buildCodeFrameError('ZACS Stylesheet accepts a single Object argument')
   }
 
   stylesheet.get('properties').forEach(styleset => {
     if (!isPlainObjectProperty(t, styleset.node)) {
       throw styleset.buildCodeFrameError(
-        'ZACS StyleSheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
+        'ZACS Stylesheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
       )
     }
     const stylesetName = styleset.node.key.name
@@ -129,7 +129,7 @@ function validateStyleSheet(t, path) {
       const cssValue = styleset.get('value')
       if (!(t.isStringLiteral(cssValue.node) || isPlainTemplateLiteral(t, cssValue.node))) {
         throw cssValue.buildCodeFrameError(
-          "ZACS StyleSheet's magic css: styleset expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
+          "ZACS Stylesheet's magic css: styleset expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
         )
       }
     } else {
@@ -204,7 +204,7 @@ function encodeCSSStyleset(styleset) {
 
   return `.${name} {\n${encodeCSSStyles(styleset.value)}\n}`
 }
-function encodeCSSStyleSheet(stylesheet) {
+function encodeCSSStylesheet(stylesheet) {
   const stylesets = stylesheet.properties.map(encodeCSSStyleset).join('\n\n')
   return `${stylesets}\n`
 }
@@ -215,7 +215,7 @@ function resolveRNStylesheet(t, platform, target, stylesheet) {
     .map(styleset => {
       const resolvedProperties = []
       const pushProp = property => {
-        if (isZacsStyleSheetLiteral(t, property.value)) {
+        if (isZacsStylesheetLiteral(t, property.value)) {
           // strip ZACS_STYLESHEET_LITERAL(x)
           const [wrappedValue] = property.value.arguments
           property.value = wrappedValue
@@ -263,18 +263,18 @@ function resolveRNStylesheet(t, platform, target, stylesheet) {
   return stylesheet
 }
 
-function transformStyleSheet(t, state, path) {
+function transformStylesheet(t, state, path) {
   const { node } = path
   const { init } = node
   const { arguments: args } = init
   const platform = getPlatform(state)
 
-  validateStyleSheet(t, path)
+  validateStylesheet(t, path)
 
   const stylesheet = args[0]
 
   if (platform === 'web') {
-    const css = encodeCSSStyleSheet(stylesheet)
+    const css = encodeCSSStylesheet(stylesheet)
     const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
     const formattedCss = t.stringLiteral(preparedCss)
     // NOTE: We can't use a template literal, because most people use a Babel transform for it, and it
@@ -313,4 +313,4 @@ function transformStyleSheet(t, state, path) {
   }
 }
 
-module.exports = { transformStyleSheet }
+module.exports = { transformStylesheet }

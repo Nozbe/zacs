@@ -12,7 +12,7 @@ const {
   jsxInferAttrTruthiness,
   jsxHasAttrNamed,
 } = require('./jsxUtils')
-const { transformStyleSheet } = require('./stylesheet')
+const { transformStylesheet } = require('./stylesheet')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -668,7 +668,7 @@ exports.default = function(babel) {
             }
           }
         },
-        // StyleSheets must be processed on exit so that other babel plugins that transform
+        // Stylesheets must be processed on exit so that other babel plugins that transform
         // inline expressions into literals can do their work first
         // TODO: Deduplicate
         exit(path, state) {
@@ -680,7 +680,7 @@ exports.default = function(babel) {
           if (zacsMethod !== 'stylesheet') {
             return
           }
-          transformStyleSheet(t, state, path)
+          transformStylesheet(t, state, path)
         },
       },
       JSXElement(path, state) {
