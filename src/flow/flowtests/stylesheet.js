@@ -62,6 +62,27 @@ const stylesheet = zacs.stylesheet({
       fake_attribute: 'this_does_not_exist',
     },
   },
+  shorthands: {
+    inset: 5,
+    inset: '10%',
+    margin: [5],
+    padding: [5, 10],
+    inset: [5, '10%', 15],
+    margin: [5, 10, 15, 20],
+    border: [1, 'solid', 'red'],
+    // $FlowExpectedError[incompatible-call]
+    border: [2],
+    // $FlowExpectedError[incompatible-call]
+    inset: [1, 2, 3, 4, 5],
+    web: {
+      inset: [5, '10%', 15],
+      border: [1, 'solid', 'red'],
+    },
+    native: {
+      inset: [5, '10%', 15],
+      border: [1, 'solid', 'red'],
+    },
+  },
   css: zacs.css`
     @animation {}
   `,

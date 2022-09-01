@@ -1,5 +1,7 @@
 // @flow
 
+import type { ZacsStylesheetShorthandExtensions } from './stylesheet-shorthands'
+
 export type CSSBasicStylesheet = $Exact<{
   // List from https://github.com/frenic/csstype
   alignContent?: string | number,
@@ -630,4 +632,5 @@ export type CSSBasicStylesheet = $Exact<{
   WebkitTextEmphasis?: string | number,
   WebkitTextStroke?: string | number,
   WebkitTransition?: string | number,
+  ...ZacsStylesheetShorthandExtensions,
 }>

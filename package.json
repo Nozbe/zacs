@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "flow": "flow check --max-warnings=0",
+    "flow": "flow check --max-warnings=0 --color=always",
     "eslint": "eslint ./src -c ./.eslintrc.yml --cache --cache-location ./.cache/.eslintcache",
     "playground": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js\"",
     "playground:native": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js --native\"",

@@ -1,5 +1,7 @@
 // @flow
 
+import type { ZacsStylesheetShorthandExtensions } from './stylesheet-shorthands'
+
 export type ReactNativeBasicStylesheet = $Exact<{
   // https://github.com/facebook/react-native/blob/master/Libraries/StyleSheet/StyleSheetTypes.js
   alignContent?:
@@ -159,4 +161,5 @@ export type ReactNativeBasicStylesheet = $Exact<{
   translateY?: number,
   width?: string | number,
   zIndex?: number,
+  ...ZacsStylesheetShorthandExtensions,
 }>
