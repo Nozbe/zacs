@@ -40,6 +40,15 @@ function resolveShorthands(key, node) {
           [verticalProp]: vertical,
           [horizontalProp]: horizontal,
         }
+      } else if (node.elements.length === 3) {
+        const [top, horizontal, bottom] = node.elements
+        const [, horizontalProp] = insetsPropNames[key].axes
+        const [topProp, , bottomProp] = insetsPropNames[key].all
+        return {
+          [topProp]: top,
+          [bottomProp]: bottom,
+          [horizontalProp]: horizontal,
+        }
       }
       const [top, right, bottom, left] = resolveInsetsShorthand(node)
       const [topProp, rightProp, bottomProp, leftProp] = insetsPropNames[key].all
