@@ -1,6 +1,6 @@
-/* eslint-disable no-use-before-define */
-const { unitlessCssAttributes } = require('./attributes')
-const { getPlatform, getTarget } = require('./state')
+const { getPlatform } = require('./state')
+const { transformStylesheetCSS } = require('./stylesheet-css')
+const { transformStylesheetRN, isZacsStylesheetLiteral } = require('./stylesheet-rn')
 
 function isPlainObjectProperty(t, node, allowStringLiterals) {
   const isAllowedKey =
@@ -21,14 +21,6 @@ function isNumberLiteral(t, node) {
       node.operator === '-' &&
       node.prefix &&
       t.isNumericLiteral(node.argument))
-  )
-}
-
-// ZACS_STYLESHEET_LITERAL(xxx) - magic syntax that passes validation
-// for use by babel plugins that transform dynamic expressions into static literals
-function isZacsStylesheetLiteral(t, node) {
-  return (
-    t.isCallExpression(node) && t.isIdentifier(node.callee, { name: 'ZACS_STYLESHEET_LITERAL' })
   )
 }
 
@@ -138,176 +130,16 @@ function validateStylesheet(t, path) {
   })
 }
 
-const strval = stringLiteralOrPlainTemplateLiteral =>
-  stringLiteralOrPlainTemplateLiteral.value ||
-  stringLiteralOrPlainTemplateLiteral.quasis[0].value.cooked
-
-const capitalRegex = /([A-Z])/g
-const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
-function encodeCSSProperty(property) {
-  return property.replace(capitalRegex, cssCaseReplacer)
-}
-
-function normalizeNumber(node) {
-  // assume number literal or unaryExpr(-, num)
-  if (node.argument) {
-    return -node.argument.value
-  }
-
-  return node.value
-}
-
-function encodeCSSValue(property, value) {
-  const val = normalizeNumber(value)
-  if (typeof val === 'number' && !unitlessCssAttributes.has(property)) {
-    return `${val}px`
-  }
-  return val
-}
-
-function encodeCSSStyle(property, spaces = '  ') {
-  if (property.type === 'SpreadElement') {
-    return encodeCSSStyles(property.argument, spaces)
-  }
-
-  const { value } = property
-
-  if (property.key.value) {
-    return `${spaces}${property.key.value} {\n${encodeCSSStyles(value, `${spaces}  `)}\n${spaces}}`
-  }
-
-  const key = property.key.name
-  if (key === 'native' || key === 'ios' || key === 'android') {
-    return null
-  } else if (key === 'css') {
-    return `${spaces}${strval(value)}`
-  } else if (key === 'web' || key === '_mixin') {
-    return encodeCSSStyles(value)
-  }
-
-  return `${spaces}${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
-}
-
-function encodeCSSStyles(styleset, spaces) {
-  return styleset.properties
-    .map(style => encodeCSSStyle(style, spaces))
-    .filter(rule => rule !== null)
-    .join('\n')
-}
-
-function encodeCSSStyleset(styleset) {
-  const { name } = styleset.key
-
-  if (name === 'css') {
-    return strval(styleset.value)
-  }
-
-  return `.${name} {\n${encodeCSSStyles(styleset.value)}\n}`
-}
-function encodeCSSStylesheet(stylesheet) {
-  const stylesets = stylesheet.properties.map(encodeCSSStyleset).join('\n\n')
-  return `${stylesets}\n`
-}
-
-function resolveRNStylesheet(t, platform, target, stylesheet) {
-  stylesheet.properties = stylesheet.properties
-    .filter(styleset => styleset.key.name !== 'css')
-    .map(styleset => {
-      const resolvedProperties = []
-      const pushProp = property => {
-        if (isZacsStylesheetLiteral(t, property.value)) {
-          // strip ZACS_STYLESHEET_LITERAL(x)
-          const [wrappedValue] = property.value.arguments
-          property.value = wrappedValue
-        }
-        resolvedProperties.push(property)
-      }
-      const pushFromInner = objectExpr => {
-        objectExpr.properties.forEach(property => {
-          if (
-            property.type === 'ObjectProperty' &&
-            property.key.name === '_mixin' &&
-            property.value.type === 'ObjectExpression'
-          ) {
-            pushFromInner(property.value)
-          } else {
-            pushProp(property)
-          }
-        })
-      }
-      styleset.value.properties.forEach(property => {
-        if (property.type === 'SpreadElement') {
-          pushFromInner(property.argument)
-          return
-        }
-
-        const key = property.key.name
-        if (key === 'web' || key === 'css') {
-          // do nothing
-        } else if (property.key.value) {
-          // css inner selector - do nothing
-        } else if (key === 'native' || key === '_mixin') {
-          pushFromInner(property.value)
-        } else if (key === 'ios' || key === 'android') {
-          if (target === key) {
-            pushFromInner(property.value)
-          }
-        } else {
-          pushProp(property)
-        }
-      })
-      styleset.value.properties = resolvedProperties
-      return styleset
-    })
-
-  return stylesheet
-}
-
 function transformStylesheet(t, state, path) {
-  const { node } = path
-  const { init } = node
-  const { arguments: args } = init
-  const platform = getPlatform(state)
-
   validateStylesheet(t, path)
 
-  const stylesheet = args[0]
+  const stylesheet = path.node.init.arguments[0]
+  const platform = getPlatform(state)
 
   if (platform === 'web') {
-    const css = encodeCSSStylesheet(stylesheet)
-    const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
-    const formattedCss = t.stringLiteral(preparedCss)
-    // NOTE: We can't use a template literal, because most people use a Babel transform for it, and it
-    // doesn't spit out clean output. So we spit out an ugly string literal, but keep it multi-line
-    // so that it's easier to view source code in case webpack fails to extract it.
-    // TODO: Escaped characters are probably broken here, please investigate
-    formattedCss.extra = {
-      rawValue: preparedCss,
-      raw: `"${preparedCss.split('\n').join(' \\n\\\n')}"`,
-    }
-
-    const magicCssExpression = t.expressionStatement(
-      t.callExpression(t.identifier('ZACS_MAGIC_CSS_STYLESHEET_MARKER_START'), [formattedCss]),
-    )
-    t.addComment(
-      path.parent,
-      'leading',
-      '\nZACS-generated CSS stylesheet begins below.\nPRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.\nIf you only see this comment and the one below in generated code, this is normal, nothing to worry about!\n',
-    )
-    path.get('init').replaceWith(magicCssExpression)
-    t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
+    transformStylesheetCSS(t, path, stylesheet)
   } else if (platform === 'native') {
-    state.set(`uses_rn`, true)
-    state.set(`uses_rn_stylesheet`, true)
-
-    const target = getTarget(state)
-
-    const resolvedRules = resolveRNStylesheet(t, platform, target, stylesheet)
-    const rnStylesheet = t.callExpression(
-      t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
-      [resolvedRules],
-    )
-    path.get('init').replaceWith(rnStylesheet)
+    transformStylesheetRN(t, path, stylesheet, state)
   } else {
     throw new Error('unknown platform')
   }
