@@ -1,5 +1,3 @@
-// Note: Why is this one big file? Because that makes it possible to work with it using https://astexplorer.net :)
-
 exports.__esModule = true
 
 const { getPlatform } = require('./state')
