@@ -46,4 +46,13 @@ function isValueAllowed(t, key, node) {
   return isSimpleValue(t, node) || isAllowedShorthand(t, key, node)
 }
 
-module.exports = { isValueAllowed, isZacsStylesheetLiteral }
+function resolveInsetsShorthand(node) {
+  if (node.type === 'ArrayExpression') {
+    const [top, right, bottom, left] = node.elements
+    return [top, right || top, bottom || top, left || right || top]
+  }
+
+  return [node, node, node, node]
+}
+
+module.exports = { isValueAllowed, isZacsStylesheetLiteral, resolveInsetsShorthand }

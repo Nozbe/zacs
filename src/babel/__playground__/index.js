@@ -5,6 +5,8 @@ const fs = require('fs')
 const { highlight } = require('cli-highlight')
 const plugin = require('../index')
 
+const isNative = process.argv.includes('--native')
+
 function transform(input, platform, extra = {}) {
   const { code } = babel.transform(input, {
     configFile: false,
@@ -42,7 +44,7 @@ process.stdout.write('\u001b[2J\u001b[0;0H')
 
 // print transformed file
 const playground = fs.readFileSync(path.resolve(__dirname, 'playground.js')).toString()
-const transformed = transform(playground, 'web')
+const transformed = transform(playground, isNative ? 'native' : 'web')
 
 // eslint-disable-next-line no-console
 process.stdout.write(highlight(transformed, { language: 'javascript' }))

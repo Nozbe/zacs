@@ -1,5 +1,59 @@
 const { getTarget } = require('./state')
-const { isZacsStylesheetLiteral } = require('./stylesheet-utils')
+const { isZacsStylesheetLiteral, resolveInsetsShorthand } = require('./stylesheet-utils')
+
+const insetsPropNames = {
+  margin: {
+    axes: ['marginVertical', 'marginHorizontal'],
+    all: ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'],
+  },
+  padding: {
+    axes: ['paddingVertical', 'paddingHorizontal'],
+    all: ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'],
+  },
+}
+
+function resolveShorthands(key, node) {
+  if (!(node.type === 'ArrayExpression' || key === 'inset')) {
+    return null
+  }
+  switch (key) {
+    case 'inset': {
+      const [top, right, bottom, left] = resolveInsetsShorthand(node)
+      return { top, right, bottom, left }
+    }
+    case 'border': {
+      const [width, style, color] = node.elements
+      return {
+        borderWidth: width,
+        borderStyle: style,
+        borderColor: color,
+      }
+    }
+    case 'margin':
+    case 'padding': {
+      if (node.elements.length === 1) {
+        return { [key]: node.elements[0] }
+      } else if (node.elements.length === 2) {
+        const [vertical, horizontal] = node.elements
+        const [verticalProp, horizontalProp] = insetsPropNames[key].axes
+        return {
+          [verticalProp]: vertical,
+          [horizontalProp]: horizontal,
+        }
+      }
+      const [top, right, bottom, left] = resolveInsetsShorthand(node)
+      const [topProp, rightProp, bottomProp, leftProp] = insetsPropNames[key].all
+      return {
+        [topProp]: top,
+        [rightProp]: right,
+        [bottomProp]: bottom,
+        [leftProp]: left,
+      }
+    }
+    default:
+      return null
+  }
+}
 
 function resolveRNStylesheet(t, target, stylesheet) {
   stylesheet.properties = stylesheet.properties
@@ -27,6 +81,11 @@ function resolveRNStylesheet(t, target, stylesheet) {
           }
         })
       }
+      const pushFromObject = object => {
+        Object.entries(object).forEach(([key, value]) => {
+          pushProp(t.objectProperty(t.identifier(key), value))
+        })
+      }
       styleset.value.properties.forEach(property => {
         if (property.type === 'SpreadElement') {
           pushFromInner(property.argument)
@@ -45,7 +104,12 @@ function resolveRNStylesheet(t, target, stylesheet) {
             pushFromInner(property.value)
           }
         } else {
-          pushProp(property)
+          const shorthandLines = resolveShorthands(key, property.value)
+          if (shorthandLines) {
+            pushFromObject(shorthandLines)
+          } else {
+            pushProp(property)
+          }
         }
       })
       styleset.value.properties = resolvedProperties

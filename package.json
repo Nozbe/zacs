@@ -8,6 +8,7 @@
     "flow": "flow check --max-warnings=0",
     "eslint": "eslint ./src -c ./.eslintrc.yml --cache --cache-location ./.cache/.eslintcache",
     "playground": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js\"",
+    "playground:native": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js --native\"",
     "prettier": "prettier-eslint --config ./.prettierrc --write \"./src/**/*.js\"",
     "ci:check": "concurrently 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail"
   },
