@@ -1,12 +1,5 @@
 const { getTarget } = require('./state')
-
-// ZACS_STYLESHEET_LITERAL(xxx) - magic syntax that passes validation
-// for use by babel plugins that transform dynamic expressions into static literals
-function isZacsStylesheetLiteral(t, node) {
-  return (
-    t.isCallExpression(node) && t.isIdentifier(node.callee, { name: 'ZACS_STYLESHEET_LITERAL' })
-  )
-}
+const { isZacsStylesheetLiteral } = require('./stylesheet-utils')
 
 function resolveRNStylesheet(t, target, stylesheet) {
   stylesheet.properties = stylesheet.properties
