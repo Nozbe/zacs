@@ -14,7 +14,7 @@
   "files": [
     "src/index.js",
     "src/index.js.flow",
-    "src/babel/index.js",
+    "src/babel/*.js",
     "babel.js",
     "src/webpack/loader.js",
     "src/flow/*.js",

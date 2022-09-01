@@ -3,6 +3,17 @@
 
 exports.__esModule = true
 
+const { htmlAttributes, htmlElements, unitlessCssAttributes } = require('./attributes')
+const { getPlatform, getTarget, isProduction } = require('./state')
+const {
+  jsxName,
+  jsxAttr,
+  jsxRenameElement,
+  jsxGetAttrValue,
+  jsxInferAttrTruthiness,
+  jsxHasAttrNamed,
+} = require('./jsxUtils')
+
 /*
 
 TERMINOLOGY:
@@ -20,63 +31,6 @@ zacs.view(
 )
 
 */
-
-function getPlatform(state) {
-  // return 'web'
-  // return 'native'
-  const { platform } = state.opts
-  if (!platform) {
-    throw new Error('platform option is required for ZACS babel plugin')
-  }
-  if (platform !== 'web' && platform !== 'native') {
-    throw new Error(
-      'illegal platform option passed to ZACS babel plugin. allowed values: web, native',
-    )
-  }
-  return platform
-}
-
-function getTarget(state) {
-  // return 'ios'
-  // return 'android'
-  const { target } = state.opts
-  if (target && !['ios', 'android', 'web'].includes(target)) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      'Unrecognized target passed to ZACS babel plugin. Known targets: web, ios, android',
-    )
-  }
-  return target
-}
-
-function isProduction(state) {
-  // return true
-  // return false
-  const { production } = state.opts
-  return !!production
-}
-
-function jsxName(t, name) {
-  if (name.includes('.')) {
-    const segments = name.split('.')
-    if (segments.length !== 2) {
-      throw new Error(`Invalid JSX name ${name}`)
-    }
-    const [obj, prop] = segments
-    return t.jSXMemberExpression(t.jSXIdentifier(obj), t.jSXIdentifier(prop))
-  }
-  return t.jSXIdentifier(name)
-}
-
-function renameJSX(t, node, name) {
-  const { openingElement, closingElement } = node
-  const jsxId = jsxName(t, name)
-
-  openingElement.name = jsxId
-  if (closingElement) {
-    closingElement.name = jsxId
-  }
-}
 
 function isAttributeWebSafe(attr) {
   return (
@@ -132,46 +86,6 @@ function withoutStylingProps(t, attributes, condStyles, literalStyleSpec) {
   })
 }
 
-function jsxAttrValue(t, attr) {
-  if (attr.value === null) {
-    return t.booleanLiteral(true)
-  } else if (t.isJSXExpressionContainer(attr.value)) {
-    return attr.value.expression
-  } else if (t.isStringLiteral(attr.value)) {
-    return attr.value
-  }
-  throw new Error('Unknown JSX Attribute value type')
-}
-
-function inferJsxAttrTruthiness(t, attr) {
-  const value = jsxAttrValue(t, attr)
-
-  if (
-    t.isBooleanLiteral(value, { value: true }) ||
-    (t.isStringLiteral(value) && value.value.length) ||
-    (t.isNumericLiteral(value) && value.value)
-  ) {
-    return true
-  }
-
-  if (
-    t.isBooleanLiteral(value, { value: false }) ||
-    t.isNullLiteral(value) ||
-    (t.isStringLiteral(value) && value.value === '') ||
-    (t.isNumericLiteral(value) && value.value === 0) ||
-    t.isIdentifier(value, { name: 'undefined' }) ||
-    t.isIdentifier(value, { name: 'NaN' })
-  ) {
-    return false
-  }
-
-  return value
-}
-
-function jsxAttr(t, name, value) {
-  return t.jSXAttribute(t.jSXIdentifier(name), t.jSXExpressionContainer(value))
-}
-
 const identifierRegex = /^[a-zA-Z][a-zA-Z0-9]*$/
 function objectKey(t, key) {
   if (typeof key === 'string' && identifierRegex.test(key)) {
@@ -218,7 +132,7 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
           return
         }
 
-        const flag = inferJsxAttrTruthiness(t, attr)
+        const flag = jsxInferAttrTruthiness(t, attr)
 
         if (flag === true) {
           stylesets.push([style])
@@ -244,7 +158,7 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
           return
         }
 
-        const styleValue = jsxAttrValue(t, attr)
+        const styleValue = jsxGetAttrValue(t, attr)
         literalStyles.push([styleAttr, styleValue])
       } else {
         literalStyles.push([
@@ -419,10 +333,6 @@ function styleAttributes(
     default:
       throw new Error('Unknown platform passed to ZACS config')
   }
-}
-
-function hasAttrNamed(t, name, attributes) {
-  return attributes.find(attribute => t.isJSXAttribute(attribute) && attribute.name.name === name)
 }
 
 const builtinElements = {
@@ -668,12 +578,12 @@ function validateZacsDeclaration(t, path) {
 function validateElementHasNoIllegalAttributes(t, path) {
   const { openingElement } = path.node
   const { attributes } = openingElement
-  if (hasAttrNamed(t, 'style', attributes)) {
+  if (jsxHasAttrNamed(t, 'style', attributes)) {
     throw path.buildCodeFrameError(
       "It's not allowed to pass `style` attribute to ZACS-styled components",
     )
   }
-  if (hasAttrNamed(t, 'className', attributes)) {
+  if (jsxHasAttrNamed(t, 'className', attributes)) {
     throw path.buildCodeFrameError(
       "It's not allowed to pass `className` attribute to ZACS-styled components",
     )
@@ -1153,7 +1063,7 @@ exports.default = function(babel) {
 
         // replace component
         if (platform === 'web') {
-          renameJSX(t, node, elementName)
+          jsxRenameElement(t, node, elementName)
 
           // filter out non-DOM attributes (React will throw errors at us for this)
           if (htmlElements.has(elementName)) {
@@ -1165,7 +1075,7 @@ exports.default = function(babel) {
           // as a binding on next attempt (as to not duplicate imports)
           state.set(`uses_rn`, true)
           state.set(`uses_rn_${zacsMethod}`, true)
-          renameJSX(t, node, elementName)
+          jsxRenameElement(t, node, elementName)
         } else {
           throw new Error('Unknown platform')
         }
@@ -1246,337 +1156,3 @@ exports.default = function(babel) {
     },
   }
 }
-
-const htmlAttributes = new Set([
-  // attributes
-  'abbr',
-  'accept',
-  'acceptCharset',
-  'accessKey',
-  'action',
-  'allowFullScreen',
-  'allowTransparency',
-  'alt',
-  'async',
-  'autoComplete',
-  'autoFocus',
-  'autoPlay',
-  'cellPadding',
-  'cellSpacing',
-  'challenge',
-  'charset',
-  'checked',
-  'cite',
-  'cols',
-  'colSpan',
-  'command',
-  'content',
-  'contentEditable',
-  'contextMenu',
-  'controls',
-  'coords',
-  'crossOrigin',
-  'data',
-  'dateTime',
-  'default',
-  'defer',
-  'dir',
-  'disabled',
-  'download',
-  'draggable',
-  'dropzone',
-  'encType',
-  'for',
-  'form',
-  'formAction',
-  'formEncType',
-  'formMethod',
-  'formNoValidate',
-  'formTarget',
-  'frameBorder',
-  'headers',
-  'height',
-  'hidden',
-  'high',
-  'href',
-  'hrefLang',
-  'htmlFor',
-  'httpEquiv',
-  'icon',
-  'id',
-  'inputMode',
-  'isMap',
-  'itemId',
-  'itemProp',
-  'itemRef',
-  'itemScope',
-  'itemType',
-  'kind',
-  'label',
-  'lang',
-  'list',
-  'loop',
-  'manifest',
-  'max',
-  'maxLength',
-  'media',
-  'mediaGroup',
-  'method',
-  'min',
-  'minLength',
-  'multiple',
-  'muted',
-  'name',
-  'noValidate',
-  'open',
-  'optimum',
-  'pattern',
-  'ping',
-  'placeholder',
-  'poster',
-  'preload',
-  'radioGroup',
-  'readOnly',
-  'rel',
-  'required',
-  'role',
-  'rows',
-  'rowSpan',
-  'sandbox',
-  'scope',
-  'scoped',
-  'scrolling',
-  'seamless',
-  'selected',
-  'shape',
-  'size',
-  'sizes',
-  'sortable',
-  'span',
-  'spellCheck',
-  'src',
-  'srcDoc',
-  'srcSet',
-  'start',
-  'step',
-  'style',
-  'tabIndex',
-  'target',
-  'title',
-  'translate',
-  'type',
-  'typeMustMatch',
-  'useMap',
-  'value',
-  'width',
-  'wmode',
-  'wrap',
-  // handlers
-  'onBlur',
-  'onChange',
-  'onClick',
-  'onContextMenu',
-  'onCopy',
-  'onCut',
-  'onDoubleClick',
-  'onDrag',
-  'onDragEnd',
-  'onDragEnter',
-  'onDragExit',
-  'onDragLeave',
-  'onDragOver',
-  'onDragStart',
-  'onDrop',
-  'onFocus',
-  'onInput',
-  'onKeyDown',
-  'onKeyPress',
-  'onKeyUp',
-  'onMouseDown',
-  'onMouseEnter',
-  'onMouseLeave',
-  'onMouseMove',
-  'onMouseOut',
-  'onMouseOver',
-  'onMouseUp',
-  'onPaste',
-  'onPointerDown',
-  'onPointerEnter',
-  'onPointerMove',
-  'onPointerUp',
-  'onPointerCancel',
-  'onPointerOut',
-  'onPointerLeave',
-  'onScroll',
-  'onSubmit',
-  'onTouchCancel',
-  'onTouchEnd',
-  'onTouchMove',
-  'onTouchStart',
-  'onWheel',
-])
-
-const htmlElements = new Set([
-  'a',
-  'abbr',
-  'address',
-  'area',
-  'article',
-  'aside',
-  'audio',
-  'b',
-  'base',
-  'bdi',
-  'bdo',
-  'blockquote',
-  'body',
-  'br',
-  'button',
-  'canvas',
-  'caption',
-  'cite',
-  'code',
-  'col',
-  'colgroup',
-  'data',
-  'datalist',
-  'dd',
-  'del',
-  'details',
-  'dfn',
-  'dialog',
-  'div',
-  'dl',
-  'dt',
-  'em',
-  'embed',
-  'fieldset',
-  'figcaption',
-  'figure',
-  'footer',
-  'form',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'head',
-  'header',
-  'hr',
-  'html',
-  'i',
-  'iframe',
-  'img',
-  'input',
-  'ins',
-  'kbd',
-  'keygen',
-  'label',
-  'legend',
-  'li',
-  'link',
-  'main',
-  'map',
-  'mark',
-  'math',
-  'menu',
-  'menuitem',
-  'meta',
-  'meter',
-  'nav',
-  'noscript',
-  'object',
-  'ol',
-  'optgroup',
-  'option',
-  'output',
-  'p',
-  'param',
-  'picture',
-  'pre',
-  'progress',
-  'q',
-  'rb',
-  'rp',
-  'rt',
-  'rtc',
-  'ruby',
-  's',
-  'samp',
-  'script',
-  'section',
-  'select',
-  'small',
-  'source',
-  'span',
-  'strong',
-  'style',
-  'sub',
-  'summary',
-  'sup',
-  'svg',
-  'table',
-  'tbody',
-  'td',
-  'template',
-  'textarea',
-  'tfoot',
-  'th',
-  'thead',
-  'time',
-  'title',
-  'tr',
-  'track',
-  'u',
-  'ul',
-  'variable',
-  'video',
-  'wbr',
-])
-
-const unitlessCssAttributes = new Set([
-  // Based on https://github.com/giuseppeg/style-sheet/blob/e71c119ecaccdb2e50be0759b45820b8cbf0c6df/src/data.js
-  'animationIterationCount',
-  'borderImageOutset',
-  'borderImageSlice',
-  'borderImageWidth',
-  'boxFlex',
-  'boxFlexGroup',
-  'boxOrdinalGroup',
-  'columnCount',
-  'columns',
-  'flex',
-  'flexGrow',
-  'flexPositive',
-  'flexShrink',
-  'flexNegative',
-  'flexOrder',
-  'gridRow',
-  'gridRowEnd',
-  'gridRowSpan',
-  'gridRowStart',
-  'gridColumn',
-  'gridColumnEnd',
-  'gridColumnSpan',
-  'gridColumnStart',
-  'fontWeight',
-  'lineClamp',
-  'lineHeight',
-  'opacity',
-  'order',
-  'orphans',
-  'tabSize',
-  'widows',
-  'zIndex',
-  'zoom',
-  // SVG
-  'fillOpacity',
-  'floodOpacity',
-  'stopOpacity',
-  'strokeDasharray',
-  'strokeDashoffset',
-  'strokeMiterlimit',
-  'strokeOpacity',
-  'strokeWidth',
-])
