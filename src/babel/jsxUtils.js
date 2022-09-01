@@ -64,6 +64,13 @@ function jsxHasAttrNamed(t, name, attributes) {
   return attributes.find(attribute => t.isJSXAttribute(attribute) && attribute.name.name === name)
 }
 
+function jsxFindNamespacedAttr(t, attributes, attrName) {
+  return attributes.find(
+    ({ name }) =>
+      t.isJSXNamespacedName(name) && name.namespace.name === 'zacs' && name.name.name === attrName,
+  )
+}
+
 module.exports = {
   jsxName,
   jsxAttr,
@@ -71,4 +78,5 @@ module.exports = {
   jsxGetAttrValue,
   jsxInferAttrTruthiness,
   jsxHasAttrNamed,
+  jsxFindNamespacedAttr,
 }
