@@ -84,6 +84,16 @@ const styles = zacs.stylesheet({
   border: {
     border: [1, 'solid', 'red'],
   },
+  scoped: {
+    web: {
+      margin: [5, 10],
+      border: [1, 'solid', 'red'],
+    },
+    native: {
+      margin: [5, 10],
+      border: [1, 'solid', 'red'],
+    },
+  },
   css: zacs.css`
   @keyframes hello {
     from { opacity: 0 }

@@ -77,6 +77,20 @@ function resolveRNStylesheet(t, target, stylesheet) {
         }
         resolvedProperties.push(property)
       }
+      const pushFromObject = object => {
+        Object.entries(object).forEach(([key, value]) => {
+          pushProp(t.objectProperty(t.identifier(key), value))
+        })
+      }
+      const pushPropOrShorthands = property => {
+        const key = property.key.name
+        const shorthandLines = resolveShorthands(key, property.value)
+        if (shorthandLines) {
+          pushFromObject(shorthandLines)
+        } else {
+          pushProp(property)
+        }
+      }
       const pushFromInner = objectExpr => {
         objectExpr.properties.forEach(property => {
           if (
@@ -86,13 +100,8 @@ function resolveRNStylesheet(t, target, stylesheet) {
           ) {
             pushFromInner(property.value)
           } else {
-            pushProp(property)
+            pushPropOrShorthands(property)
           }
-        })
-      }
-      const pushFromObject = object => {
-        Object.entries(object).forEach(([key, value]) => {
-          pushProp(t.objectProperty(t.identifier(key), value))
         })
       }
       styleset.value.properties.forEach(property => {
@@ -113,12 +122,7 @@ function resolveRNStylesheet(t, target, stylesheet) {
             pushFromInner(property.value)
           }
         } else {
-          const shorthandLines = resolveShorthands(key, property.value)
-          if (shorthandLines) {
-            pushFromObject(shorthandLines)
-          } else {
-            pushProp(property)
-          }
+          pushPropOrShorthands(property)
         }
       })
       styleset.value.properties = resolvedProperties

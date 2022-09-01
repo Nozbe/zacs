@@ -103,6 +103,13 @@ const styles = ZACS_RN_StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'red'
+  },
+  scoped: {
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'red'
   }
 });"
 `;
@@ -200,6 +207,13 @@ const styles = ZACS_RN_StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'red'
+  },
+  scoped: {
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'red'
   }
 });"
 `;
@@ -214,7 +228,13 @@ const styles = ZACS_RN_StyleSheet.create({
   text: {
     // magic syntax for babel replacement plugins
     backgroundColor: Styling.colors.onSurface1,
-    backgroundColor: Styling.colors.onSurface2
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: Styling.colors.onSurface1,
+    backgroundColor: Styling.colors.onSurface2,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: Styling.colors.onSurface2
   }
 });"
 `;
@@ -313,6 +333,13 @@ const styles = ZACS_RN_StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'red'
+  },
+  scoped: {
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'red'
   }
 });"
 `;
@@ -388,6 +415,11 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
 } \\\\n\\\\
  \\\\n\\\\
 .border { \\\\n\\\\
+  border: 1px solid red; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.scoped { \\\\n\\\\
+  margin: 5px 10px; \\\\n\\\\
   border: 1px solid red; \\\\n\\\\
 } \\\\n\\\\
  \\\\n\\\\
