@@ -100,4 +100,27 @@ function validateZacsDeclaration(t, path) {
   }
 }
 
-module.exports = { isZacsDeclaration, validateZacsDeclaration }
+const declarationStateKey = name => `declaration_${name}`
+
+function registerDeclaration(t, path, state) {
+  const { node } = path
+
+  const id = node.id.name
+  const stateKey = declarationStateKey(id)
+  if (state.get(stateKey)) {
+    throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
+  }
+  state.set(stateKey, node)
+
+  if (!state.opts.keepDeclarations) {
+    path.remove()
+  }
+}
+
+function getDeclaration(t, path, state, name) {
+  const stateKey = declarationStateKey(name)
+  const declaration = state.get(stateKey)
+  return declaration
+}
+
+module.exports = { isZacsDeclaration, validateZacsDeclaration, registerDeclaration, getDeclaration }

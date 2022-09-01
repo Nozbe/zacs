@@ -13,7 +13,12 @@ const {
   jsxHasAttrNamed,
 } = require('./jsxUtils')
 const { transformStylesheet } = require('./stylesheet')
-const { isZacsDeclaration, validateZacsDeclaration } = require('./declarations')
+const {
+  isZacsDeclaration,
+  validateZacsDeclaration,
+  registerDeclaration,
+  getDeclaration,
+} = require('./declarations')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -528,8 +533,6 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
     .concat(addedAttrs)
 }
 
-const componentKey = name => `declaration_${name}`
-
 exports.default = function(babel) {
   const { types: t } = babel
 
@@ -555,16 +558,7 @@ exports.default = function(babel) {
           } else if (zacsMethod.startsWith('create')) {
             node.init = createZacsComponent(t, state, path)
           } else {
-            const id = node.id.name
-            const stateKey = componentKey(id)
-            if (state.get(stateKey)) {
-              throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${id}`)
-            }
-            state.set(stateKey, node)
-
-            if (!state.opts.keepDeclarations) {
-              path.remove()
-            }
+            registerDeclaration(t, path, state)
           }
         },
         // Stylesheets must be processed on exit so that other babel plugins that transform
@@ -589,7 +583,7 @@ exports.default = function(babel) {
         const platform = getPlatform(state)
 
         // check if it's a ZACS element
-        const declaration = state.get(componentKey(name))
+        const declaration = getDeclaration(t, path, state, name)
         if (!declaration) {
           transformZacsAttributesOnNonZacsElement(t, platform, path)
           return
