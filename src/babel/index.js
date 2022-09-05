@@ -595,15 +595,9 @@ function validateZacsDeclaration(t, path) {
 
   // Validate declaration
   if (
-    ![
-      'text',
-      'view',
-      'styled',
-      'createText',
-      'createView',
-      'createStyled',
-      'stylesheet',
-    ].includes(zacsMethod)
+    !['text', 'view', 'styled', 'createText', 'createView', 'createStyled', 'stylesheet'].includes(
+      zacsMethod,
+    )
   ) {
     throw path.buildCodeFrameError(
       `zacs.${init.callee.property.name} is not a valid zacs declaration`,
@@ -676,12 +670,12 @@ function validateElementHasNoIllegalAttributes(t, path) {
   const { attributes } = openingElement
   if (hasAttrNamed(t, 'style', attributes)) {
     throw path.buildCodeFrameError(
-      'It\'s not allowed to pass `style` attribute to ZACS-styled components',
+      "It's not allowed to pass `style` attribute to ZACS-styled components",
     )
   }
   if (hasAttrNamed(t, 'className', attributes)) {
     throw path.buildCodeFrameError(
-      'It\'s not allowed to pass `className` attribute to ZACS-styled components',
+      "It's not allowed to pass `className` attribute to ZACS-styled components",
     )
   }
 }
@@ -691,12 +685,15 @@ function validateZacsImport(t, path) {
   if (
     !(
       node.specifiers.length === 1 &&
-      t.isImportDefaultSpecifier(node.specifiers[0]) &&
-      node.specifiers[0].local.name === 'zacs'
+      node.specifiers[0].local.name === 'zacs' &&
+      // import zacs from 'zacs'
+      (t.isImportDefaultSpecifier(node.specifiers[0]) ||
+        // import * as zacs from 'zacs'
+        t.isImportNamespaceSpecifier(node.specifiers[0]))
     )
   ) {
     throw path.buildCodeFrameError(
-      'ZACS import must say exactly `import zacs from \'@nozbe/zacs\'`. Other forms such as `import { view, text }`, `require`, `import * as zacs` are not allowed.',
+      "ZACS import must say exactly `import zacs from '@nozbe/zacs'` or `import * as zacs from '@nozbe/zacs'`. Other forms such as `import { view, text }`, `require` are not allowed.",
     )
   }
 }
@@ -773,7 +770,7 @@ function isZacsStyleSheetLiteral(t, node) {
 function validateStyleset(t, styleset, nestedIn) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
-      'ZACS StyleSheets must be simple object literals, like so: `text: { backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.',
+      "ZACS StyleSheets must be simple object literals, like so: `text: { backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
     )
   }
 
@@ -797,7 +794,7 @@ function validateStyleset(t, styleset, nestedIn) {
 
     if (!isPlainObjectProperty(t, property.node, true)) {
       throw property.buildCodeFrameError(
-        'ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Other syntaxes, like `[propName]:` are not allowed.',
+        "ZACS StyleSheets style attributes must be simple strings, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `[propName]:` are not allowed.",
       )
     }
     const valuePath = property.get('value')
@@ -818,7 +815,7 @@ function validateStyleset(t, styleset, nestedIn) {
     if (key === 'css') {
       if (!(t.isStringLiteral(value) || isPlainTemplateLiteral(t, value))) {
         throw valuePath.buildCodeFrameError(
-          'ZACS StyleSheet\'s magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.',
+          "ZACS StyleSheet's magic css: property expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
         )
       }
     } else if (key === '_mixin') {
@@ -842,7 +839,7 @@ function validateStyleset(t, styleset, nestedIn) {
         !nestedInNative
       ) {
         throw valuePath.buildCodeFrameError(
-          'ZACS StyleSheet\'s style values must be simple literal strings or numbers, e.g.: `backgroundColor: \'red\'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed',
+          "ZACS StyleSheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
         )
       }
     }
@@ -867,7 +864,7 @@ function validateStyleSheet(t, path) {
       const cssValue = styleset.get('value')
       if (!(t.isStringLiteral(cssValue.node) || isPlainTemplateLiteral(t, cssValue.node))) {
         throw cssValue.buildCodeFrameError(
-          'ZACS StyleSheet\'s magic css: styleset expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.',
+          "ZACS StyleSheet's magic css: styleset expects a simple literal string as its value. Object expressions, references, expressions in a template literal are not allowed.",
         )
       }
     } else {
@@ -963,7 +960,11 @@ function resolveRNStylesheet(t, platform, target, stylesheet) {
       }
       const pushFromInner = objectExpr => {
         objectExpr.properties.forEach(property => {
-          if (property.type === 'ObjectProperty' && property.key.name === '_mixin' && property.value.type === 'ObjectExpression') {
+          if (
+            property.type === 'ObjectProperty' &&
+            property.key.name === '_mixin' &&
+            property.value.type === 'ObjectExpression'
+          ) {
             pushFromInner(property.value)
           } else {
             pushProp(property)

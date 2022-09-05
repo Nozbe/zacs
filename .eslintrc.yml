@@ -24,16 +24,7 @@ rules:
   curly:
     - 2
     - all
-  arrow-parens:
-    - 2
-    - as-needed
-  semi:
-    - 2
-    - never
   class-methods-use-this: 0
-  comma-dangle:
-    - 2
-    - always-multiline
   no-console:
     - 2
   no-unused-expressions: 0
@@ -42,13 +33,7 @@ rules:
     - props: false
   no-useless-escape: 0
   func-names: 0
-  quotes:
-    - 2
-    - single
-    - allowTemplateLiterals: true
   no-underscore-dangle: 0
-  object-curly-newline: 0
-  function-paren-newline: 0
   no-unused-vars:
     - 2
     - argsIgnorePattern: "^_"
@@ -56,9 +41,28 @@ rules:
     - 2
     - allowElseIf: true
 
+  # formatting (off - formatting is Prettier's job)
+  semi:
+    - 2
+    - never
+  arrow-parens: off
+  react/jsx-closing-bracket-location: off
+  react/jsx-first-prop-new-line: off
+  operator-linebreak: off
+  object-curly-newline: off
+  function-paren-newline: off
+  max-classes-per-file: off
+  camelcase: off
+  react/jsx-indent: off
+  quotes: off
+  react/jsx-curly-newline: off
+  flowtype/space-after-type-colon: off
+  flowtype/generic-spacing: off
+  lines-between-class-members: off
+
   # react
   # react/prop-types: 0
-  # react/jsx-filename-extension: 0
+  react/jsx-filename-extension: 0
   # react/jsx-no-bind:
   #   - 2
   #   - ignoreRefs: true
@@ -75,9 +79,8 @@ rules:
   # react/prefer-stateless-function:
   #   - 1
   #   - ignorePureComponents: true
-  # react/jsx-boolean-value:
-  #   - 2
-  #   - always
+  react/jsx-boolean-value: off
+  react/react-in-jsx-scope: off
   # react/no-unused-prop-types: 0
   # react/destructuring-assignment: 0
   # react/jsx-one-expression-per-line: 0

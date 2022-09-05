@@ -1,5 +1,5 @@
 /* eslint-disable */
-import zacs from 'zacs'
+import * as zacs from 'zacs'
 
 const styles = zacs.stylesheet({
   root: {
@@ -38,7 +38,7 @@ const styles = zacs.stylesheet({
     '& > div': {
       margin: -20,
       opacity: 0.5,
-    }
+    },
   },
   text: {
     color: '#abcdef',

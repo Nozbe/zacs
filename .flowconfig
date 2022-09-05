@@ -13,13 +13,15 @@
 ; flow-typed/
 
 [options]
-esproposal.optional_chaining=enable
+server.max_workers=8
 emoji=true
-module.ignore_non_literal_requires=true
-module.file_ext=.js
+merge_timeout=120
+react.runtime=automatic
+# remove later
+inference_mode=classic
 
 # fixes Flow on ARM
 sharedmemory.heap_size=4000000000
 
 [version]
->=0.146
+>=0.185.2

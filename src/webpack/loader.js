@@ -33,7 +33,8 @@ const startMarker = 'ZACS_MAGIC_CSS_STYLESHEET_MARKER_START("'
 const cssDisclaimer = '/* Generated CSS file (from ZACS Stylesheets) - do not edit! */\n'
 
 exports.default = function loader(source, inputSourceMap) {
-  const { cacheDirectory = '.zacs-cache', extension = '.zacs.css' } = loaderUtils.getOptions(this) || {}
+  const { cacheDirectory = '.zacs-cache', extension = '.zacs.css' } =
+    loaderUtils.getOptions(this) || {}
 
   const stylesheetMarkerPos = source.indexOf(startMarker)
   if (stylesheetMarkerPos === -1) {
@@ -42,14 +43,20 @@ exports.default = function loader(source, inputSourceMap) {
   }
 
   if (source.lastIndexOf(startMarker) !== stylesheetMarkerPos) {
-    this.emitError(`It's not allowed to have multiple \`zacs.stylesheet()\`s in a single JavaScript file`)
+    this.emitError(
+      `It's not allowed to have multiple \`zacs.stylesheet()\`s in a single JavaScript file`,
+    )
   }
 
   // NOTE: We can't use simple indexOf + substring, because some Babel plugins malform the magic markers, insterting whitespace
   // between end of string argument and the closing paren
-  const match = source.match(/ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\("(.*)ZACS_MAGIC_CSS_STYLESHEET_MARKER_END"\s*\)/s)
+  const match = source.match(
+    /ZACS_MAGIC_CSS_STYLESHEET_MARKER_START\("(.*)ZACS_MAGIC_CSS_STYLESHEET_MARKER_END"\s*\)/s,
+  )
   if (!match) {
-    this.emitError(`Broken ZACS stylesheet. Found the beginning of it, but the end is missing or malformed.`)
+    this.emitError(
+      `Broken ZACS stylesheet. Found the beginning of it, but the end is missing or malformed.`,
+    )
   }
 
   const extractedStyles = match[0]
@@ -71,14 +78,15 @@ exports.default = function loader(source, inputSourceMap) {
 
   // Add extra whitespace as to not break sourcemap positions of items before/after
   const extraWhitespaceCount = extractedStyles.split('\n').length - 1
-  const extraWhitespace = Array(extraWhitespaceCount).fill('\n').join('')
-  const requireStatement = `require(${loaderUtils.stringifyRequest(this, outputFilename)})${extraWhitespace}`
+  const extraWhitespace = Array(extraWhitespaceCount)
+    .fill('\n')
+    .join('')
+  const requireStatement = `require(${loaderUtils.stringifyRequest(
+    this,
+    outputFilename,
+  )})${extraWhitespace}`
   const cleanSource = source.replace(extractedStyles, requireStatement)
 
-  this.callback(
-    null,
-    cleanSource,
-    inputSourceMap,
-  )
+  this.callback(null, cleanSource, inputSourceMap)
   return undefined
 }
