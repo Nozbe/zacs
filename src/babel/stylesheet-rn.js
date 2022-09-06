@@ -1,11 +1,67 @@
 const { getTarget } = require('./state')
+const { isZacsStylesheetLiteral, resolveInsetsShorthand } = require('./stylesheet-utils')
 
-// ZACS_STYLESHEET_LITERAL(xxx) - magic syntax that passes validation
-// for use by babel plugins that transform dynamic expressions into static literals
-function isZacsStylesheetLiteral(t, node) {
-  return (
-    t.isCallExpression(node) && t.isIdentifier(node.callee, { name: 'ZACS_STYLESHEET_LITERAL' })
-  )
+const insetsPropNames = {
+  margin: {
+    axes: ['marginVertical', 'marginHorizontal'],
+    all: ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'],
+  },
+  padding: {
+    axes: ['paddingVertical', 'paddingHorizontal'],
+    all: ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'],
+  },
+}
+
+function resolveShorthands(key, node) {
+  if (!(node.type === 'ArrayExpression' || key === 'inset')) {
+    return null
+  }
+  switch (key) {
+    case 'inset': {
+      const [top, right, bottom, left] = resolveInsetsShorthand(node)
+      return { top, right, bottom, left }
+    }
+    case 'border': {
+      const [width, style, color] = node.elements
+      return {
+        borderWidth: width,
+        borderStyle: style,
+        borderColor: color,
+      }
+    }
+    case 'margin':
+    case 'padding': {
+      if (node.elements.length === 1) {
+        return { [key]: node.elements[0] }
+      } else if (node.elements.length === 2) {
+        const [vertical, horizontal] = node.elements
+        const [verticalProp, horizontalProp] = insetsPropNames[key].axes
+        return {
+          [verticalProp]: vertical,
+          [horizontalProp]: horizontal,
+        }
+      } else if (node.elements.length === 3) {
+        const [top, horizontal, bottom] = node.elements
+        const [, horizontalProp] = insetsPropNames[key].axes
+        const [topProp, , bottomProp] = insetsPropNames[key].all
+        return {
+          [topProp]: top,
+          [bottomProp]: bottom,
+          [horizontalProp]: horizontal,
+        }
+      }
+      const [top, right, bottom, left] = resolveInsetsShorthand(node)
+      const [topProp, rightProp, bottomProp, leftProp] = insetsPropNames[key].all
+      return {
+        [topProp]: top,
+        [rightProp]: right,
+        [bottomProp]: bottom,
+        [leftProp]: left,
+      }
+    }
+    default:
+      return null
+  }
 }
 
 function resolveRNStylesheet(t, target, stylesheet) {
@@ -21,6 +77,20 @@ function resolveRNStylesheet(t, target, stylesheet) {
         }
         resolvedProperties.push(property)
       }
+      const pushFromObject = object => {
+        Object.entries(object).forEach(([key, value]) => {
+          pushProp(t.objectProperty(t.identifier(key), value))
+        })
+      }
+      const pushPropOrShorthands = property => {
+        const key = property.key.name
+        const shorthandLines = resolveShorthands(key, property.value)
+        if (shorthandLines) {
+          pushFromObject(shorthandLines)
+        } else {
+          pushProp(property)
+        }
+      }
       const pushFromInner = objectExpr => {
         objectExpr.properties.forEach(property => {
           if (
@@ -30,7 +100,7 @@ function resolveRNStylesheet(t, target, stylesheet) {
           ) {
             pushFromInner(property.value)
           } else {
-            pushProp(property)
+            pushPropOrShorthands(property)
           }
         })
       }
@@ -52,7 +122,7 @@ function resolveRNStylesheet(t, target, stylesheet) {
             pushFromInner(property.value)
           }
         } else {
-          pushProp(property)
+          pushPropOrShorthands(property)
         }
       })
       styleset.value.properties = resolvedProperties

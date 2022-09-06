@@ -1,6 +1,7 @@
 const { getPlatform } = require('./state')
 const { transformStylesheetCSS } = require('./stylesheet-css')
-const { transformStylesheetRN, isZacsStylesheetLiteral } = require('./stylesheet-rn')
+const { transformStylesheetRN } = require('./stylesheet-rn')
+const { isValueAllowed } = require('./stylesheet-utils')
 
 function isPlainObjectProperty(t, node, allowStringLiterals) {
   const isAllowedKey =
@@ -12,16 +13,6 @@ function isPlainObjectProperty(t, node, allowStringLiterals) {
 
 function isPlainTemplateLiteral(t, node) {
   return t.isTemplateLiteral(node) && !node.expressions.length && node.quasis.length === 1
-}
-
-function isNumberLiteral(t, node) {
-  return (
-    t.isNumericLiteral(node) ||
-    (t.isUnaryExpression(node) &&
-      node.operator === '-' &&
-      node.prefix &&
-      t.isNumericLiteral(node.argument))
-  )
 }
 
 function validateStyleset(t, styleset, nestedIn) {
@@ -87,16 +78,9 @@ function validateStyleset(t, styleset, nestedIn) {
       validateStyleset(t, valuePath, key)
     } else {
       const nestedInNative = nestedIn === 'native' || nestedIn === 'ios' || nestedIn === 'android'
-      if (
-        !(
-          t.isStringLiteral(value) ||
-          isNumberLiteral(t, value) ||
-          isZacsStylesheetLiteral(t, value)
-        ) &&
-        !nestedInNative
-      ) {
+      if (!isValueAllowed(t, key, value) && !nestedInNative) {
         throw valuePath.buildCodeFrameError(
-          "ZACS Stylesheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Compound expressions, references, and other syntaxes are not allowed",
+          "ZACS Stylesheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Also allowed are margin/padding/inset shorthands (`margin: [5, 10, '20%']`) and border shorthand (`border: [1, 'solid', 'red']`). Compound expressions, references, and other syntaxes are not allowed.",
         )
       }
     }

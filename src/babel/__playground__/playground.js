@@ -6,8 +6,12 @@ const Root2 = zacs.createView([style.root, style.root2])
 const view = <Root />
 
 const styles = zacs.stylesheet({
-  root: {
-    backgroundColor: 'red',
-    height: 100,
+  threeArray: {
+    margin: [5, 10, 15],
+    padding: [5, 10, 15],
+    inset: [5, 10, 15],
+  },
+  border: {
+    border: [1, 'solid', 'red'],
   },
 })

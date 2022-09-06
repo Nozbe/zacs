@@ -1,13 +1,14 @@
 {
   "name": "@nozbe/zacs",
-  "version": "2.0.0-5",
+  "version": "2.0.0-7",
   "description": "Zero Abstraction Cost Styling (for React DOM and React Native)",
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "flow": "flow check --max-warnings=0",
+    "flow": "flow check --max-warnings=0 --color=always",
     "eslint": "eslint ./src -c ./.eslintrc.yml --cache --cache-location ./.cache/.eslintcache",
     "playground": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js\"",
+    "playground:native": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js --native\"",
     "prettier": "prettier-eslint --config ./.prettierrc --write \"./src/**/*.js\"",
     "ci:check": "concurrently 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail"
   },

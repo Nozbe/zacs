@@ -11,21 +11,42 @@ function encodeCSSProperty(property) {
   return property.replace(capitalRegex, cssCaseReplacer)
 }
 
-function normalizeNumber(node) {
+function normalizeVal(node) {
   // assume number literal or unaryExpr(-, num)
   if (node.argument) {
     return -node.argument.value
+  } else if (typeof node === 'string') {
+    return node
   }
 
   return node.value
 }
 
 function encodeCSSValue(property, value) {
-  const val = normalizeNumber(value)
+  const val = normalizeVal(value)
   if (typeof val === 'number' && !unitlessCssAttributes.has(property)) {
     return `${val}px`
   }
   return val
+}
+
+function encodeCSSLine(spaces, key, value) {
+  return `${spaces}${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
+}
+
+function encodeCSSLines(spaces, object) {
+  return Object.entries(object)
+    .map(([key, value]) => encodeCSSLine(spaces, key, value))
+    .join('\n')
+}
+
+function resolveShorthands(key, node) {
+  if (node.type !== 'ArrayExpression') {
+    return null
+  }
+  return {
+    [key]: node.elements.map(el => encodeCSSValue('', el)).join(' '),
+  }
 }
 
 function encodeCSSStyle(property, spaces = '  ') {
@@ -40,6 +61,7 @@ function encodeCSSStyle(property, spaces = '  ') {
   }
 
   const key = property.key.name
+
   if (key === 'native' || key === 'ios' || key === 'android') {
     return null
   } else if (key === 'css') {
@@ -48,7 +70,12 @@ function encodeCSSStyle(property, spaces = '  ') {
     return encodeCSSStyles(value)
   }
 
-  return `${spaces}${encodeCSSProperty(key)}: ${encodeCSSValue(key, value)};`
+  const shorthandLines = resolveShorthands(key, value)
+  if (shorthandLines) {
+    return encodeCSSLines(spaces, shorthandLines)
+  }
+
+  return encodeCSSLine(spaces, key, value)
 }
 
 function encodeCSSStyles(styleset, spaces) {
