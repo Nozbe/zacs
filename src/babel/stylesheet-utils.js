@@ -36,6 +36,10 @@ function isAllowedShorthand(t, key, node) {
     case 'inset':
       return length >= 1 && length <= 4
     case 'border':
+    case 'borderTop':
+    case 'borderRight':
+    case 'borderBottom':
+    case 'borderLeft':
       return length === 3
     default:
       return false

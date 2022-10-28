@@ -102,7 +102,19 @@ const styles = ZACS_RN_StyleSheet.create({
   border: {
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: 'red'
+    borderColor: 'red',
+    borderTopWidth: 2,
+    borderTopStyle: 'solid',
+    borderTopColor: 'green',
+    borderRightWidth: 3,
+    borderRightStyle: 'solid',
+    borderRightColor: 'yellow',
+    borderBottomWidth: 4,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'blue',
+    borderLeftWidth: 5,
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'black'
   },
   scoped: {
     marginVertical: 5,
@@ -206,7 +218,19 @@ const styles = ZACS_RN_StyleSheet.create({
   border: {
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: 'red'
+    borderColor: 'red',
+    borderTopWidth: 2,
+    borderTopStyle: 'solid',
+    borderTopColor: 'green',
+    borderRightWidth: 3,
+    borderRightStyle: 'solid',
+    borderRightColor: 'yellow',
+    borderBottomWidth: 4,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'blue',
+    borderLeftWidth: 5,
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'black'
   },
   scoped: {
     marginVertical: 5,
@@ -332,7 +356,19 @@ const styles = ZACS_RN_StyleSheet.create({
   border: {
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: 'red'
+    borderColor: 'red',
+    borderTopWidth: 2,
+    borderTopStyle: 'solid',
+    borderTopColor: 'green',
+    borderRightWidth: 3,
+    borderRightStyle: 'solid',
+    borderRightColor: 'yellow',
+    borderBottomWidth: 4,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'blue',
+    borderLeftWidth: 5,
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'black'
   },
   scoped: {
     marginVertical: 5,
@@ -416,6 +452,10 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
  \\\\n\\\\
 .border { \\\\n\\\\
   border: 1px solid red; \\\\n\\\\
+  border-top: 2px solid green; \\\\n\\\\
+  border-right: 3px solid yellow; \\\\n\\\\
+  border-bottom: 4px solid blue; \\\\n\\\\
+  border-left: 5px solid black; \\\\n\\\\
 } \\\\n\\\\
  \\\\n\\\\
 .scoped { \\\\n\\\\
