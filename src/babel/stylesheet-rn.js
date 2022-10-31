@@ -21,12 +21,16 @@ function resolveShorthands(key, node) {
       const [top, right, bottom, left] = resolveInsetsShorthand(node)
       return { top, right, bottom, left }
     }
-    case 'border': {
+    case 'border':
+    case 'borderTop':
+    case 'borderRight':
+    case 'borderBottom':
+    case 'borderLeft': {
       const [width, style, color] = node.elements
       return {
-        borderWidth: width,
-        borderStyle: style,
-        borderColor: color,
+        [`${key}Width`]: width,
+        [`${key}Style`]: style,
+        [`${key}Color`]: color,
       }
     }
     case 'margin':

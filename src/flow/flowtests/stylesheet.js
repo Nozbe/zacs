@@ -70,6 +70,10 @@ const stylesheet = zacs.stylesheet({
     inset: [5, '10%', 15],
     margin: [5, 10, 15, 20],
     border: [1, 'solid', 'red'],
+    borderTop: [2, 'solid', 'green'],
+    borderRight: [3, 'solid', 'yellow'],
+    borderBottom: [4, 'solid', 'blue'],
+    borderLeft: [5, 'solid', 'black'],
     // $FlowExpectedError[incompatible-call]
     border: [2],
     // $FlowExpectedError[incompatible-call]
