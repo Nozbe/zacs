@@ -17,11 +17,10 @@ server.max_workers=8
 emoji=true
 merge_timeout=120
 react.runtime=automatic
-# remove later
-inference_mode=classic
+exact_by_default=false
 
 # fixes Flow on ARM
 sharedmemory.heap_size=4000000000
 
 [version]
->=0.185.2
+>=0.199.0

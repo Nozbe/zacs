@@ -73,7 +73,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
-    "flow-bin": "0.185.2",
+    "flow-bin": "0.200.0",
     "jest": "^24.9.0",
     "memfs": "^3.2.0",
     "mini-css-extract-plugin": "^0.12.0",

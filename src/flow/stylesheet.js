@@ -47,4 +47,7 @@ export type { ZacsStylesheet }
 
 export type ZacsStylesheetFunction = ZacsStylesheetSpec => ZacsStylesheet
 
-export type CSSStringTemplateTag = (_strings: string[], ..._exprs: Array<any>) => string
+export type CSSStringTemplateTag = (
+  _strings: $ReadOnlyArray<string>,
+  ..._exprs: Array<any>
+) => string
