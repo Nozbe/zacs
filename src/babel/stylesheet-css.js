@@ -1,6 +1,15 @@
 /* eslint-disable no-use-before-define */
 const { unitlessCssAttributes } = require('./attributes')
 
+const comment = (text) => `/*${text} */`
+
+const encodeComment = (node, spaces) => {
+  if (node && node.leadingComments) {
+    return `${node.leadingComments.map((c) => spaces + comment(c.value)).join('\n')}\n`
+  }
+  return ''
+}
+
 const strval = (stringLiteralOrPlainTemplateLiteral) =>
   stringLiteralOrPlainTemplateLiteral.value ||
   stringLiteralOrPlainTemplateLiteral.quasis[0].value.cooked
@@ -49,7 +58,7 @@ function resolveShorthands(key, node) {
   }
 }
 
-function encodeCSSStyle(property, spaces = '  ') {
+function encodeCSSStyle(property, spaces) {
   if (property.type === 'SpreadElement') {
     return encodeCSSStyles(property.argument, spaces)
   }
@@ -63,7 +72,7 @@ function encodeCSSStyle(property, spaces = '  ') {
   const key = property.key.name
 
   if (key === 'native' || key === 'ios' || key === 'android') {
-    return null
+    return ''
   } else if (key === 'css') {
     return `${spaces}${strval(value)}`
   } else if (key === 'web' || key === '_mixin') {
@@ -78,10 +87,10 @@ function encodeCSSStyle(property, spaces = '  ') {
   return encodeCSSLine(spaces, key, value)
 }
 
-function encodeCSSStyles(styleset, spaces) {
+function encodeCSSStyles(styleset, spaces = '  ') {
   return styleset.properties
-    .map((style) => encodeCSSStyle(style, spaces))
-    .filter((rule) => rule !== null)
+    .map((style) => encodeComment(style, spaces) + encodeCSSStyle(style, spaces))
+    .filter(Boolean)
     .join('\n')
 }
 

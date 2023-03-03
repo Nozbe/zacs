@@ -8,6 +8,7 @@ If you only see this comment and the one below in generated code, this is normal
 */
 const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
 .root { \\n\\
+  /* check native-only expressions */ \\n\\
  \\n\\
 } \\n\\
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");

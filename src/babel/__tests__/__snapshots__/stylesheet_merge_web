@@ -13,6 +13,8 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
   color: red; \\n\\
   margin: 2px; \\n\\
   opacity: 0.5; \\n\\
+  /* Note: web keys should NOT be merged (leave that up to PostCSS), because declaring a property */ \\n\\
+  /* multiple times in CSS is a common technique to use new CSS features with a fallback */ \\n\\
   background: some-css-background; \\n\\
   background: some-modern-css-magic; \\n\\
 } \\n\\

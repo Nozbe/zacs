@@ -8,11 +8,17 @@ If you only see this comment and the one below in generated code, this is normal
 */
 const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
 .root { \\n\\
+  /* strings */ \\n\\
   background-color: red; \\n\\
+  /* unitless quantities */ \\n\\
   opacity: 0.5; \\n\\
+  /* pixels */ \\n\\
   width: 100px; \\n\\
+  /* units */ \\n\\
   height: 100%; \\n\\
+  /* prefixed names */ \\n\\
   -webkit-padding-start: 20px; \\n\\
+  /* postcss syntax */ \\n\\
   background-color: @theme(onSurface1); \\n\\
 } \\n\\
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");

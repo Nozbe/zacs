@@ -8,15 +8,19 @@ If you only see this comment and the one below in generated code, this is normal
 */
 const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
 .with_css { \\n\\
+  /* string */ \\n\\
   opacity: 0.5; color: #abbaba; \\n\\
+  /* zacs.css template */ \\n\\
    \\n\\
       opacity: 0.5; \\n\\
       color: #abbaba; \\n\\
      \\n\\
+  /* plain template + nesting */ \\n\\
   &:hover { \\n\\
       opacity: .8; \\n\\
       color: #abbaba; \\n\\
     } \\n\\
+  /* css in nested scoped */ \\n\\
   & > div { \\n\\
     border: 1px solid red; \\n\\
   } \\n\\

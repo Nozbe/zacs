@@ -8,9 +8,18 @@ If you only see this comment and the one below in generated code, this is normal
 */
 const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
 .root { \\n\\
+  /* TODO: check emulated mixins */ \\n\\
+  /* ...{ */ \\n\\
+  /*   flex: 1, */ \\n\\
+  /*   zIndex: -1000, */ \\n\\
+  /* }, */ \\n\\
+  /* _mixin syntax */ \\n\\
   flex: 1; \\n\\
   z-index: -1000; \\n\\
+  /* second mixin with override */ \\n\\
   z-index: -2; \\n\\
+  /* mixins in nested scoped */ \\n\\
+ \\n\\
   & > div { \\n\\
   background-color: web; \\n\\
   } \\n\\
