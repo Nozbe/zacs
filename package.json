@@ -76,7 +76,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "flow-bin": "0.201.0",
-    "jest": "^28",
+    "jest": "^29",
     "jest-specific-snapshot": "^7.0.0",
     "memfs": "^3.2.0",
     "mini-css-extract-plugin": "^0.12.0",
