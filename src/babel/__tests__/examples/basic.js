@@ -42,11 +42,3 @@ const styledhack = <Root __forwardedRef={__forwardedRef} />
 
 // react splat
 const splat = <Root2 {...props} />
-
-/* === No styles === */
-
-const NoStyles = zacs.view(null)
-const noStyles = <NoStyles />
-
-const NoStyles2 = zacs.view()
-const noStyles2 = <NoStyles2 />

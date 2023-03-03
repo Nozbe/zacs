@@ -38,11 +38,7 @@ const reactAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\
 
 const styledhack = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" __forwardedRef={__forwardedRef} />; // react splat
 
-const splat = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;
-/* === No styles === */
-
-const noStyles = <ZACS_RN_View __zacs_original_name=\\"NoStyles\\" />;
-const noStyles2 = <ZACS_RN_View __zacs_original_name=\\"NoStyles2\\" />;"
+const splat = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;"
 `;
 
 exports[`zacs example: basic, web 1`] = `
@@ -73,11 +69,7 @@ const reactAttributes = <div className={style.root} __zacs_original_name=\\"Root
 
 const styledhack = <div className={style.root} __zacs_original_name=\\"Root\\" />; // react splat
 
-const splat = <div className={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;
-/* === No styles === */
-
-const noStyles = <div __zacs_original_name=\\"NoStyles\\" />;
-const noStyles2 = <div __zacs_original_name=\\"NoStyles2\\" />;"
+const splat = <div className={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;"
 `;
 
 exports[`zacs example: createdComponents, native 1`] = `
@@ -279,6 +271,26 @@ const added1_propKeys = <div style={{
 }} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
 
 const addedNull = <div __zacs_original_name=\\"AddedStylesNull\\" />;"
+`;
+
+exports[`zacs example: declaration_null, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === No styles === */
+const noStyles = <ZACS_RN_View __zacs_original_name=\\"NoStyles\\" />;
+const noStyles2 = <ZACS_RN_View __zacs_original_name=\\"NoStyles2\\" />;"
+`;
+
+exports[`zacs example: declaration_null, web 1`] = `
+"/* eslint-disable */
+
+/* === No styles === */
+const noStyles = <div __zacs_original_name=\\"NoStyles\\" />;
+const noStyles2 = <div __zacs_original_name=\\"NoStyles2\\" />;"
 `;
 
 exports[`zacs example: manyStyleSources, native 1`] = `

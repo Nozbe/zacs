@@ -33,6 +33,7 @@ function example(name) {
 describe('zacs', () => {
   const examples = [
     'basic',
+    'declaration_null',
     'declaration_conditionalStyleSpec',
     'declaration_literalStyleSpec',
     'zacs:style',
