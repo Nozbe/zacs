@@ -6,8 +6,8 @@ const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
 const styles = ZACS_RN_StyleSheet.create({
   root: {
     height: 200,
-    color: 'black',
     margin: 2,
+    color: 'black',
     opacity: 0.2
   }
 });"

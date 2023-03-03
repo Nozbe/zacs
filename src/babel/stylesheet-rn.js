@@ -69,9 +69,19 @@ function resolveShorthands(key, node) {
 }
 
 function deduplicatedProperties(input) {
-  const map = new Map()
-  input.forEach((property) => map.set(property.key.name, property))
-  return Array.from(map.values())
+  // Note: we're doing double-reverse instead of adding to map because we want to preserve order
+  // of the LAST property, not the first one
+  const output = []
+  const seen = new Set()
+  input.reverse().forEach((property) => {
+    const { name } = property.key
+    if (seen.has(name)) {
+      return
+    }
+    seen.add(name)
+    output.push(property)
+  })
+  return output.reverse()
 }
 
 function resolveRNStylesheet(t, target, stylesheet) {
