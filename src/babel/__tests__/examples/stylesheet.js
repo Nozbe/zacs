@@ -9,16 +9,13 @@ const styles = zacs.stylesheet({
     // native-only
     native: {
       width: 1337,
-      // check native-only expressions
-      backgroundColor: foo ? rgba(a, b) : bar,
       _mixin: { left: 0, right: 0 },
     },
     ios: {
-      marginHorizontal: foo(0),
+      marginHorizontal: 5,
     },
     android: {
       opacity: 0.1,
-      marginVertical: foo(0),
     },
     // web-only
     web: {

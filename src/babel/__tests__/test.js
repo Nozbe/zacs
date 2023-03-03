@@ -127,7 +127,10 @@ describe('zacs stylesheets', () => {
     'stylesheet_shorthand_border',
     'stylesheet_shorthand_scoped',
   ]
-  const webIosAndroidExamples = []
+  const webIosAndroidExamples = [
+    //
+    'stylesheet_nativeExpressions',
+  ]
   webNativeExamples.forEach(exampleName => {
     const platforms = ['web', 'native']
     platforms.forEach(platform => {

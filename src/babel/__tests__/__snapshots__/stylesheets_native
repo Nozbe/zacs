@@ -12,8 +12,6 @@ const styles = ZACS_RN_StyleSheet.create({
     height: 50,
     width: '100%',
     width: 1337,
-    // check native-only expressions
-    backgroundColor: foo ? rgba(a, b) : bar,
     left: 0,
     right: 0
   },
