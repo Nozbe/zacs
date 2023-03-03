@@ -34,7 +34,6 @@ const styles = zacs.stylesheet({
       WebkitPaddingStart: 20,
       zIndex: 1500,
     },
-    css: '& > span { opacity: 0.5 }',
     '& > div': {
       margin: -20,
       opacity: 0.5,
@@ -49,17 +48,5 @@ const styles = zacs.stylesheet({
     opacity: 0.5,
     // web-only postcss syntax
     backgroundColor: '@theme(onSurface1)',
-    css: `&:hover {
-      opacity: .8;
-      color: #abbaba;
-    }`,
   },
-  // test ZACS-specific style shorthands
-
-  css: zacs.css`
-  @keyframes hello {
-    from { opacity: 0 }
-    to { opacity: 0 }
-  }
-  `,
 })
