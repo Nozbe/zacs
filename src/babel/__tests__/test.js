@@ -112,7 +112,6 @@ describe('zacs', () => {
       `import ZACS from 'zacs'`,
     ]
     badForms.forEach((js) => {
-      // console.log(js)
       expect(() => transform(js, 'web')).toThrow('ZACS import must say exactly')
     })
   })

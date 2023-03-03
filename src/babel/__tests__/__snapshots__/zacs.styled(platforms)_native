@@ -2,8 +2,6 @@
 
 exports[`zacs example: zacs.styled(platforms), native 1`] = `
 "const zacsReactNative = require('react-native');
-/* eslint-disable */
-
 const platbox = <NativeBox __zacs_original_name="PlatformBox" style={style.box} />;
 const platbox_attrs = <NativeBox __zacs_original_name="PlatformBox" style={style.box} foo={foo} bar title="hello" />;
 

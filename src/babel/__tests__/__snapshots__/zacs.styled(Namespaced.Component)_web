@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs example: zacs.styled(Namespaced.Component), web 1`] = `
-"/* eslint-disable */
-
-const modalText = <Modal.Text __zacs_original_name="StyledModalText" className={style.foo} />;"
-`;
+exports[`zacs example: zacs.styled(Namespaced.Component), web 1`] = `"const modalText = <Modal.Text __zacs_original_name="StyledModalText" className={style.foo} />;"`;

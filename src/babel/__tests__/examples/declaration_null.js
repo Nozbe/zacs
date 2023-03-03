@@ -1,5 +1,4 @@
-/* eslint-disable */
-import zacs from 'zacs'
+import * as zacs from '@nozbe/zacs'
 
 const View0 = zacs.view()
 const view0 = <View0 />

@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs:inherit, web 1`] = `
-"/* eslint-disable */
-
-const stylableBlank = <div __zacs_original_name="StylableBlank" className={props.className} style={props.style} />;
+"const stylableBlank = <div __zacs_original_name="StylableBlank" className={props.className} style={props.style} />;
 const stylableMain = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={props.style} />;
 const stylableMain_highlighted = <span __zacs_original_name="StylableMain" className={style.main + (" " + style.highlighted) + (" " + (props.className || ""))} style={props.style} />;
 const stylableMain_color = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={Object.assign({

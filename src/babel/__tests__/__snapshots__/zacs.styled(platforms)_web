@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(platforms), web 1`] = `
-"/* eslint-disable */
-
-const platbox = <WebBox __zacs_original_name="PlatformBox" className={style.box} />;
+"const platbox = <WebBox __zacs_original_name="PlatformBox" className={style.box} />;
 const platbox_attrs = <WebBox __zacs_original_name="PlatformBox" className={style.box} foo={foo} bar title="hello" />;
 
 // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)

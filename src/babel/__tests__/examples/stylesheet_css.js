@@ -1,5 +1,4 @@
-/* eslint-disable */
-import * as zacs from 'zacs'
+import * as zacs from '@nozbe/zacs'
 
 const styles = zacs.stylesheet({
   with_css: {

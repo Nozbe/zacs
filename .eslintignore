@@ -1,3 +1,4 @@
 src/legacy-runtime-styling
 src/webpack/__tests__/examples/
+src/babel/__tests__/examples
 src/babel/__tests__/__snapshots__

@@ -1,5 +1,4 @@
-/* eslint-disable */
-import zacs from 'zacs'
+import * as zacs from '@nozbe/zacs'
 
 const StylableBlank = zacs.view()
 const stylableBlank = <StylableBlank zacs:inherit={props} />

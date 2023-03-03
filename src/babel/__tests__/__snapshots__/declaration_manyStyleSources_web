@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_manyStyleSources, web 1`] = `
-"/* eslint-disable */
-
-const mix1_none = <div __zacs_original_name="Mix1" className={styles.box} />;
+"const mix1_none = <div __zacs_original_name="Mix1" className={styles.box} />;
 const mix1_add = <div __zacs_original_name="Mix1" className={styles.box} style={{
   width: 500
 }} />;

@@ -1,5 +1,4 @@
-/* eslint-disable */
-import zacs from 'zacs'
+import * as zacs from '@nozbe/zacs'
 
 const StyledBox = zacs.styled(Box)
 const box = <StyledBox isFoo />

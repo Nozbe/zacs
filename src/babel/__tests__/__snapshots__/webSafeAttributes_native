@@ -3,8 +3,6 @@
 exports[`zacs example: webSafeAttributes, native 1`] = `
 "const zacsReactNative = require('react-native');
 const ZACS_RN_View = zacsReactNative.View;
-/* eslint-disable */
-
 // custom props -- different JSX syntaxes (will be cut out on web)
 const customProps = <ZACS_RN_View __zacs_original_name="Root" style={style.root} foo={foo} isHighlighted={true} isBlocked bar="bar" Component={<Hello />} />;
 

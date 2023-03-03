@@ -4,8 +4,6 @@ exports[`zacs example: declaration_unconditionalStyle, native 1`] = `
 "const zacsReactNative = require('react-native');
 const ZACS_RN_Text = zacsReactNative.Text;
 const ZACS_RN_View = zacsReactNative.View;
-/* eslint-disable */
-
 const view = <ZACS_RN_View __zacs_original_name="Root" style={style.root} />;
 const view2 = <ZACS_RN_View __zacs_original_name="Root2" style={styles.root2} />;
 const composition = <>

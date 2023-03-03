@@ -1,5 +1,4 @@
-/* eslint-disable */
-import zacs from 'zacs'
+import * as zacs from '@nozbe/zacs'
 
 const PlatformBox = zacs.styled({ web: WebBox, native: NativeBox }, style.box)
 

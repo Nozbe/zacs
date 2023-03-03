@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs:style, web 1`] = `
-"/* eslint-disable */
-
-const addedViaProp = <div __zacs_original_name="View" style={{
+"const addedViaProp = <div __zacs_original_name="View" style={{
   width: 100,
   height: 50
 }} />;

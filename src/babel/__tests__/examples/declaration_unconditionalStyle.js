@@ -1,5 +1,4 @@
-/* eslint-disable */
-import zacs from 'zacs'
+import * as zacs from '@nozbe/zacs'
 
 const Root = zacs.view(style.root)
 const Root2 = zacs.view(styles.root2)

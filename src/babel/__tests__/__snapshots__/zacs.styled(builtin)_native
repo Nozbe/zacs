@@ -2,8 +2,6 @@
 
 exports[`zacs example: zacs.styled(builtin), native 1`] = `
 "const zacsReactNative = require('react-native');
-/* eslint-disable */
-
 // you wouldn't do it in shared code, only in .{native,web}.js
 
 const li = <li __zacs_original_name="StyledLi" foo={foo} title="hello" />;"

@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(Component), web 1`] = `
-"/* eslint-disable */
-
-const box = <Box __zacs_original_name="StyledBox" isFoo />;
+"const box = <Box __zacs_original_name="StyledBox" isFoo />;
 const box_ref = <Box __zacs_original_name="StyledBox" ref={boxRef} />;
 const link = <Link __zacs_original_name="StyledLink" className={styles.link} />;
 const link_visited = <Link __zacs_original_name="StyledLink" className={styles.link + (" " + style.visitedLink)} />;

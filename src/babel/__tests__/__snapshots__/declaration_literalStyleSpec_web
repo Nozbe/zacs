@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_literalStyleSpec, web 1`] = `
-"/* eslint-disable */
-
-const added1_none = <div __zacs_original_name="AddedStyles1" />;
+"const added1_none = <div __zacs_original_name="AddedStyles1" />;
 const added1_one = <div __zacs_original_name="AddedStyles1" style={{
   width: width
 }} />;

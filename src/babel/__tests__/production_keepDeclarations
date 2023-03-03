@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs preserves declarations if requested 1`] = `
-"/* eslint-disable */
-import zacs from 'zacs';
+"import * as zacs from '@nozbe/zacs';
 const Root = zacs.view(style.root);
 const root = <div className={style.root} />;"
 `;

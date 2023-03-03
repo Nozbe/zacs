@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_unconditionalStyle, web 1`] = `
-"/* eslint-disable */
-
-const view = <div __zacs_original_name="Root" className={style.root} />;
+"const view = <div __zacs_original_name="Root" className={style.root} />;
 const view2 = <div __zacs_original_name="Root2" className={styles.root2} />;
 const composition = <>
     <div __zacs_original_name="Root" className={style.root}>

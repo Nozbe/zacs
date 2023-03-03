@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.createX, web 1`] = `
-"/* eslint-disable */
-
-export const ExportedView = props => <div>{props.children}</div>;
+"export const ExportedView = props => <div>{props.children}</div>;
 export const ExportedText = props => <span className={style.text}>{props.children}</span>;
 export const ExportedButton = props => <Button className={style.button + (props.isHighlighted ? " " + style.highlighted : "")} style={{
   backgroundColor: props.color

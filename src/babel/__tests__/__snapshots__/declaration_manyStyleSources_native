@@ -3,8 +3,6 @@
 exports[`zacs example: declaration_manyStyleSources, native 1`] = `
 "const zacsReactNative = require('react-native');
 const ZACS_RN_View = zacsReactNative.View;
-/* eslint-disable */
-
 const mix1_none = <ZACS_RN_View __zacs_original_name="Mix1" style={styles.box} />;
 const mix1_add = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, {
   width: 500

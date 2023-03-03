@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs doesn't add __zacs_original_name in production 1`] = `
-"/* eslint-disable */
-
-const root = <div className={style.root} />;"
-`;
+exports[`zacs doesn't add __zacs_original_name in production 1`] = `"const root = <div className={style.root} />;"`;

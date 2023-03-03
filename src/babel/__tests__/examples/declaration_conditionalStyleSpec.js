@@ -1,5 +1,4 @@
-/* eslint-disable */
-import zacs from 'zacs'
+import * as zacs from '@nozbe/zacs'
 
 const Conditional1 = zacs.view(style.root, {
   isFoo: style.rootFoo,
