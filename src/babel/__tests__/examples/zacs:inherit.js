@@ -13,7 +13,7 @@ const stylableMain_all = <StylableMain zacs:inherit={props} isHighlighted color=
 
 const stylableMain_splat = <StylableMain zacs:inherit={props} {...props} /> // dangerous territory!
 
-export const StylableButton = props => {
+export const StylableButton = (props) => {
   const { title, isHighlighted, color } = props
   return (
     <StylableMain zacs:inherit={props} isHighlighted={isHighlighted} color={factoryColor(color)}>

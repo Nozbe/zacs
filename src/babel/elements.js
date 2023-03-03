@@ -20,7 +20,7 @@ function isAttributeWebSafe(attr) {
 }
 
 function webSafeAttributes(attributes) {
-  return attributes.filter(attribute => {
+  return attributes.filter((attribute) => {
     if (attribute.type === 'JSXSpreadAttribute') {
       // not sure what to do here - this might spread non-dom-safe attributes...
       // better to get the warning than skip something important but perhaps we
@@ -38,18 +38,18 @@ function withoutStylingProps(t, attributes, condStyles, literalStyleSpec) {
   const stylingProps = []
 
   if (condStyles && condStyles.properties) {
-    condStyles.properties.forEach(property => {
+    condStyles.properties.forEach((property) => {
       stylingProps.push(property.key.name)
     })
   }
 
   if (literalStyleSpec && literalStyleSpec.properties) {
-    literalStyleSpec.properties.forEach(property => {
+    literalStyleSpec.properties.forEach((property) => {
       stylingProps.push(property.key.name)
     })
   }
 
-  return attributes.filter(attribute => {
+  return attributes.filter((attribute) => {
     if (t.isJSXSpreadAttribute(attribute)) {
       return true
     } else if (t.isJSXAttribute(attribute)) {
@@ -85,19 +85,19 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
 
   if (uncondStyles && !t.isNullLiteral(uncondStyles)) {
     if (t.isArrayExpression(uncondStyles)) {
-      stylesets.push(...uncondStyles.elements.map(styleset => [styleset]))
+      stylesets.push(...uncondStyles.elements.map((styleset) => [styleset]))
     } else {
       stylesets.push([uncondStyles])
     }
   }
 
   if (condStyles && !t.isNullLiteral(condStyles)) {
-    condStyles.properties.forEach(property => {
+    condStyles.properties.forEach((property) => {
       const style = property.value
       const propName = property.key.name
 
       if (jsxAttributes) {
-        const attr = jsxAttributes.find(a => a.name && a.name.name === propName)
+        const attr = jsxAttributes.find((a) => a.name && a.name.name === propName)
         if (!attr) {
           return
         }
@@ -118,12 +118,12 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
   }
 
   if (literalStyleSpec && !t.isNullLiteral(literalStyleSpec)) {
-    literalStyleSpec.properties.forEach(property => {
+    literalStyleSpec.properties.forEach((property) => {
       const styleAttr = property.value.value
       const propName = property.key.name
 
       if (jsxAttributes) {
-        const attr = jsxAttributes.find(a => a.name && a.name.name === propName)
+        const attr = jsxAttributes.find((a) => a.name && a.name.name === propName)
         if (!attr) {
           return
         }
@@ -334,7 +334,9 @@ function getElementName(t, platform, path, originalName, component) {
     // assuming it was already validated to be id.id
     return `${component.object.name}.${component.property.name}`
   } else if (t.isObjectExpression(component)) {
-    const platformComponent = component.properties.find(property => property.key.name === platform)
+    const platformComponent = component.properties.find(
+      (property) => property.key.name === platform,
+    )
 
     if (!platformComponent) {
       throw path.buildCodeFrameError(

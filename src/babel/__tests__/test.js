@@ -51,7 +51,7 @@ describe('zacs', () => {
     'zacs.styled(platforms)',
     'zacs.createX',
   ]
-  examples.forEach(exampleName => {
+  examples.forEach((exampleName) => {
     it(`example: ${exampleName}, web`, () => {
       expect(transform(example(exampleName), 'web')).toMatchSpecificSnapshot(
         snapshot(`${exampleName}_web`),
@@ -111,7 +111,7 @@ describe('zacs', () => {
       `import * as ZACS from '@nozbe/zacs'`,
       `import ZACS from 'zacs'`,
     ]
-    badForms.forEach(js => {
+    badForms.forEach((js) => {
       // console.log(js)
       expect(() => transform(js, 'web')).toThrow('ZACS import must say exactly')
     })
@@ -133,9 +133,9 @@ describe('zacs stylesheets', () => {
     'stylesheet_nesting',
     'stylesheet_nativeExpressions',
   ]
-  webNativeExamples.forEach(exampleName => {
+  webNativeExamples.forEach((exampleName) => {
     const platforms = ['web', 'native']
-    platforms.forEach(platform => {
+    platforms.forEach((platform) => {
       it(`example: ${exampleName}, ${platform}`, () => {
         expect(transform(example(exampleName), platform)).toMatchSpecificSnapshot(
           snapshot(`${exampleName}_${platform}`),
@@ -143,9 +143,9 @@ describe('zacs stylesheets', () => {
       })
     })
   })
-  webIosAndroidExamples.forEach(exampleName => {
+  webIosAndroidExamples.forEach((exampleName) => {
     const platforms = ['web', 'ios', 'android']
-    platforms.forEach(platform => {
+    platforms.forEach((platform) => {
       it(`example: ${exampleName}, ${platform}`, () => {
         expect(
           transform(example(exampleName), platform === 'web' ? 'web' : 'native', {

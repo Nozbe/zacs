@@ -45,7 +45,7 @@ type ZacsStylesheetSpec = $Exact<{
 
 export type { ZacsStylesheet }
 
-export type ZacsStylesheetFunction = ZacsStylesheetSpec => ZacsStylesheet
+export type ZacsStylesheetFunction = (ZacsStylesheetSpec) => ZacsStylesheet
 
 export type CSSStringTemplateTag = (
   _strings: $ReadOnlyArray<string>,

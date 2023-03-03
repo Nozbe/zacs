@@ -16,7 +16,7 @@ export type StyledComponent<A> = (
   ?FactoryStyle<any>,
 ) => React$StyledComponent<A>
 
-export type CreateStyledElement<A> = React$ElementType => (
+export type CreateStyledElement<A> = (React$ElementType) => (
   ?StyleObject,
   ?FactoryStyleName<any>,
   ?FactoryStyle<any>,

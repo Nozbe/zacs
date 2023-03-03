@@ -70,10 +70,10 @@ function resolveShorthands(key, node) {
 
 function resolveRNStylesheet(t, target, stylesheet) {
   stylesheet.properties = stylesheet.properties
-    .filter(styleset => styleset.key.name !== 'css')
-    .map(styleset => {
+    .filter((styleset) => styleset.key.name !== 'css')
+    .map((styleset) => {
       const resolvedProperties = []
-      const pushProp = property => {
+      const pushProp = (property) => {
         if (isZacsStylesheetLiteral(t, property.value)) {
           // strip ZACS_STYLESHEET_LITERAL(x)
           const [wrappedValue] = property.value.arguments
@@ -81,12 +81,12 @@ function resolveRNStylesheet(t, target, stylesheet) {
         }
         resolvedProperties.push(property)
       }
-      const pushFromObject = object => {
+      const pushFromObject = (object) => {
         Object.entries(object).forEach(([key, value]) => {
           pushProp(t.objectProperty(t.identifier(key), value))
         })
       }
-      const pushPropOrShorthands = property => {
+      const pushPropOrShorthands = (property) => {
         const key = property.key.name
         const shorthandLines = resolveShorthands(key, property.value)
         if (shorthandLines) {
@@ -95,8 +95,8 @@ function resolveRNStylesheet(t, target, stylesheet) {
           pushProp(property)
         }
       }
-      const pushFromInner = objectExpr => {
-        objectExpr.properties.forEach(property => {
+      const pushFromInner = (objectExpr) => {
+        objectExpr.properties.forEach((property) => {
           if (
             property.type === 'ObjectProperty' &&
             property.key.name === '_mixin' &&
@@ -108,7 +108,7 @@ function resolveRNStylesheet(t, target, stylesheet) {
           }
         })
       }
-      styleset.value.properties.forEach(property => {
+      styleset.value.properties.forEach((property) => {
         if (property.type === 'SpreadElement') {
           pushFromInner(property.argument)
           return

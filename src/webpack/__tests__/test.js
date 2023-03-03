@@ -98,12 +98,12 @@ describe('zacs-loader', () => {
     const { modules } = stats.compilation
     expect(modules.length).toBe(3)
 
-    const js = modules.find(m => m.rawRequest === './examples/basic.js')._source._value
+    const js = modules.find((m) => m.rawRequest === './examples/basic.js')._source._value
     expect(js).toMatchSnapshot()
 
-    const css = modules.find(m => m.constructor.name === 'CssModule').content
+    const css = modules.find((m) => m.constructor.name === 'CssModule').content
     expect(css).toMatchSnapshot()
-    const cssShim = modules.find(m => m.rawRequest.endsWith('/basic.zacs.css'))._source._value
+    const cssShim = modules.find((m) => m.rawRequest.endsWith('/basic.zacs.css'))._source._value
     expect(cssShim).toMatchSnapshot()
   })
   it(`extracts CSS with slightly malformed whitespace`, async () => {
@@ -112,7 +112,7 @@ describe('zacs-loader', () => {
     const { modules } = stats.compilation
     expect(modules.length).toBe(3)
 
-    const js = modules.find(m => m.rawRequest === './examples/brokenWhitespace.js')._source._value
+    const js = modules.find((m) => m.rawRequest === './examples/brokenWhitespace.js')._source._value
     expect(js).toMatchSnapshot()
   })
   it(`has configurable cache directory and extension`, async () => {
@@ -123,7 +123,7 @@ describe('zacs-loader', () => {
     const { modules } = stats.compilation
     expect(modules.length).toBe(3)
 
-    const cssShim = modules.find(m =>
+    const cssShim = modules.find((m) =>
       m.rawRequest.endsWith(
         '../.zacs-cache-test/src/webpack/__tests__/examples/basic.zacstest.css',
       ),

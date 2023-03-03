@@ -5,12 +5,12 @@ import { filter, toPairs, piped, fromPairs, map } from 'rambdax'
 
 import type { CreateStyledElement } from './type'
 
-const isObject: <T>(T) => boolean = maybeObject =>
+const isObject: <T>(T) => boolean = (maybeObject) =>
   maybeObject !== null && typeof maybeObject === 'object' && !Array.isArray(maybeObject)
 
 type CreateStyle = Function
 
-const isBuiltInComponent = component =>
+const isBuiltInComponent = (component) =>
   typeof component !== 'function' &&
   (component.displayName === 'View' || component.displayName === 'Text')
 
@@ -25,7 +25,7 @@ const createClassComponent = <A: *>(
 
     _component: React$StatelessFunctionalComponent<any>
 
-    setNativeProps = nativeProps => {
+    setNativeProps = (nativeProps) => {
       // $FlowFixMe
       this._component.setNativeProps(nativeProps)
     }
@@ -37,7 +37,7 @@ const createClassComponent = <A: *>(
       }
 
       if (isBuiltInComponent(element)) {
-        attributes.ref = node => {
+        attributes.ref = (node) => {
           this._component = node
         }
       } else if (this.props.__forwardedRef) {
@@ -66,7 +66,7 @@ const getAddedStyles = (styleSelector, props) =>
 
 const getAddedAttributes = (addAttributes, props) =>
   typeof addAttributes === 'function'
-    ? filter(value => !!value || value === 0, addAttributes(props))
+    ? filter((value) => !!value || value === 0, addAttributes(props))
     : piped(
         addAttributes,
         toPairs,
@@ -75,22 +75,21 @@ const getAddedAttributes = (addAttributes, props) =>
         fromPairs,
       )
 
-const getStylesFromProps = maybeStyles =>
+const getStylesFromProps = (maybeStyles) =>
   isObject(maybeStyles) ? [maybeStyles] : maybeStyles || []
 
-const createStyleFactory = ({ styleSelector, addAttributes, rootStyle }) => props => {
-  const extraStyles = styleSelector ? getAddedStyles(styleSelector, props) : []
-  const extraAttributes = addAttributes ? getAddedAttributes(addAttributes, props) : {}
+const createStyleFactory =
+  ({ styleSelector, addAttributes, rootStyle }) =>
+  (props) => {
+    const extraStyles = styleSelector ? getAddedStyles(styleSelector, props) : []
+    const extraAttributes = addAttributes ? getAddedAttributes(addAttributes, props) : {}
 
-  return [rootStyle, ...extraStyles, extraAttributes, ...getStylesFromProps(props.style)]
-}
+    return [rootStyle, ...extraStyles, extraAttributes, ...getStylesFromProps(props.style)]
+  }
 
-export const createStyledElement: CreateStyledElement<any> = element => (
-  rootStyle,
-  styleSelector,
-  addAttributes,
-) => {
-  const createStyle = createStyleFactory({ rootStyle, styleSelector, addAttributes })
-  // $FlowFixMe
-  return createClassComponent(element, createStyle)
-}
+export const createStyledElement: CreateStyledElement<any> =
+  (element) => (rootStyle, styleSelector, addAttributes) => {
+    const createStyle = createStyleFactory({ rootStyle, styleSelector, addAttributes })
+    // $FlowFixMe
+    return createClassComponent(element, createStyle)
+  }

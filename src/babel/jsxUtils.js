@@ -61,7 +61,7 @@ function jsxInferAttrTruthiness(t, attr) {
 }
 
 function jsxHasAttrNamed(t, name, attributes) {
-  return attributes.find(attribute => t.isJSXAttribute(attribute) && attribute.name.name === name)
+  return attributes.find((attribute) => t.isJSXAttribute(attribute) && attribute.name.name === name)
 }
 
 function jsxFindNamespacedAttr(t, attributes, attrName) {

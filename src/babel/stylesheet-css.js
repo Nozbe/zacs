@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 const { unitlessCssAttributes } = require('./attributes')
 
-const strval = stringLiteralOrPlainTemplateLiteral =>
+const strval = (stringLiteralOrPlainTemplateLiteral) =>
   stringLiteralOrPlainTemplateLiteral.value ||
   stringLiteralOrPlainTemplateLiteral.quasis[0].value.cooked
 
@@ -45,7 +45,7 @@ function resolveShorthands(key, node) {
     return null
   }
   return {
-    [key]: node.elements.map(el => encodeCSSValue('', el)).join(' '),
+    [key]: node.elements.map((el) => encodeCSSValue('', el)).join(' '),
   }
 }
 
@@ -80,8 +80,8 @@ function encodeCSSStyle(property, spaces = '  ') {
 
 function encodeCSSStyles(styleset, spaces) {
   return styleset.properties
-    .map(style => encodeCSSStyle(style, spaces))
-    .filter(rule => rule !== null)
+    .map((style) => encodeCSSStyle(style, spaces))
+    .filter((rule) => rule !== null)
     .join('\n')
 }
 

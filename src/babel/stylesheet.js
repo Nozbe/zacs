@@ -23,7 +23,7 @@ function validateStyleset(t, styleset, nestedIn) {
   }
 
   const properties = styleset.get('properties')
-  properties.forEach(property => {
+  properties.forEach((property) => {
     // FIXME: We want to allow `...{literal-object}` syntax as a natural way to do mixins, but
     // most setups use a Babel plugin that will transpile object spread syntax into a function call
     // before ZACS stylesheets be processed. We can't do all processing earlier because that will
@@ -94,7 +94,7 @@ function validateStylesheet(t, path) {
     throw path.buildCodeFrameError('ZACS Stylesheet accepts a single Object argument')
   }
 
-  stylesheet.get('properties').forEach(styleset => {
+  stylesheet.get('properties').forEach((styleset) => {
     if (!isPlainObjectProperty(t, styleset.node)) {
       throw styleset.buildCodeFrameError(
         'ZACS Stylesheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',

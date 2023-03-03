@@ -48,11 +48,11 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
   }
 
   openingElement.attributes = openingElement.attributes
-    .filter(attr => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
+    .filter((attr) => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
     .concat(addedAttrs)
 }
 
-exports.default = function(babel) {
+exports.default = function (babel) {
   const { types: t } = babel
 
   return {

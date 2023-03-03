@@ -48,7 +48,7 @@ function extractFnReturn(node, type) {
 
 function getPatternProps(node) {
   return node.params[0].type === 'ObjectPattern'
-    ? node.params[0].properties.map(p => p.key.name)
+    ? node.params[0].properties.map((p) => p.key.name)
     : null
 }
 
@@ -68,7 +68,7 @@ function convertAddedToStatic(j, node) {
   }
 
   try {
-    const styles = stylesObj.properties.map(property => {
+    const styles = stylesObj.properties.map((property) => {
       const attr = property.key.name
       if (!attr) {
         throw 'out'
@@ -124,7 +124,7 @@ function convertConditionalToStatic(j, node) {
   }
 
   try {
-    const styles = stylesArray.elements.map(el => {
+    const styles = stylesArray.elements.map((el) => {
       if (el.type !== 'ArrayExpression' || el.elements.length !== 2) {
         throw 'out'
       }
@@ -170,7 +170,7 @@ module.exports = function transformer(file, api) {
   const usedStyleExports = {}
   const needsComponentImport = {}
 
-  root.find(j.CallExpression).forEach(path => {
+  root.find(j.CallExpression).forEach((path) => {
     const def = path.node
 
     // fix up existing zacs code
@@ -309,10 +309,10 @@ module.exports = function transformer(file, api) {
 
   // remove style import if possible
   if (styleImports.length) {
-    styleImports.forEach(styleImport => {
+    styleImports.forEach((styleImport) => {
       const { specifiers } = styleImport.value
 
-      styleImport.value.specifiers = specifiers.filter(specifier => {
+      styleImport.value.specifiers = specifiers.filter((specifier) => {
         const zacsifiable = ['view', 'text']
 
         if (
@@ -336,7 +336,7 @@ module.exports = function transformer(file, api) {
       return
     }
     let importToAdd = null
-    value.specifiers = value.specifiers.filter(specifier => {
+    value.specifiers = value.specifiers.filter((specifier) => {
       const { local, imported } = specifier
       if (
         imported &&
@@ -356,7 +356,7 @@ module.exports = function transformer(file, api) {
     })
     if (
       importToAdd &&
-      !value.specifiers.find(specifier => specifier.type === 'ImportDefaultSpecifier')
+      !value.specifiers.find((specifier) => specifier.type === 'ImportDefaultSpecifier')
     ) {
       value.specifiers.push(j.importDefaultSpecifier(j.identifier(importToAdd)))
     }

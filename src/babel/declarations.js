@@ -100,7 +100,7 @@ function validateZacsDeclaration(t, path) {
   }
 }
 
-const declarationStateKey = name => `declaration_${name}`
+const declarationStateKey = (name) => `declaration_${name}`
 
 function registerDeclaration(t, path, state) {
   const { node } = path

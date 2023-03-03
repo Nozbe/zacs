@@ -26,7 +26,7 @@ function arrayExprToStringArray(t, expr) {
     return []
   }
 
-  return expr.elements.map(element => {
+  return expr.elements.map((element) => {
     // TODO: Validate passed props earlier, don't just crash babel
     t.assertStringLiteral(element)
     if (element.value === 'style' || element.value === 'className') {
@@ -64,7 +64,7 @@ function createZacsComponent(t, state, path) {
   const shouldForwardRef = passedProps.includes('ref')
 
   const jsxAttributes = []
-  passedProps.forEach(prop => {
+  passedProps.forEach((prop) => {
     const isAttrWebSafe =
       platform === 'web' && htmlElements.has(elementName) ? isAttributeWebSafe(prop) : true
     if (prop !== 'zacs:inherit' && prop !== 'zacs:style' && prop !== 'ref' && isAttrWebSafe) {

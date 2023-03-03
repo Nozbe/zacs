@@ -142,7 +142,7 @@ export type StyledComponent<A> = (
   ?FactoryStyle<any>,
 ) => React$StyledComponent<A>
 
-export type CreateStyledElement<A> = HtmlElement => (
+export type CreateStyledElement<A> = (HtmlElement) => (
   ?ClassName,
   ?FactoryClassName<any>,
   ?FactoryStyle<any>,

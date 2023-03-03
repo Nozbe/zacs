@@ -78,9 +78,7 @@ exports.default = function loader(source, inputSourceMap) {
 
   // Add extra whitespace as to not break sourcemap positions of items before/after
   const extraWhitespaceCount = extractedStyles.split('\n').length - 1
-  const extraWhitespace = Array(extraWhitespaceCount)
-    .fill('\n')
-    .join('')
+  const extraWhitespace = Array(extraWhitespaceCount).fill('\n').join('')
   const requireStatement = `require(${loaderUtils.stringifyRequest(
     this,
     outputFilename,

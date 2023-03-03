@@ -16,7 +16,7 @@ function transform(input, platform, extra = {}) {
 }
 
 // change console.{log,warn,error} so that it shows up differently
-;['log', 'error', 'warn'].forEach(method => {
+;['log', 'error', 'warn'].forEach((method) => {
   // eslint-disable-next-line
   const orig = console[method]
   // eslint-disable-next-line

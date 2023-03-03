@@ -179,67 +179,64 @@ const isHtmlAttribute = (key: string): boolean => htmlAttributes.has(key)
 const pickHtmlAttributes = pickBy(isHtmlAttribute)
 const isHtmlElement = is(String)
 
-export const createStyledElement: CreateStyledElement<any> = element => (
-  root,
-  factoryClass,
-  factoryStyle,
-) =>
-  // $FlowFixMe
-  forwardRef((props, ref) => {
-    const { children } = props
+export const createStyledElement: CreateStyledElement<any> =
+  (element) => (root, factoryClass, factoryStyle) =>
+    // $FlowFixMe
+    forwardRef((props, ref) => {
+      const { children } = props
 
-    const getClassNames = () => {
-      if (!factoryClass) {
-        return null
-      } else if (typeof factoryClass === 'object') {
-        return piped(
-          factoryClass,
-          toPairs,
-          map(([propName, className]) => [className, props[propName]]),
-          fromPairs,
-        )
-      }
-      return fromPairs(factoryClass(props))
-    }
-
-    const attributes = {
-      children,
-      className: classNames({ [root || '']: true }, getClassNames()),
-      ...(isHtmlElement(element) ? pickHtmlAttributes(props) : props),
-    }
-    const forwardedRef = ref || props.__forwardedRef
-
-    if (props.style) {
-      attributes.style = props.style
-    }
-
-    if (factoryStyle) {
-      const { style } = attributes
-
-      const getExtraStyles = () => {
-        if (!factoryStyle) {
+      const getClassNames = () => {
+        if (!factoryClass) {
           return null
-        } else if (typeof factoryStyle === 'object') {
+        } else if (typeof factoryClass === 'object') {
           return piped(
-            factoryStyle,
+            factoryClass,
             toPairs,
-            map(([propName, attr]) => [attr, props[propName]]),
+            map(([propName, className]) => [className, props[propName]]),
             fromPairs,
           )
         }
-
-        return factoryStyle(props)
+        return fromPairs(factoryClass(props))
       }
 
-      attributes.style = {
-        ...style,
-        ...getExtraStyles(),
+      const attributes = {
+        children,
+        className: classNames({ [root || '']: true }, getClassNames()),
+        ...(isHtmlElement(element) ? pickHtmlAttributes(props) : props),
       }
-    }
+      const forwardedRef = ref || props.__forwardedRef
 
-    if (forwardedRef) {
-      attributes[isHtmlElement(element) ? 'ref' : '__forwardedRef'] = forwardedRef
-    }
+      if (props.style) {
+        attributes.style = props.style
+      }
 
-    return createElement(element, attributes)
-  })
+      if (factoryStyle) {
+        const { style } = attributes
+
+        const getExtraStyles = () => {
+          if (!factoryStyle) {
+            return null
+          } else if (typeof factoryStyle === 'object') {
+            return piped(
+              factoryStyle,
+              toPairs,
+              map(([propName, attr]) => [attr, props[propName]]),
+              fromPairs,
+            )
+          }
+
+          return factoryStyle(props)
+        }
+
+        attributes.style = {
+          ...style,
+          ...getExtraStyles(),
+        }
+      }
+
+      if (forwardedRef) {
+        attributes[isHtmlElement(element) ? 'ref' : '__forwardedRef'] = forwardedRef
+      }
+
+      return createElement(element, attributes)
+    })

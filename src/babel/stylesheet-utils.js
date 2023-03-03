@@ -25,7 +25,7 @@ function isAllowedShorthand(t, key, node) {
     return false
   }
   const { elements } = node
-  if (!elements.every(el => isSimpleValue(t, el))) {
+  if (!elements.every((el) => isSimpleValue(t, el))) {
     return false
   }
 
