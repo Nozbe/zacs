@@ -120,10 +120,3 @@ const added1_propKeys = <AddedStyles1 background="white" one={1} />
 const AddedStylesNull = zacs.view(null, null, null)
 
 const addedNull = <AddedStylesNull onPress={onPress} />
-
-/* === Added styles (directly with a prop) === */
-
-const addedViaProp = <AddedStylesNull zacs:style={{ width: 100, height: 50 }} />
-const stylesToAddViaProp = { width: 100, height: 50 }
-
-const addedViaProp_2 = <AddedStylesNull zacs:style={stylesToAddViaProp} />

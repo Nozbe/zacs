@@ -33,6 +33,7 @@ function example(name) {
 describe('zacs', () => {
   const examples = [
     'basic',
+    'zacs:style',
     'manyStyleSources',
     'zacsStyled',
     'stylableComponents',
