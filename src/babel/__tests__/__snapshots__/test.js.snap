@@ -135,34 +135,7 @@ const mix1_add_zacsStyle_2 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
 }]} __zacs_original_name=\\"Mix1\\" />;
 const mix1_add_zacsStyle_3 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
   width: 50
-}, stylesToAddViaProp]} __zacs_original_name=\\"Mix1\\" />;
-/* === styled(Component) === */
-
-const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
-const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
-const link = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" />;
-const link_visited = <Link style={[styles.link, style.visitedLink]} __zacs_original_name=\\"StyledLink\\" />;
-const link_colored = <Link style={[styles.link, visited && style.visitedLink, {
-  color: factoryColor(color)
-}]} __zacs_original_name=\\"StyledLink\\" href={href} />;
-const link_attrs = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
-/* === styled(Namespaced.Component) === */
-
-const modalText = <Modal.Text style={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
-/* === styled('builtin') === */
-// you wouldn't do it in shared code, only in .{native,web}.js
-
-const li = <li __zacs_original_name=\\"Li\\" foo={foo} title=\\"hello\\" />;
-/* === styled(web,native) === */
-
-const platbox = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" />;
-const platbox_attrs = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
-const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
-
-const p = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</RCTText>;
-const p_attrs = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\" foo={foo} title=\\"DOM attr\\" />;
-const platform_zacs = <ZACS_RN_Text __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
+}, stylesToAddViaProp]} __zacs_original_name=\\"Mix1\\" />;"
 `;
 
 exports[`zacs example: basic, web 1`] = `
@@ -290,34 +263,7 @@ const mix1_add_zacsStyle_2 = <div className={styles.box + (\\" \\" + style.mixFo
 })} __zacs_original_name=\\"Mix1\\" />;
 const mix1_add_zacsStyle_3 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
   width: 50
-}, stylesToAddViaProp)} __zacs_original_name=\\"Mix1\\" />;
-/* === styled(Component) === */
-
-const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
-const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
-const link = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" />;
-const link_visited = <Link className={styles.link + (\\" \\" + style.visitedLink)} __zacs_original_name=\\"StyledLink\\" />;
-const link_colored = <Link className={styles.link + (visited ? \\" \\" + style.visitedLink : \\"\\")} style={{
-  color: factoryColor(color)
-}} __zacs_original_name=\\"StyledLink\\" href={href} />;
-const link_attrs = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
-/* === styled(Namespaced.Component) === */
-
-const modalText = <Modal.Text className={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
-/* === styled('builtin') === */
-// you wouldn't do it in shared code, only in .{native,web}.js
-
-const li = <li __zacs_original_name=\\"Li\\" title=\\"hello\\" />;
-/* === styled(web,native) === */
-
-const platbox = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" />;
-const platbox_attrs = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
-const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
-
-const p = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</p>;
-const p_attrs = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\" title=\\"DOM attr\\" />;
-const platform_zacs = <article __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
+}, stylesToAddViaProp)} __zacs_original_name=\\"Mix1\\" />;"
 `;
 
 exports[`zacs example: createdComponents, native 1`] = `
@@ -482,6 +428,70 @@ export const StylableButton = props => {
 const ImportedComponent = require('ImportedComponent');
 
 const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
+`;
+
+exports[`zacs example: zacsStyled, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+/* eslint-disable */
+
+/* === styled(Component) === */
+const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
+const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
+const link = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" />;
+const link_visited = <Link style={[styles.link, style.visitedLink]} __zacs_original_name=\\"StyledLink\\" />;
+const link_colored = <Link style={[styles.link, visited && style.visitedLink, {
+  color: factoryColor(color)
+}]} __zacs_original_name=\\"StyledLink\\" href={href} />;
+const link_attrs = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
+/* === styled(Namespaced.Component) === */
+
+const modalText = <Modal.Text style={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
+/* === styled('builtin') === */
+// you wouldn't do it in shared code, only in .{native,web}.js
+
+const li = <li __zacs_original_name=\\"Li\\" foo={foo} title=\\"hello\\" />;
+/* === styled(web,native) === */
+
+const platbox = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" />;
+const platbox_attrs = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
+
+const p = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</RCTText>;
+const p_attrs = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\" foo={foo} title=\\"DOM attr\\" />;
+const platform_zacs = <ZACS_RN_Text __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
+const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
+`;
+
+exports[`zacs example: zacsStyled, web 1`] = `
+"/* eslint-disable */
+
+/* === styled(Component) === */
+const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
+const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
+const link = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" />;
+const link_visited = <Link className={styles.link + (\\" \\" + style.visitedLink)} __zacs_original_name=\\"StyledLink\\" />;
+const link_colored = <Link className={styles.link + (visited ? \\" \\" + style.visitedLink : \\"\\")} style={{
+  color: factoryColor(color)
+}} __zacs_original_name=\\"StyledLink\\" href={href} />;
+const link_attrs = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
+/* === styled(Namespaced.Component) === */
+
+const modalText = <Modal.Text className={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
+/* === styled('builtin') === */
+// you wouldn't do it in shared code, only in .{native,web}.js
+
+const li = <li __zacs_original_name=\\"Li\\" title=\\"hello\\" />;
+/* === styled(web,native) === */
+
+const platbox = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" />;
+const platbox_attrs = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
+
+const p = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</p>;
+const p_attrs = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\" title=\\"DOM attr\\" />;
+const platform_zacs = <article __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
+const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
 `;
 
 exports[`zacs preserves declarations if requested 1`] = `

@@ -31,7 +31,7 @@ function example(name) {
 }
 
 describe('zacs', () => {
-  const examples = ['basic', 'stylableComponents', 'createdComponents']
+  const examples = ['basic', 'zacsStyled', 'stylableComponents', 'createdComponents']
   examples.forEach(exampleName => {
     it(`example: ${exampleName}, web`, () => {
       expect(transform(example(exampleName), 'web')).toMatchSnapshot()
