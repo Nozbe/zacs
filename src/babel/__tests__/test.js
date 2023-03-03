@@ -45,7 +45,10 @@ describe('zacs', () => {
     'zacs:style',
     'declaration_manyStyleSources',
     'zacs:inherit',
-    'zacs.styled',
+    'zacs.styled(builtin)',
+    'zacs.styled(Component)',
+    'zacs.styled(Namespaced.Component)',
+    'zacs.styled(platforms)',
     'zacs.createX',
   ]
   examples.forEach(exampleName => {
@@ -133,10 +136,15 @@ describe('zacs', () => {
       transform(example('stylesheet'), 'native', { target: 'android' }),
     ).toMatchSpecificSnapshot(snapshot('stylesheets_android'))
   })
-  it(`transforms ZACS_STYLESHEET_LITERAL`, () => {
+  it(`transforms ZACS_STYLESHEET_LITERAL (android)`, () => {
     expect(
       transform(example('ZACS_STYLESHEET_LITERAL'), 'native', { target: 'android' }),
-    ).toMatchSpecificSnapshot(snapshot('ZACS_STYLESHEET_LITERAL'))
+    ).toMatchSpecificSnapshot(snapshot('ZACS_STYLESHEET_LITERAL_android'))
+  })
+  it(`transforms ZACS_STYLESHEET_LITERAL (ios)`, () => {
+    expect(
+      transform(example('ZACS_STYLESHEET_LITERAL'), 'native', { target: 'ios' }),
+    ).toMatchSpecificSnapshot(snapshot('ZACS_STYLESHEET_LITERAL_ios'))
   })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>

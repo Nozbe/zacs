@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: zacs.styled(Component), web 1`] = `
+"/* eslint-disable */
+const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
+const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
+const link = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" />;
+const link_visited = <Link className={styles.link + (\\" \\" + style.visitedLink)} __zacs_original_name=\\"StyledLink\\" />;
+const link_colored = <Link className={styles.link + (visited ? \\" \\" + style.visitedLink : \\"\\")} style={{
+  color: factoryColor(color)
+}} __zacs_original_name=\\"StyledLink\\" href={href} />;
+const link_attrs = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;"
+`;
