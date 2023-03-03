@@ -5,6 +5,472 @@ exports[`zacs doesn't add __zacs_original_name in production 1`] = `
 const root = <div className={style.root} />;"
 `;
 
+exports[`zacs example: basic, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_Text = zacsReactNative.Text;
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === Different invocations === */
+const view = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
+const view2 = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" />;
+const composition = <>
+    <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\">
+      <ZACS_RN_Text style={style.text} __zacs_original_name=\\"Text\\" />
+    </ZACS_RN_View>
+  </>;
+
+function AnotherComponent() {
+  const helper = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
+  return <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</ZACS_RN_View>;
+}
+/* === Component attributes === */
+// custom props -- different JSX syntaxes (will be cut out on web)
+
+
+const customProps = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" foo={foo} isHighlighted={true} isBlocked bar=\\"bar\\" Component={<Hello />} />; // DOM-safe attributes
+
+const domSafeAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
+
+const reactAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
+
+const styledhack = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" __forwardedRef={__forwardedRef} />; // react splat
+
+const splat = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;
+/* === No styles === */
+
+const noStyles = <ZACS_RN_View __zacs_original_name=\\"NoStyles\\" />;
+const noStyles2 = <ZACS_RN_View __zacs_original_name=\\"NoStyles2\\" />;
+/* === Conditional styles === */
+
+const cond1_root = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_one = <ZACS_RN_View style={[style.root, foo && style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_two = <ZACS_RN_View style={[style.root, foo && style.rootFoo, barCount > 0 && style.rootBar]} __zacs_original_name=\\"Conditional1\\" />; // infer that a style is to be included / not included
+
+const cond1_true = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_true2 = <ZACS_RN_View style={[style.root, style.rootFoo, style.rootBar]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_trueShort = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_true2Short = <ZACS_RN_View style={[style.root, style.rootFoo, style.rootBar]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_false = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy2 = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy3 = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy2 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy3 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy4 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy5 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />; // check with mainStyle=null
+
+const cond2_one = <ZACS_RN_View style={foo && style.cond2Foo} __zacs_original_name=\\"Conditional2\\" />;
+const cond2_two = <ZACS_RN_View style={[foo && style.cond2Foo, bCount > 100 && style.cond2Bar]} __zacs_original_name=\\"Conditional2\\" />;
+const cond2_true2 = <ZACS_RN_View style={[style.cond2Foo, style.cond2Bar]} __zacs_original_name=\\"Conditional2\\" />; // check with null
+
+const condNull = <ZACS_RN_View __zacs_original_name=\\"ConditionalNull\\" onPress={onPress} />;
+/* === Added styles === */
+
+const added1_none = <ZACS_RN_View __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_one = <ZACS_RN_View style={{
+  width: width
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_two = <ZACS_RN_View style={{
+  width: width,
+  backgroundColor: factoryColor(color)
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_literals = <ZACS_RN_View style={{
+  width: 500,
+  backgroundColor: \\"#abcdef\\"
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_propKeys = <ZACS_RN_View style={{
+  \\"--background\\": \\"white\\",
+  1: 1
+}} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
+
+const addedNull = <ZACS_RN_View __zacs_original_name=\\"AddedStylesNull\\" onPress={onPress} />;
+/* === Added styles (directly with a prop) === */
+
+const addedViaProp = <ZACS_RN_View style={{
+  width: 100,
+  height: 50
+}} __zacs_original_name=\\"AddedStylesNull\\" />;
+const stylesToAddViaProp = {
+  width: 100,
+  height: 50
+};
+const addedViaProp_2 = <ZACS_RN_View style={stylesToAddViaProp} __zacs_original_name=\\"AddedStylesNull\\" />;
+/* === Added, conditional, main styles === */
+
+const mix1_none = <ZACS_RN_View style={styles.box} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add = <ZACS_RN_View style={[styles.box, {
+  width: 500
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_true1 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+  width: 500
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_true2 = <ZACS_RN_View style={[styles.box, style.mixFoo, style.mixBar, {
+  width: 500
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_1 = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, {
+  width: 500
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_2 = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
+  width: 500
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix_splat = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
+  width: 500
+}]} __zacs_original_name=\\"Mix1\\" {...props} />;
+const mix1_zacsStyle = <ZACS_RN_View style={[styles.box, {
+  width: 100
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle = <ZACS_RN_View style={[styles.box, {
+  width: 50
+}, {
+  width: 100
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_2 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+  width: 50
+}, {
+  width: 100
+}]} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_3 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+  width: 50
+}, stylesToAddViaProp]} __zacs_original_name=\\"Mix1\\" />;
+/* === styled(Component) === */
+
+const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
+const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
+const link = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" />;
+const link_visited = <Link style={[styles.link, style.visitedLink]} __zacs_original_name=\\"StyledLink\\" />;
+const link_colored = <Link style={[styles.link, visited && style.visitedLink, {
+  color: factoryColor(color)
+}]} __zacs_original_name=\\"StyledLink\\" href={href} />;
+const link_attrs = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
+/* === styled(Namespaced.Component) === */
+
+const modalText = <Modal.Text style={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
+/* === styled('builtin') === */
+// you wouldn't do it in shared code, only in .{native,web}.js
+
+const li = <li __zacs_original_name=\\"Li\\" foo={foo} title=\\"hello\\" />;
+/* === styled(web,native) === */
+
+const platbox = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" />;
+const platbox_attrs = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
+
+const p = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</RCTText>;
+const p_attrs = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\" foo={foo} title=\\"DOM attr\\" />;
+const platform_zacs = <ZACS_RN_Text __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
+const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;
+/* === Defined stylable component === */
+
+const stylableBlank = <ZACS_RN_View style={[].concat(props.style || [])} __zacs_original_name=\\"StylableBlank\\" />;
+const stylableMain = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_highlighted = <ZACS_RN_Text style={[style.main, style.highlighted].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_color = <ZACS_RN_Text style={[style.main, {
+  color: \\"red\\"
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <ZACS_RN_Text style={[style.main, {
+  color: 'red'
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_all = <ZACS_RN_Text style={[style.main, style.highlighted, {
+  color: \\"red\\"
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_splat = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
+
+export const StylableButton = props => {
+  const {
+    title,
+    isHighlighted,
+    color
+  } = props;
+  return <ZACS_RN_Text style={[style.main, isHighlighted && style.highlighted, {
+    color: factoryColor(color)
+  }].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\">
+      {title}
+    </ZACS_RN_Text>;
+}; // second-order stylable component (no zacs definition)
+
+const ImportedComponent = require('ImportedComponent');
+
+const stylable2nd = <ImportedComponent style={props.style} />;"
+`;
+
+exports[`zacs example: basic, web 1`] = `
+"/* eslint-disable */
+
+/* === Different invocations === */
+const view = <div className={style.root} __zacs_original_name=\\"Root\\" />;
+const view2 = <div className={styles.root2} __zacs_original_name=\\"Root2\\" />;
+const composition = <>
+    <div className={style.root} __zacs_original_name=\\"Root\\">
+      <span className={style.text} __zacs_original_name=\\"Text\\" />
+    </div>
+  </>;
+
+function AnotherComponent() {
+  const helper = <div className={style.root} __zacs_original_name=\\"Root\\" />;
+  return <div className={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</div>;
+}
+/* === Component attributes === */
+// custom props -- different JSX syntaxes (will be cut out on web)
+
+
+const customProps = <div className={style.root} __zacs_original_name=\\"Root\\" />; // DOM-safe attributes
+
+const domSafeAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
+
+const reactAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
+
+const styledhack = <div className={style.root} __zacs_original_name=\\"Root\\" />; // react splat
+
+const splat = <div className={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;
+/* === No styles === */
+
+const noStyles = <div __zacs_original_name=\\"NoStyles\\" />;
+const noStyles2 = <div __zacs_original_name=\\"NoStyles2\\" />;
+/* === Conditional styles === */
+
+const cond1_root = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_one = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\")} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_two = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\") + (barCount > 0 ? \\" \\" + style.rootBar : \\"\\")} __zacs_original_name=\\"Conditional1\\" />; // infer that a style is to be included / not included
+
+const cond1_true = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_true2 = <div className={style.root + (\\" \\" + style.rootFoo) + (\\" \\" + style.rootBar)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_trueShort = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_true2Short = <div className={style.root + (\\" \\" + style.rootFoo) + (\\" \\" + style.rootBar)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_false = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy2 = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy3 = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy2 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy3 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy4 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy5 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />; // check with mainStyle=null
+
+const cond2_one = <div className={foo ? style.cond2Foo : \\"\\"} __zacs_original_name=\\"Conditional2\\" />;
+const cond2_two = <div className={(foo ? style.cond2Foo : \\"\\") + (bCount > 100 ? \\" \\" + style.cond2Bar : \\"\\")} __zacs_original_name=\\"Conditional2\\" />;
+const cond2_true2 = <div className={style.cond2Foo + (\\" \\" + style.cond2Bar)} __zacs_original_name=\\"Conditional2\\" />; // check with null
+
+const condNull = <div __zacs_original_name=\\"ConditionalNull\\" />;
+/* === Added styles === */
+
+const added1_none = <div __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_one = <div style={{
+  width: width
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_two = <div style={{
+  width: width,
+  backgroundColor: factoryColor(color)
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_literals = <div style={{
+  width: 500,
+  backgroundColor: \\"#abcdef\\"
+}} __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_propKeys = <div style={{
+  \\"--background\\": \\"white\\",
+  1: 1
+}} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
+
+const addedNull = <div __zacs_original_name=\\"AddedStylesNull\\" />;
+/* === Added styles (directly with a prop) === */
+
+const addedViaProp = <div style={{
+  width: 100,
+  height: 50
+}} __zacs_original_name=\\"AddedStylesNull\\" />;
+const stylesToAddViaProp = {
+  width: 100,
+  height: 50
+};
+const addedViaProp_2 = <div style={stylesToAddViaProp} __zacs_original_name=\\"AddedStylesNull\\" />;
+/* === Added, conditional, main styles === */
+
+const mix1_none = <div className={styles.box} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add = <div className={styles.box} style={{
+  width: 500
+}} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_true1 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={{
+  width: 500
+}} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_true2 = <div className={styles.box + (\\" \\" + style.mixFoo) + (\\" \\" + style.mixBar)} style={{
+  width: 500
+}} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_1 = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\")} style={{
+  width: 500
+}} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_2 = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\") + (\\" \\" + style.mixBar)} style={{
+  width: 500
+}} __zacs_original_name=\\"Mix1\\" />;
+const mix_splat = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\") + (\\" \\" + style.mixBar)} style={{
+  width: 500
+}} __zacs_original_name=\\"Mix1\\" {...props} />;
+const mix1_zacsStyle = <div className={styles.box} style={{
+  width: 100
+}} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle = <div className={styles.box} style={Object.assign({
+  width: 50
+}, {
+  width: 100
+})} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_2 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
+  width: 50
+}, {
+  width: 100
+})} __zacs_original_name=\\"Mix1\\" />;
+const mix1_add_zacsStyle_3 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
+  width: 50
+}, stylesToAddViaProp)} __zacs_original_name=\\"Mix1\\" />;
+/* === styled(Component) === */
+
+const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
+const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
+const link = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" />;
+const link_visited = <Link className={styles.link + (\\" \\" + style.visitedLink)} __zacs_original_name=\\"StyledLink\\" />;
+const link_colored = <Link className={styles.link + (visited ? \\" \\" + style.visitedLink : \\"\\")} style={{
+  color: factoryColor(color)
+}} __zacs_original_name=\\"StyledLink\\" href={href} />;
+const link_attrs = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
+/* === styled(Namespaced.Component) === */
+
+const modalText = <Modal.Text className={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
+/* === styled('builtin') === */
+// you wouldn't do it in shared code, only in .{native,web}.js
+
+const li = <li __zacs_original_name=\\"Li\\" title=\\"hello\\" />;
+/* === styled(web,native) === */
+
+const platbox = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" />;
+const platbox_attrs = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
+
+const p = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</p>;
+const p_attrs = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\" title=\\"DOM attr\\" />;
+const platform_zacs = <article __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
+const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;
+/* === Defined stylable component === */
+
+const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name=\\"StylableBlank\\" />;
+const stylableMain = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_color = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: \\"red\\"
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: 'red'
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_all = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: \\"red\\"
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_splat = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
+
+export const StylableButton = props => {
+  const {
+    title,
+    isHighlighted,
+    color
+  } = props;
+  return <span className={style.main + (isHighlighted ? \\" \\" + style.highlighted : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+    color: factoryColor(color)
+  }, props.style)} __zacs_original_name=\\"StylableMain\\">
+      {title}
+    </span>;
+}; // second-order stylable component (no zacs definition)
+
+const ImportedComponent = require('ImportedComponent');
+
+const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
+`;
+
+exports[`zacs example: createdComponents, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_Text = zacsReactNative.Text;
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === createView/Text/Styled === */
+export const ExportedView = props => <ZACS_RN_View>{props.children}</ZACS_RN_View>;
+export const ExportedText = props => <ZACS_RN_Text style={style.text}>{props.children}</ZACS_RN_Text>;
+export const ExportedButton = props => <Button style={[style.button, props.isHighlighted && style.highlighted, {
+  backgroundColor: props.color
+}]}>{props.children}</Button>;
+export const ExportedLabel = props => <ZACS_RN_Text style={style.label} title={props.title} numberOfLines={props.numberOfLines}>{props.children}</ZACS_RN_Text>;
+export const ExportedWrapper = React.forwardRef((props, ref) => <ZACS_RN_View style={style.wrapper} ref={ref}>{props.children}</ZACS_RN_View>);
+export const ExportedStylable = props => <ZACS_RN_Text style={[style.text, props.isBold && style.bold, {
+  color: props.color
+}].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
+export const ExportedStylable2 = props => <ZACS_RN_Text style={[style.text, props.isBold && style.bold, {
+  color: props.color
+}, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
+export const ExportedCombo = React.forwardRef((props, ref) => <Native.Combo style={[style.combo, props.isFoo && style.foo, props.isBar && style.bar, {
+  color: props.color,
+  height: props.height
+}].concat(props.style || [])} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</Native.Combo>); // regression test
+
+export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_View>; // Make sure nothing breaks if I use created component in the same file
+
+const combo = <ExportedCombo />;
+const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
+const combo_styles = <ExportedCombo style={props.style} />;
+const combo_styles2 = <ExportedCombo style={props.style} __zacs_style={{
+  width: 500
+}} />; // Pretend we're using an exported component
+
+const ImportedComponent2 = require('ImportedComponent');
+
+const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
+  width: 199
+}} />;
+const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} __zacs_style={{
+  width: 199
+}} />;"
+`;
+
+exports[`zacs example: createdComponents, web 1`] = `
+"/* eslint-disable */
+
+/* === createView/Text/Styled === */
+export const ExportedView = props => <div>{props.children}</div>;
+export const ExportedText = props => <span className={style.text}>{props.children}</span>;
+export const ExportedButton = props => <Button className={style.button + (props.isHighlighted ? \\" \\" + style.highlighted : \\"\\")} style={{
+  backgroundColor: props.color
+}}>{props.children}</Button>;
+export const ExportedLabel = props => <span className={style.label} title={props.title}>{props.children}</span>;
+export const ExportedWrapper = React.forwardRef((props, ref) => <div className={style.wrapper} ref={ref}>{props.children}</div>);
+export const ExportedStylable = props => <span className={style.text + (props.isBold ? \\" \\" + style.bold : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: props.color
+}, props.style)}>{props.children}</span>;
+export const ExportedStylable2 = props => <span className={style.text + (props.isBold ? \\" \\" + style.bold : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: props.color
+}, props.__zacs_style, props.style)}>{props.children}</span>;
+export const ExportedCombo = React.forwardRef((props, ref) => <WebCombo className={style.combo + (props.isFoo ? \\" \\" + style.foo : \\"\\") + (props.isBar ? \\" \\" + style.bar : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: props.color,
+  height: props.height
+}, props.style)} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</WebCombo>); // regression test
+
+export const ExporterZacsStyleInherit = props => <div className={style.foo + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({}, props.__zacs_style, props.style)}>{props.children}</div>; // Make sure nothing breaks if I use created component in the same file
+
+const combo = <ExportedCombo />;
+const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
+const combo_styles = <ExportedCombo style={props.style} className={props.className} />;
+const combo_styles2 = <ExportedCombo style={props.style} className={props.className} __zacs_style={{
+  width: 500
+}} />; // Pretend we're using an exported component
+
+const ImportedComponent2 = require('ImportedComponent');
+
+const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
+  width: 199
+}} />;
+const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} className={props.className} __zacs_style={{
+  width: 199
+}} />;"
+`;
+
 exports[`zacs preserves declarations if requested 1`] = `
 "/* eslint-disable */
 import zacs from 'zacs';
@@ -471,457 +937,4 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
    \\\\n\\\\
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
 /* ZACS-generated CSS stylesheet ends above */"
-`;
-
-exports[`zacs works with the basic example on native 1`] = `
-"const zacsReactNative = require('react-native');
-
-const ZACS_RN_Text = zacsReactNative.Text;
-const ZACS_RN_View = zacsReactNative.View;
-
-/* eslint-disable */
-
-/* === Different invocations === */
-const view = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
-const view2 = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" />;
-const composition = <>
-    <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\">
-      <ZACS_RN_Text style={style.text} __zacs_original_name=\\"Text\\" />
-    </ZACS_RN_View>
-  </>;
-
-function AnotherComponent() {
-  const helper = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
-  return <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</ZACS_RN_View>;
-}
-/* === Component attributes === */
-// custom props -- different JSX syntaxes (will be cut out on web)
-
-
-const customProps = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" foo={foo} isHighlighted={true} isBlocked bar=\\"bar\\" Component={<Hello />} />; // DOM-safe attributes
-
-const domSafeAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
-
-const reactAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
-
-const styledhack = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" __forwardedRef={__forwardedRef} />; // react splat
-
-const splat = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;
-/* === No styles === */
-
-const noStyles = <ZACS_RN_View __zacs_original_name=\\"NoStyles\\" />;
-const noStyles2 = <ZACS_RN_View __zacs_original_name=\\"NoStyles2\\" />;
-/* === Conditional styles === */
-
-const cond1_root = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_one = <ZACS_RN_View style={[style.root, foo && style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_two = <ZACS_RN_View style={[style.root, foo && style.rootFoo, barCount > 0 && style.rootBar]} __zacs_original_name=\\"Conditional1\\" />; // infer that a style is to be included / not included
-
-const cond1_true = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_true2 = <ZACS_RN_View style={[style.root, style.rootFoo, style.rootBar]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_trueShort = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_true2Short = <ZACS_RN_View style={[style.root, style.rootFoo, style.rootBar]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_false = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_truthy = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_truthy2 = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_truthy3 = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy2 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy3 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy4 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy5 = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Conditional1\\" />; // check with mainStyle=null
-
-const cond2_one = <ZACS_RN_View style={foo && style.cond2Foo} __zacs_original_name=\\"Conditional2\\" />;
-const cond2_two = <ZACS_RN_View style={[foo && style.cond2Foo, bCount > 100 && style.cond2Bar]} __zacs_original_name=\\"Conditional2\\" />;
-const cond2_true2 = <ZACS_RN_View style={[style.cond2Foo, style.cond2Bar]} __zacs_original_name=\\"Conditional2\\" />; // check with null
-
-const condNull = <ZACS_RN_View __zacs_original_name=\\"ConditionalNull\\" onPress={onPress} />;
-/* === Added styles === */
-
-const added1_none = <ZACS_RN_View __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_one = <ZACS_RN_View style={{
-  width: width
-}} __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_two = <ZACS_RN_View style={{
-  width: width,
-  backgroundColor: factoryColor(color)
-}} __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_literals = <ZACS_RN_View style={{
-  width: 500,
-  backgroundColor: \\"#abcdef\\"
-}} __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_propKeys = <ZACS_RN_View style={{
-  \\"--background\\": \\"white\\",
-  1: 1
-}} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
-
-const addedNull = <ZACS_RN_View __zacs_original_name=\\"AddedStylesNull\\" onPress={onPress} />;
-/* === Added styles (directly with a prop) === */
-
-const addedViaProp = <ZACS_RN_View style={{
-  width: 100,
-  height: 50
-}} __zacs_original_name=\\"AddedStylesNull\\" />;
-const stylesToAddViaProp = {
-  width: 100,
-  height: 50
-};
-const addedViaProp_2 = <ZACS_RN_View style={stylesToAddViaProp} __zacs_original_name=\\"AddedStylesNull\\" />;
-/* === Added, conditional, main styles === */
-
-const mix1_none = <ZACS_RN_View style={styles.box} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add = <ZACS_RN_View style={[styles.box, {
-  width: 500
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_true1 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
-  width: 500
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_true2 = <ZACS_RN_View style={[styles.box, style.mixFoo, style.mixBar, {
-  width: 500
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_1 = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, {
-  width: 500
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_2 = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
-  width: 500
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix_splat = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
-  width: 500
-}]} __zacs_original_name=\\"Mix1\\" {...props} />;
-const mix1_zacsStyle = <ZACS_RN_View style={[styles.box, {
-  width: 100
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle = <ZACS_RN_View style={[styles.box, {
-  width: 50
-}, {
-  width: 100
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle_2 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
-  width: 50
-}, {
-  width: 100
-}]} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle_3 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
-  width: 50
-}, stylesToAddViaProp]} __zacs_original_name=\\"Mix1\\" />;
-/* === styled(Component) === */
-
-const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
-const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
-const link = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" />;
-const link_visited = <Link style={[styles.link, style.visitedLink]} __zacs_original_name=\\"StyledLink\\" />;
-const link_colored = <Link style={[styles.link, visited && style.visitedLink, {
-  color: factoryColor(color)
-}]} __zacs_original_name=\\"StyledLink\\" href={href} />;
-const link_attrs = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
-/* === styled(Namespaced.Component) === */
-
-const modalText = <Modal.Text style={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
-/* === styled('builtin') === */
-// you wouldn't do it in shared code, only in .{native,web}.js
-
-const li = <li __zacs_original_name=\\"Li\\" foo={foo} title=\\"hello\\" />;
-/* === styled(web,native) === */
-
-const platbox = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" />;
-const platbox_attrs = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
-const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
-
-const p = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</RCTText>;
-const p_attrs = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\" foo={foo} title=\\"DOM attr\\" />;
-const platform_zacs = <ZACS_RN_Text __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;
-/* === Defined stylable component === */
-
-const stylableBlank = <ZACS_RN_View style={[].concat(props.style || [])} __zacs_original_name=\\"StylableBlank\\" />;
-const stylableMain = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_highlighted = <ZACS_RN_Text style={[style.main, style.highlighted].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_color = <ZACS_RN_Text style={[style.main, {
-  color: \\"red\\"
-}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_colorAlt = <ZACS_RN_Text style={[style.main, {
-  color: 'red'
-}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_all = <ZACS_RN_Text style={[style.main, style.highlighted, {
-  color: \\"red\\"
-}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_splat = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
-
-export const StylableButton = props => {
-  const {
-    title,
-    isHighlighted,
-    color
-  } = props;
-  return <ZACS_RN_Text style={[style.main, isHighlighted && style.highlighted, {
-    color: factoryColor(color)
-  }].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\">
-      {title}
-    </ZACS_RN_Text>;
-}; // second-order stylable component (no zacs definition)
-
-const ImportedComponent = require('ImportedComponent');
-
-const stylable2nd = <ImportedComponent style={props.style} />;
-/* === createView/Text/Styled === */
-
-export const ExportedView = props => <ZACS_RN_View>{props.children}</ZACS_RN_View>;
-export const ExportedText = props => <ZACS_RN_Text style={style.text}>{props.children}</ZACS_RN_Text>;
-export const ExportedButton = props => <Button style={[style.button, props.isHighlighted && style.highlighted, {
-  backgroundColor: props.color
-}]}>{props.children}</Button>;
-export const ExportedLabel = props => <ZACS_RN_Text style={style.label} title={props.title} numberOfLines={props.numberOfLines}>{props.children}</ZACS_RN_Text>;
-export const ExportedWrapper = React.forwardRef((props, ref) => <ZACS_RN_View style={style.wrapper} ref={ref}>{props.children}</ZACS_RN_View>);
-export const ExportedStylable = props => <ZACS_RN_Text style={[style.text, props.isBold && style.bold, {
-  color: props.color
-}].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
-export const ExportedStylable2 = props => <ZACS_RN_Text style={[style.text, props.isBold && style.bold, {
-  color: props.color
-}, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
-export const ExportedCombo = React.forwardRef((props, ref) => <Native.Combo style={[style.combo, props.isFoo && style.foo, props.isBar && style.bar, {
-  color: props.color,
-  height: props.height
-}].concat(props.style || [])} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</Native.Combo>); // regression test
-
-export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_View>; // Make sure nothing breaks if I use created component in the same file
-
-const combo = <ExportedCombo />;
-const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
-const combo_styles = <ExportedCombo style={props.style} />;
-const combo_styles2 = <ExportedCombo style={props.style} __zacs_style={{
-  width: 500
-}} />; // Pretend we're using an exported component
-
-const ImportedComponent2 = require('ImportedComponent');
-
-const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
-  width: 199
-}} />;
-const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} __zacs_style={{
-  width: 199
-}} />;"
-`;
-
-exports[`zacs works with the basic example on web 1`] = `
-"/* eslint-disable */
-
-/* === Different invocations === */
-const view = <div className={style.root} __zacs_original_name=\\"Root\\" />;
-const view2 = <div className={styles.root2} __zacs_original_name=\\"Root2\\" />;
-const composition = <>
-    <div className={style.root} __zacs_original_name=\\"Root\\">
-      <span className={style.text} __zacs_original_name=\\"Text\\" />
-    </div>
-  </>;
-
-function AnotherComponent() {
-  const helper = <div className={style.root} __zacs_original_name=\\"Root\\" />;
-  return <div className={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</div>;
-}
-/* === Component attributes === */
-// custom props -- different JSX syntaxes (will be cut out on web)
-
-
-const customProps = <div className={style.root} __zacs_original_name=\\"Root\\" />; // DOM-safe attributes
-
-const domSafeAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
-
-const reactAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
-
-const styledhack = <div className={style.root} __zacs_original_name=\\"Root\\" />; // react splat
-
-const splat = <div className={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;
-/* === No styles === */
-
-const noStyles = <div __zacs_original_name=\\"NoStyles\\" />;
-const noStyles2 = <div __zacs_original_name=\\"NoStyles2\\" />;
-/* === Conditional styles === */
-
-const cond1_root = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_one = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\")} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_two = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\") + (barCount > 0 ? \\" \\" + style.rootBar : \\"\\")} __zacs_original_name=\\"Conditional1\\" />; // infer that a style is to be included / not included
-
-const cond1_true = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_true2 = <div className={style.root + (\\" \\" + style.rootFoo) + (\\" \\" + style.rootBar)} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_trueShort = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_true2Short = <div className={style.root + (\\" \\" + style.rootFoo) + (\\" \\" + style.rootBar)} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_false = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_truthy = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_truthy2 = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_truthy3 = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy2 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy3 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy4 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
-const cond1_falsy5 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />; // check with mainStyle=null
-
-const cond2_one = <div className={foo ? style.cond2Foo : \\"\\"} __zacs_original_name=\\"Conditional2\\" />;
-const cond2_two = <div className={(foo ? style.cond2Foo : \\"\\") + (bCount > 100 ? \\" \\" + style.cond2Bar : \\"\\")} __zacs_original_name=\\"Conditional2\\" />;
-const cond2_true2 = <div className={style.cond2Foo + (\\" \\" + style.cond2Bar)} __zacs_original_name=\\"Conditional2\\" />; // check with null
-
-const condNull = <div __zacs_original_name=\\"ConditionalNull\\" />;
-/* === Added styles === */
-
-const added1_none = <div __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_one = <div style={{
-  width: width
-}} __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_two = <div style={{
-  width: width,
-  backgroundColor: factoryColor(color)
-}} __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_literals = <div style={{
-  width: 500,
-  backgroundColor: \\"#abcdef\\"
-}} __zacs_original_name=\\"AddedStyles1\\" />;
-const added1_propKeys = <div style={{
-  \\"--background\\": \\"white\\",
-  1: 1
-}} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
-
-const addedNull = <div __zacs_original_name=\\"AddedStylesNull\\" />;
-/* === Added styles (directly with a prop) === */
-
-const addedViaProp = <div style={{
-  width: 100,
-  height: 50
-}} __zacs_original_name=\\"AddedStylesNull\\" />;
-const stylesToAddViaProp = {
-  width: 100,
-  height: 50
-};
-const addedViaProp_2 = <div style={stylesToAddViaProp} __zacs_original_name=\\"AddedStylesNull\\" />;
-/* === Added, conditional, main styles === */
-
-const mix1_none = <div className={styles.box} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add = <div className={styles.box} style={{
-  width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_true1 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={{
-  width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_true2 = <div className={styles.box + (\\" \\" + style.mixFoo) + (\\" \\" + style.mixBar)} style={{
-  width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_1 = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\")} style={{
-  width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_2 = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\") + (\\" \\" + style.mixBar)} style={{
-  width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix_splat = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\") + (\\" \\" + style.mixBar)} style={{
-  width: 500
-}} __zacs_original_name=\\"Mix1\\" {...props} />;
-const mix1_zacsStyle = <div className={styles.box} style={{
-  width: 100
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle = <div className={styles.box} style={Object.assign({
-  width: 50
-}, {
-  width: 100
-})} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle_2 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
-  width: 50
-}, {
-  width: 100
-})} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle_3 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
-  width: 50
-}, stylesToAddViaProp)} __zacs_original_name=\\"Mix1\\" />;
-/* === styled(Component) === */
-
-const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
-const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
-const link = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" />;
-const link_visited = <Link className={styles.link + (\\" \\" + style.visitedLink)} __zacs_original_name=\\"StyledLink\\" />;
-const link_colored = <Link className={styles.link + (visited ? \\" \\" + style.visitedLink : \\"\\")} style={{
-  color: factoryColor(color)
-}} __zacs_original_name=\\"StyledLink\\" href={href} />;
-const link_attrs = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
-/* === styled(Namespaced.Component) === */
-
-const modalText = <Modal.Text className={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
-/* === styled('builtin') === */
-// you wouldn't do it in shared code, only in .{native,web}.js
-
-const li = <li __zacs_original_name=\\"Li\\" title=\\"hello\\" />;
-/* === styled(web,native) === */
-
-const platbox = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" />;
-const platbox_attrs = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
-const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
-
-const p = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</p>;
-const p_attrs = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\" title=\\"DOM attr\\" />;
-const platform_zacs = <article __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;
-/* === Defined stylable component === */
-
-const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name=\\"StylableBlank\\" />;
-const stylableMain = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_color = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: \\"red\\"
-}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: 'red'
-}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_all = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: \\"red\\"
-}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_splat = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
-
-export const StylableButton = props => {
-  const {
-    title,
-    isHighlighted,
-    color
-  } = props;
-  return <span className={style.main + (isHighlighted ? \\" \\" + style.highlighted : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-    color: factoryColor(color)
-  }, props.style)} __zacs_original_name=\\"StylableMain\\">
-      {title}
-    </span>;
-}; // second-order stylable component (no zacs definition)
-
-const ImportedComponent = require('ImportedComponent');
-
-const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;
-/* === createView/Text/Styled === */
-
-export const ExportedView = props => <div>{props.children}</div>;
-export const ExportedText = props => <span className={style.text}>{props.children}</span>;
-export const ExportedButton = props => <Button className={style.button + (props.isHighlighted ? \\" \\" + style.highlighted : \\"\\")} style={{
-  backgroundColor: props.color
-}}>{props.children}</Button>;
-export const ExportedLabel = props => <span className={style.label} title={props.title}>{props.children}</span>;
-export const ExportedWrapper = React.forwardRef((props, ref) => <div className={style.wrapper} ref={ref}>{props.children}</div>);
-export const ExportedStylable = props => <span className={style.text + (props.isBold ? \\" \\" + style.bold : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: props.color
-}, props.style)}>{props.children}</span>;
-export const ExportedStylable2 = props => <span className={style.text + (props.isBold ? \\" \\" + style.bold : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: props.color
-}, props.__zacs_style, props.style)}>{props.children}</span>;
-export const ExportedCombo = React.forwardRef((props, ref) => <WebCombo className={style.combo + (props.isFoo ? \\" \\" + style.foo : \\"\\") + (props.isBar ? \\" \\" + style.bar : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: props.color,
-  height: props.height
-}, props.style)} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</WebCombo>); // regression test
-
-export const ExporterZacsStyleInherit = props => <div className={style.foo + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({}, props.__zacs_style, props.style)}>{props.children}</div>; // Make sure nothing breaks if I use created component in the same file
-
-const combo = <ExportedCombo />;
-const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
-const combo_styles = <ExportedCombo style={props.style} className={props.className} />;
-const combo_styles2 = <ExportedCombo style={props.style} className={props.className} __zacs_style={{
-  width: 500
-}} />; // Pretend we're using an exported component
-
-const ImportedComponent2 = require('ImportedComponent');
-
-const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
-  width: 199
-}} />;
-const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} className={props.className} __zacs_style={{
-  width: 199
-}} />;"
 `;

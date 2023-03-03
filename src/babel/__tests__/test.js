@@ -31,11 +31,14 @@ function example(name) {
 }
 
 describe('zacs', () => {
-  it('works with the basic example on web', () => {
-    expect(transform(example('basic'), 'web')).toMatchSnapshot()
-  })
-  it('works with the basic example on native', () => {
-    expect(transform(example('basic'), 'native')).toMatchSnapshot()
+  const examples = ['basic', 'createdComponents']
+  examples.forEach(exampleName => {
+    it(`example: ${exampleName}, web`, () => {
+      expect(transform(example(exampleName), 'web')).toMatchSnapshot()
+    })
+    it(`example: ${exampleName}, native`, () => {
+      expect(transform(example(exampleName), 'native')).toMatchSnapshot()
+    })
   })
   it('className in components not allowed', () => {
     expect(() => transform(example('classNameNotAllowed'), 'web')).toThrow(
