@@ -6,6 +6,7 @@
 <PROJECT_ROOT>/examples
 .*/node_modules/react\-native/.*
 <PROJECT_ROOT>/src/legacy-runtime-styling/.*
+.*/node_modules/resolve/test/resolver/**
 
 [include]
 
