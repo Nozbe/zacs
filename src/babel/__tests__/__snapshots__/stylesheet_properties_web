@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs stylesheets example: stylesheet_nesting, web 1`] = `
+exports[`zacs stylesheets example: stylesheet_properties, web 1`] = `
 "/*
 ZACS-generated CSS stylesheet begins below.
 PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
@@ -10,17 +10,12 @@ If you only see this comment and the one below in generated code, this is normal
 /* eslint-disable */
 const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
 .root { \\\\n\\\\
-  height: 100px; \\\\n\\\\
-  color: black; \\\\n\\\\
-  & > span { \\\\n\\\\
-    &:first-child { \\\\n\\\\
-      color: red; \\\\n\\\\
-    } \\\\n\\\\
-  } \\\\n\\\\
-  &:hover { \\\\n\\\\
-    margin: -20px; \\\\n\\\\
-    opacity: 0.5; \\\\n\\\\
-  } \\\\n\\\\
+  background-color: red; \\\\n\\\\
+  opacity: 0.5; \\\\n\\\\
+  width: 100px; \\\\n\\\\
+  height: 100%; \\\\n\\\\
+  -webkit-padding-start: 20px; \\\\n\\\\
+  background-color: @theme(onSurface1); \\\\n\\\\
 } \\\\n\\\\
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
 /* ZACS-generated CSS stylesheet ends above */"

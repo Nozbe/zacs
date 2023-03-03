@@ -120,6 +120,7 @@ describe('zacs', () => {
 
 describe('zacs stylesheets', () => {
   const webNativeExamples = [
+    'stylesheet_properties',
     'stylesheet_babelReplacement',
     'stylesheet_mixins',
     'stylesheet_css',

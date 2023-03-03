@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets example: stylesheet_properties, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  root: {
+    // strings
+    backgroundColor: 'red',
+    // unitless quantities
+    opacity: 0.5,
+    // pixels
+    width: 100,
+    // units
+    height: '100%',
+    // arrays
+    transform: [{
+      translateY: 4
+    }]
+  }
+});"
+`;

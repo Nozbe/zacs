@@ -3,10 +3,7 @@ import * as zacs from 'zacs'
 
 const styles = zacs.stylesheet({
   root: {
-    backgroundColor: 'red',
-    opacity: 50,
-    width: '100%',
-    // native-only
+    height: 100,
     native: {
       width: 1337,
     },
@@ -16,10 +13,8 @@ const styles = zacs.stylesheet({
     android: {
       opacity: 0.1,
     },
-    // web-only
     web: {
-      WebkitPaddingStart: 20, // prefixed properties
-      backgroundColor: '@theme(onSurface1)', // postcss syntax
+      color: 'black',
       '& > span': {
         '&:first-child': {
           color: 'red',
