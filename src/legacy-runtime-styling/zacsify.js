@@ -55,7 +55,9 @@ function getPatternProps(node) {
 function convertAddedToStatic(j, node) {
   const stylesObj = extractFnReturn(node, 'ObjectExpression')
 
-  if (!stylesObj) {return}
+  if (!stylesObj) {
+    return
+  }
 
   const hasPropsArg = node.params[0].type === 'Identifier' && node.params[0].name === 'props'
   const availablePatternProps = getPatternProps(node)
@@ -109,7 +111,9 @@ function convertAddedToStatic(j, node) {
 function convertConditionalToStatic(j, node) {
   const stylesArray = extractFnReturn(node, 'ArrayExpression')
 
-  if (!stylesArray) {return}
+  if (!stylesArray) {
+    return
+  }
 
   const hasPropsArg = node.params[0].type === 'Identifier' && node.params[0].name === 'props'
   const availablePatternProps = getPatternProps(node)
@@ -240,9 +244,13 @@ module.exports = function transformer(file, api) {
       }
     }
 
-    if (shortHandExtras) {args[1] = shortHandExtras}
+    if (shortHandExtras) {
+      args[1] = shortHandExtras
+    }
 
-    if (shorthandAdded) {args[2] = shorthandAdded}
+    if (shorthandAdded) {
+      args[2] = shorthandAdded
+    }
 
     const zacsMethods = {
       [true]: {
@@ -324,7 +332,9 @@ module.exports = function transformer(file, api) {
 
   // replace `createStyledXX` imports with `XX` imports
   allImports.forEach(({ value }) => {
-    if (!value) {return}
+    if (!value) {
+      return
+    }
     let importToAdd = null
     value.specifiers = value.specifiers.filter(specifier => {
       const { local, imported } = specifier
@@ -336,7 +346,9 @@ module.exports = function transformer(file, api) {
       ) {
         const componentName = local.name.replace('createStyled', '')
 
-        if (needsComponentImport[componentName]) {importToAdd = componentName}
+        if (needsComponentImport[componentName]) {
+          importToAdd = componentName
+        }
 
         return usedStyleExports[local.name]
       }

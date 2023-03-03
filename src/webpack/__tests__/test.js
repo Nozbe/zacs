@@ -123,7 +123,11 @@ describe('zacs-loader', () => {
     const { modules } = stats.compilation
     expect(modules.length).toBe(3)
 
-    const cssShim = modules.find(m => m.rawRequest.endsWith('../.zacs-cache-test/src/webpack/__tests__/examples/basic.zacstest.css'))._source._value
+    const cssShim = modules.find(m =>
+      m.rawRequest.endsWith(
+        '../.zacs-cache-test/src/webpack/__tests__/examples/basic.zacstest.css',
+      ),
+    )._source._value
     expect(cssShim).toMatchSnapshot()
   })
   it(`does not allow multiple stylesheets in one file`, async () => {
