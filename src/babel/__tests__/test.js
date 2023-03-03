@@ -116,6 +116,37 @@ describe('zacs', () => {
       expect(() => transform(js, 'web')).toThrow('ZACS import must say exactly')
     })
   })
+})
+
+describe('zacs stylesheets', () => {
+  const webNativeExamples = [
+    'stylesheet_shorthand_box',
+    'stylesheet_shorthand_border',
+    'stylesheet_shorthand_scoped',
+  ]
+  const webIosAndroidExamples = []
+  webNativeExamples.forEach(exampleName => {
+    const platforms = ['web', 'native']
+    platforms.forEach(platform => {
+      it(`example: ${exampleName}, ${platform}`, () => {
+        expect(transform(example(exampleName), platform)).toMatchSpecificSnapshot(
+          snapshot(`${exampleName}_${platform}`),
+        )
+      })
+    })
+  })
+  webIosAndroidExamples.forEach(exampleName => {
+    const platforms = ['web', 'ios', 'android']
+    platforms.forEach(platform => {
+      it(`example: ${exampleName}, ${platform}`, () => {
+        expect(
+          transform(example(exampleName), platform === 'web' ? 'web' : 'native', {
+            target: platform,
+          }),
+        ).toMatchSpecificSnapshot(snapshot(`${exampleName}_${platform}`))
+      })
+    })
+  })
   it(`transforms experimental stylesheets (web)`, () => {
     expect(transform(example('stylesheet'), 'web')).toMatchSpecificSnapshot(
       snapshot('stylesheets_web'),

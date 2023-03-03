@@ -55,49 +55,7 @@ const styles = zacs.stylesheet({
     }`,
   },
   // test ZACS-specific style shorthands
-  one: {
-    margin: 5,
-    padding: 5,
-    inset: 5,
-    inset: '10%',
-  },
-  oneArray: {
-    margin: [5],
-    padding: [5],
-    inset: [5],
-  },
-  twoArray: {
-    margin: [5, 10],
-    padding: [5, 10],
-    inset: [5, 10],
-  },
-  threeArray: {
-    margin: [5, '10%', 15],
-    padding: [5, '10%', 15],
-    inset: [5, '10%', 15],
-  },
-  fourArray: {
-    margin: [5, 10, 15, 20],
-    padding: [5, 10, 15, 20],
-    inset: [5, 10, 15, 20],
-  },
-  border: {
-    border: [1, 'solid', 'red'],
-    borderTop: [2, 'solid', 'green'],
-    borderRight: [3, 'solid', 'yellow'],
-    borderBottom: [4, 'solid', 'blue'],
-    borderLeft: [5, 'solid', 'black'],
-  },
-  scoped: {
-    web: {
-      margin: [5, 10],
-      border: [1, 'solid', 'red'],
-    },
-    native: {
-      margin: [5, 10],
-      border: [1, 'solid', 'red'],
-    },
-  },
+
   css: zacs.css`
   @keyframes hello {
     from { opacity: 0 }

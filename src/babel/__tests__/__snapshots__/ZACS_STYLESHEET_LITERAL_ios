@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs transforms ZACS_STYLESHEET_LITERAL (ios) 1`] = `
+exports[`zacs stylesheets transforms ZACS_STYLESHEET_LITERAL (ios) 1`] = `
 "const zacsReactNative = require('react-native');
 
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;

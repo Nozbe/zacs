@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets example: stylesheet_shorthand_border, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  border: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'red',
+    borderTopWidth: 2,
+    borderTopStyle: 'solid',
+    borderTopColor: 'green',
+    borderRightWidth: 3,
+    borderRightStyle: 'solid',
+    borderRightColor: 'yellow',
+    borderBottomWidth: 4,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'blue',
+    borderLeftWidth: 5,
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'black'
+  }
+});"
+`;

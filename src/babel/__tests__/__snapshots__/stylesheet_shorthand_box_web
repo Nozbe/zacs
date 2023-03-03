@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets example: stylesheet_shorthand_box, web 1`] = `
+"/*
+ZACS-generated CSS stylesheet begins below.
+PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
+If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
+*/
+
+/* eslint-disable */
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
+.one { \\\\n\\\\
+  margin: 5px; \\\\n\\\\
+  padding: 5px; \\\\n\\\\
+  inset: 5px; \\\\n\\\\
+  inset: 10%; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.oneArray { \\\\n\\\\
+  margin: 5px; \\\\n\\\\
+  padding: 5px; \\\\n\\\\
+  inset: 5px; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.twoArray { \\\\n\\\\
+  margin: 5px 10px; \\\\n\\\\
+  padding: 5px 10px; \\\\n\\\\
+  inset: 5px 10px; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.threeArray { \\\\n\\\\
+  margin: 5px 10% 15px; \\\\n\\\\
+  padding: 5px 10% 15px; \\\\n\\\\
+  inset: 5px 10% 15px; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.fourArray { \\\\n\\\\
+  margin: 5px 10px 15px 20px; \\\\n\\\\
+  padding: 5px 10px 15px 20px; \\\\n\\\\
+  inset: 5px 10px 15px 20px; \\\\n\\\\
+} \\\\n\\\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
+/* ZACS-generated CSS stylesheet ends above */"
+`;

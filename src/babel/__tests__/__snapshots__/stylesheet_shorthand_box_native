@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets example: stylesheet_shorthand_box, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  one: {
+    margin: 5,
+    padding: 5,
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5,
+    top: '10%',
+    right: '10%',
+    bottom: '10%',
+    left: '10%'
+  },
+  oneArray: {
+    margin: 5,
+    padding: 5,
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5
+  },
+  twoArray: {
+    marginVertical: 5,
+    marginHorizontal: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    top: 5,
+    right: 10,
+    bottom: 5,
+    left: 10
+  },
+  threeArray: {
+    marginTop: 5,
+    marginBottom: 15,
+    marginHorizontal: '10%',
+    paddingTop: 5,
+    paddingBottom: 15,
+    paddingHorizontal: '10%',
+    top: 5,
+    right: '10%',
+    bottom: 15,
+    left: '10%'
+  },
+  fourArray: {
+    marginTop: 5,
+    marginRight: 10,
+    marginBottom: 15,
+    marginLeft: 20,
+    paddingTop: 5,
+    paddingRight: 10,
+    paddingBottom: 15,
+    paddingLeft: 20,
+    top: 5,
+    right: 10,
+    bottom: 15,
+    left: 20
+  }
+});"
+`;
