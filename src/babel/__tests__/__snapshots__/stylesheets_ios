@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs transforms experimental stylesheets (native, ios) 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  root: {
+    backgroundColor: 'red',
+    height: 50,
+    width: '100%',
+    flex: 1,
+    zIndex: -1000,
+    zIndex: -2,
+    width: 1337,
+    // check native-only expressions
+    backgroundColor: foo ? rgba(a, b) : bar,
+    left: 0,
+    right: 0,
+    // check replacement by babel
+    width: 2137,
+    marginHorizontal: foo(0)
+  },
+  text: {
+    color: '#abcdef',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    paddingRight: 20,
+    opacity: 0.5,
+    // web-only postcss syntax
+    backgroundColor: '@theme(onSurface1)'
+  },
+  // test ZACS-specific style shorthands
+  one: {
+    margin: 5,
+    padding: 5,
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5,
+    top: '10%',
+    right: '10%',
+    bottom: '10%',
+    left: '10%'
+  },
+  oneArray: {
+    margin: 5,
+    padding: 5,
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5
+  },
+  twoArray: {
+    marginVertical: 5,
+    marginHorizontal: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    top: 5,
+    right: 10,
+    bottom: 5,
+    left: 10
+  },
+  threeArray: {
+    marginTop: 5,
+    marginBottom: 15,
+    marginHorizontal: '10%',
+    paddingTop: 5,
+    paddingBottom: 15,
+    paddingHorizontal: '10%',
+    top: 5,
+    right: '10%',
+    bottom: 15,
+    left: '10%'
+  },
+  fourArray: {
+    marginTop: 5,
+    marginRight: 10,
+    marginBottom: 15,
+    marginLeft: 20,
+    paddingTop: 5,
+    paddingRight: 10,
+    paddingBottom: 15,
+    paddingLeft: 20,
+    top: 5,
+    right: 10,
+    bottom: 15,
+    left: 20
+  },
+  border: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'red',
+    borderTopWidth: 2,
+    borderTopStyle: 'solid',
+    borderTopColor: 'green',
+    borderRightWidth: 3,
+    borderRightStyle: 'solid',
+    borderRightColor: 'yellow',
+    borderBottomWidth: 4,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'blue',
+    borderLeftWidth: 5,
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'black'
+  },
+  scoped: {
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'red'
+  }
+});"
+`;

@@ -2,6 +2,7 @@ const babel = require('@babel/core')
 const path = require('path')
 const fs = require('fs')
 const plugin = require('../index')
+require('jest-specific-snapshot')
 
 function testBabelPlugin(pluginBabel) {
   const { types: t } = pluginBabel
@@ -103,16 +104,24 @@ describe('zacs', () => {
     })
   })
   it(`transforms experimental stylesheets (web)`, () => {
-    expect(transform(example('stylesheet'), 'web')).toMatchSnapshot()
+    expect(transform(example('stylesheet'), 'web')).toMatchSpecificSnapshot(
+      './__snapshots__/stylesheets_web',
+    )
   })
   it(`transforms experimental stylesheets (native)`, () => {
-    expect(transform(example('stylesheet'), 'native')).toMatchSnapshot()
+    expect(transform(example('stylesheet'), 'native')).toMatchSpecificSnapshot(
+      './__snapshots__/stylesheets_native',
+    )
   })
   it(`transforms experimental stylesheets (native, ios)`, () => {
-    expect(transform(example('stylesheet'), 'native', { target: 'ios' })).toMatchSnapshot()
+    expect(transform(example('stylesheet'), 'native', { target: 'ios' })).toMatchSpecificSnapshot(
+      './__snapshots__/stylesheets_ios',
+    )
   })
   it(`transforms experimental stylesheets (native, android)`, () => {
-    expect(transform(example('stylesheet'), 'native', { target: 'android' })).toMatchSnapshot()
+    expect(
+      transform(example('stylesheet'), 'native', { target: 'android' }),
+    ).toMatchSpecificSnapshot('./__snapshots__/stylesheets_android')
     expect(
       transform(example('stylesheetNative'), 'native', { target: 'android' }),
     ).toMatchSnapshot()

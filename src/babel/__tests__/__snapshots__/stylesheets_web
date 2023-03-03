@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs transforms experimental stylesheets (web) 1`] = `
+"/*
+ZACS-generated CSS stylesheet begins below.
+PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
+If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
+*/
+
+/* eslint-disable */
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
+.root { \\\\n\\\\
+  background-color: red; \\\\n\\\\
+  height: 50px; \\\\n\\\\
+  width: 100%; \\\\n\\\\
+  flex: 1; \\\\n\\\\
+  z-index: -1000; \\\\n\\\\
+  z-index: -2; \\\\n\\\\
+  -webkit-padding-start: 20px; \\\\n\\\\
+  z-index: 1500; \\\\n\\\\
+  & > span { opacity: 0.5 } \\\\n\\\\
+  & > div { \\\\n\\\\
+    margin: -20px; \\\\n\\\\
+    opacity: 0.5; \\\\n\\\\
+  } \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.text { \\\\n\\\\
+  color: #abcdef; \\\\n\\\\
+  font-size: 12px; \\\\n\\\\
+  font-weight: bold; \\\\n\\\\
+  padding-left: 20px; \\\\n\\\\
+  padding-right: 20px; \\\\n\\\\
+  opacity: 0.5; \\\\n\\\\
+  background-color: @theme(onSurface1); \\\\n\\\\
+  &:hover { \\\\n\\\\
+      opacity: .8; \\\\n\\\\
+      color: #abbaba; \\\\n\\\\
+    } \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.one { \\\\n\\\\
+  margin: 5px; \\\\n\\\\
+  padding: 5px; \\\\n\\\\
+  inset: 5px; \\\\n\\\\
+  inset: 10%; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.oneArray { \\\\n\\\\
+  margin: 5px; \\\\n\\\\
+  padding: 5px; \\\\n\\\\
+  inset: 5px; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.twoArray { \\\\n\\\\
+  margin: 5px 10px; \\\\n\\\\
+  padding: 5px 10px; \\\\n\\\\
+  inset: 5px 10px; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.threeArray { \\\\n\\\\
+  margin: 5px 10% 15px; \\\\n\\\\
+  padding: 5px 10% 15px; \\\\n\\\\
+  inset: 5px 10% 15px; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.fourArray { \\\\n\\\\
+  margin: 5px 10px 15px 20px; \\\\n\\\\
+  padding: 5px 10px 15px 20px; \\\\n\\\\
+  inset: 5px 10px 15px 20px; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.border { \\\\n\\\\
+  border: 1px solid red; \\\\n\\\\
+  border-top: 2px solid green; \\\\n\\\\
+  border-right: 3px solid yellow; \\\\n\\\\
+  border-bottom: 4px solid blue; \\\\n\\\\
+  border-left: 5px solid black; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+.scoped { \\\\n\\\\
+  margin: 5px 10px; \\\\n\\\\
+  border: 1px solid red; \\\\n\\\\
+} \\\\n\\\\
+ \\\\n\\\\
+ \\\\n\\\\
+  @keyframes hello { \\\\n\\\\
+    from { opacity: 0 } \\\\n\\\\
+    to { opacity: 0 } \\\\n\\\\
+  } \\\\n\\\\
+   \\\\n\\\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
+/* ZACS-generated CSS stylesheet ends above */"
+`;
