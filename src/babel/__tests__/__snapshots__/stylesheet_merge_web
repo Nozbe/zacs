@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets example: stylesheet_merge, web 1`] = `
+"/*
+ZACS-generated CSS stylesheet begins below.
+PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
+If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
+*/
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
+.root { \\n\\
+  height: 100px; \\n\\
+  height: 200px; \\n\\
+  color: red; \\n\\
+  margin: 2px; \\n\\
+  opacity: 0.5; \\n\\
+  background: some-css-background; \\n\\
+  background: some-modern-css-magic; \\n\\
+} \\n\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");
+/* ZACS-generated CSS stylesheet ends above */"
+`;

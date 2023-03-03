@@ -68,6 +68,12 @@ function resolveShorthands(key, node) {
   }
 }
 
+function deduplicatedProperties(input) {
+  const map = new Map()
+  input.forEach((property) => map.set(property.key.name, property))
+  return Array.from(map.values())
+}
+
 function resolveRNStylesheet(t, target, stylesheet) {
   stylesheet.properties = stylesheet.properties
     .filter((styleset) => styleset.key.name !== 'css')
@@ -129,7 +135,7 @@ function resolveRNStylesheet(t, target, stylesheet) {
           pushPropOrShorthands(property)
         }
       })
-      styleset.value.properties = resolvedProperties
+      styleset.value.properties = deduplicatedProperties(resolvedProperties)
       return styleset
     })
 

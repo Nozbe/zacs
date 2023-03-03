@@ -1,13 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs stylesheets example: stylesheet_mixins, native 1`] = `
+exports[`zacs stylesheets example: stylesheet_merge, native 1`] = `
 "const zacsReactNative = require('react-native');
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
 const styles = ZACS_RN_StyleSheet.create({
   root: {
-    flex: 1,
-    zIndex: -2,
-    backgroundColor: 'native'
+    height: 200,
+    color: 'black',
+    margin: 2,
+    opacity: 0.2
   }
 });"
 `;

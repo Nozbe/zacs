@@ -5,11 +5,6 @@ exports[`zacs stylesheets transforms ZACS_STYLESHEET_LITERAL (ios) 1`] = `
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
 const styles = ZACS_RN_StyleSheet.create({
   text: {
-    // magic syntax for babel replacement plugins
-    backgroundColor: Styling.colors.onSurface1,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: Styling.colors.onSurface1,
     backgroundColor: Styling.colors.onSurface3,
     borderWidth: 3,
     borderStyle: 'solid',

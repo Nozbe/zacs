@@ -5,7 +5,6 @@ const styles = zacs.stylesheet({
     margin: 5,
     padding: 5,
     inset: 5,
-    inset: '10%',
   },
   oneArray: {
     margin: [5],

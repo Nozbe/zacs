@@ -11,7 +11,6 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
   margin: 5px; \\n\\
   padding: 5px; \\n\\
   inset: 5px; \\n\\
-  inset: 10%; \\n\\
 } \\n\\
  \\n\\
 .oneArray { \\n\\
