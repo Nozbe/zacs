@@ -5,47 +5,6 @@ exports[`zacs doesn't add __zacs_original_name in production 1`] = `
 const root = <div className={style.root} />;"
 `;
 
-exports[`zacs example: basic, native 1`] = `
-"const zacsReactNative = require('react-native');
-
-const ZACS_RN_Text = zacsReactNative.Text;
-const ZACS_RN_View = zacsReactNative.View;
-
-/* eslint-disable */
-
-/* === Different invocations === */
-const view = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
-const view2 = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" />;
-const composition = <>
-    <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\">
-      <ZACS_RN_Text style={style.text} __zacs_original_name=\\"Text\\" />
-    </ZACS_RN_View>
-  </>;
-
-function AnotherComponent() {
-  const helper = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
-  return <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</ZACS_RN_View>;
-}"
-`;
-
-exports[`zacs example: basic, web 1`] = `
-"/* eslint-disable */
-
-/* === Different invocations === */
-const view = <div className={style.root} __zacs_original_name=\\"Root\\" />;
-const view2 = <div className={styles.root2} __zacs_original_name=\\"Root2\\" />;
-const composition = <>
-    <div className={style.root} __zacs_original_name=\\"Root\\">
-      <span className={style.text} __zacs_original_name=\\"Text\\" />
-    </div>
-  </>;
-
-function AnotherComponent() {
-  const helper = <div className={style.root} __zacs_original_name=\\"Root\\" />;
-  return <div className={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</div>;
-}"
-`;
-
 exports[`zacs example: createdComponents, native 1`] = `
 "const zacsReactNative = require('react-native');
 
@@ -265,6 +224,47 @@ exports[`zacs example: declaration_null, web 1`] = `
 /* === No styles === */
 const noStyles = <div __zacs_original_name=\\"NoStyles\\" />;
 const noStyles2 = <div __zacs_original_name=\\"NoStyles2\\" />;"
+`;
+
+exports[`zacs example: declaration_unconditionalStyle, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_Text = zacsReactNative.Text;
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === Different invocations === */
+const view = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
+const view2 = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" />;
+const composition = <>
+    <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\">
+      <ZACS_RN_Text style={style.text} __zacs_original_name=\\"Text\\" />
+    </ZACS_RN_View>
+  </>;
+
+function AnotherComponent() {
+  const helper = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
+  return <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</ZACS_RN_View>;
+}"
+`;
+
+exports[`zacs example: declaration_unconditionalStyle, web 1`] = `
+"/* eslint-disable */
+
+/* === Different invocations === */
+const view = <div className={style.root} __zacs_original_name=\\"Root\\" />;
+const view2 = <div className={styles.root2} __zacs_original_name=\\"Root2\\" />;
+const composition = <>
+    <div className={style.root} __zacs_original_name=\\"Root\\">
+      <span className={style.text} __zacs_original_name=\\"Text\\" />
+    </div>
+  </>;
+
+function AnotherComponent() {
+  const helper = <div className={style.root} __zacs_original_name=\\"Root\\" />;
+  return <div className={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</div>;
+}"
 `;
 
 exports[`zacs example: manyStyleSources, native 1`] = `

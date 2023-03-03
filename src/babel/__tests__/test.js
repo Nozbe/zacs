@@ -32,7 +32,7 @@ function example(name) {
 
 describe('zacs', () => {
   const examples = [
-    'basic',
+    'declaration_unconditionalStyle',
     'webSafeAttributes',
     'declaration_null',
     'declaration_conditionalStyleSpec',
