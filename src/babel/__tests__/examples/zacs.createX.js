@@ -1,8 +1,6 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-/* === createView/Text/Styled === */
-
 export const ExportedView = zacs.createView()
 
 export const ExportedText = zacs.createText(style.text)

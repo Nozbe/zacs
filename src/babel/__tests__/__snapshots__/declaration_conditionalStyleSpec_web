@@ -2,8 +2,6 @@
 
 exports[`zacs example: declaration_conditionalStyleSpec, web 1`] = `
 "/* eslint-disable */
-
-/* === Conditional styles === */
 const cond1_root = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
 const cond1_one = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\")} __zacs_original_name=\\"Conditional1\\" />;
 const cond1_two = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\") + (barCount > 0 ? \\" \\" + style.rootBar : \\"\\")} __zacs_original_name=\\"Conditional1\\" />; // infer that a style is to be included / not included
@@ -24,7 +22,5 @@ const cond1_falsy5 = <div className={style.root} __zacs_original_name=\\"Conditi
 
 const cond2_one = <div className={foo ? style.cond2Foo : \\"\\"} __zacs_original_name=\\"Conditional2\\" />;
 const cond2_two = <div className={(foo ? style.cond2Foo : \\"\\") + (bCount > 100 ? \\" \\" + style.cond2Bar : \\"\\")} __zacs_original_name=\\"Conditional2\\" />;
-const cond2_true2 = <div className={style.cond2Foo + (\\" \\" + style.cond2Bar)} __zacs_original_name=\\"Conditional2\\" />; // check with null
-
-const condNull = <div __zacs_original_name=\\"ConditionalNull\\" />;"
+const cond2_true2 = <div className={style.cond2Foo + (\\" \\" + style.cond2Bar)} __zacs_original_name=\\"Conditional2\\" />;"
 `;

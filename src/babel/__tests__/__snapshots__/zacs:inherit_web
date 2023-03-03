@@ -2,8 +2,6 @@
 
 exports[`zacs example: zacs:inherit, web 1`] = `
 "/* eslint-disable */
-
-/* === Defined stylable component === */
 const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name=\\"StylableBlank\\" />;
 const stylableMain = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
 const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;

@@ -1,8 +1,6 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-/* === Component attributes === */
-
 const Root = zacs.view(style.root)
 
 // custom props -- different JSX syntaxes (will be cut out on web)

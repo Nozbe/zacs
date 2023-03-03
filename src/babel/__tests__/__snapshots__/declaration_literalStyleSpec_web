@@ -2,8 +2,6 @@
 
 exports[`zacs example: declaration_literalStyleSpec, web 1`] = `
 "/* eslint-disable */
-
-/* === Added styles === */
 const added1_none = <div __zacs_original_name=\\"AddedStyles1\\" />;
 const added1_one = <div style={{
   width: width
@@ -19,7 +17,5 @@ const added1_literals = <div style={{
 const added1_propKeys = <div style={{
   \\"--background\\": \\"white\\",
   1: 1
-}} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
-
-const addedNull = <div __zacs_original_name=\\"AddedStylesNull\\" />;"
+}} __zacs_original_name=\\"AddedStyles1\\" />;"
 `;

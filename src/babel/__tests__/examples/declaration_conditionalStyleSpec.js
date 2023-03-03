@@ -1,8 +1,6 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-/* === Conditional styles === */
-
 const Conditional1 = zacs.view(style.root, {
   isFoo: style.rootFoo,
   isBar: style.rootBar,
@@ -41,9 +39,3 @@ const Conditional2 = zacs.view(null, {
 const cond2_one = <Conditional2 isA={foo} />
 const cond2_two = <Conditional2 isA={foo} isB={bCount > 100} />
 const cond2_true2 = <Conditional2 isA isB />
-
-// check with null
-
-const ConditionalNull = zacs.view(null, null)
-
-const condNull = <ConditionalNull onPress={onPress} />

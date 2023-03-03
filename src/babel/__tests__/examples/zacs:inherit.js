@@ -1,8 +1,6 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-/* === Defined stylable component === */
-
 const StylableBlank = zacs.view()
 const stylableBlank = <StylableBlank zacs:inherit={props} />
 

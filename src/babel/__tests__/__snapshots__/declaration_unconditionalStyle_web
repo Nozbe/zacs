@@ -2,8 +2,6 @@
 
 exports[`zacs example: declaration_unconditionalStyle, web 1`] = `
 "/* eslint-disable */
-
-/* === Different invocations === */
 const view = <div className={style.root} __zacs_original_name=\\"Root\\" />;
 const view2 = <div className={styles.root2} __zacs_original_name=\\"Root2\\" />;
 const composition = <>

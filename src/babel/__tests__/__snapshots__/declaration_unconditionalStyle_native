@@ -7,8 +7,6 @@ const ZACS_RN_Text = zacsReactNative.Text;
 const ZACS_RN_View = zacsReactNative.View;
 
 /* eslint-disable */
-
-/* === Different invocations === */
 const view = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
 const view2 = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" />;
 const composition = <>

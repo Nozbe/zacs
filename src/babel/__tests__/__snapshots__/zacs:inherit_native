@@ -7,8 +7,6 @@ const ZACS_RN_Text = zacsReactNative.Text;
 const ZACS_RN_View = zacsReactNative.View;
 
 /* eslint-disable */
-
-/* === Defined stylable component === */
 const stylableBlank = <ZACS_RN_View style={[].concat(props.style || [])} __zacs_original_name=\\"StylableBlank\\" />;
 const stylableMain = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
 const stylableMain_highlighted = <ZACS_RN_Text style={[style.main, style.highlighted].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;

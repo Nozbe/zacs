@@ -6,8 +6,8 @@ exports[`zacs example: declaration_null, native 1`] = `
 const ZACS_RN_View = zacsReactNative.View;
 
 /* eslint-disable */
-
-/* === No styles === */
-const noStyles = <ZACS_RN_View __zacs_original_name=\\"NoStyles\\" />;
-const noStyles2 = <ZACS_RN_View __zacs_original_name=\\"NoStyles2\\" />;"
+const view0 = <ZACS_RN_View __zacs_original_name=\\"View0\\" />;
+const view1 = <ZACS_RN_View __zacs_original_name=\\"View1\\" />;
+const view2 = <ZACS_RN_View __zacs_original_name=\\"View2\\" />;
+const view3 = <ZACS_RN_View __zacs_original_name=\\"View3\\" />;"
 `;

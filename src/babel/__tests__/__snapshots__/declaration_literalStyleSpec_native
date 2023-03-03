@@ -6,8 +6,6 @@ exports[`zacs example: declaration_literalStyleSpec, native 1`] = `
 const ZACS_RN_View = zacsReactNative.View;
 
 /* eslint-disable */
-
-/* === Added styles === */
 const added1_none = <ZACS_RN_View __zacs_original_name=\\"AddedStyles1\\" />;
 const added1_one = <ZACS_RN_View style={{
   width: width
@@ -23,7 +21,5 @@ const added1_literals = <ZACS_RN_View style={{
 const added1_propKeys = <ZACS_RN_View style={{
   \\"--background\\": \\"white\\",
   1: 1
-}} __zacs_original_name=\\"AddedStyles1\\" />; // check with null
-
-const addedNull = <ZACS_RN_View __zacs_original_name=\\"AddedStylesNull\\" onPress={onPress} />;"
+}} __zacs_original_name=\\"AddedStyles1\\" />;"
 `;

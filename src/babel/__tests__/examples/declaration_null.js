@@ -1,10 +1,14 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-/* === No styles === */
+const View0 = zacs.view()
+const view0 = <View0 />
 
-const NoStyles = zacs.view(null)
-const noStyles = <NoStyles />
+const View1 = zacs.view(null)
+const view1 = <View1 />
 
-const NoStyles2 = zacs.view()
-const noStyles2 = <NoStyles2 />
+const View2 = zacs.view(null, null)
+const view2 = <View2 />
+
+const View3 = zacs.view(null, null, null)
+const view3 = <View3 />

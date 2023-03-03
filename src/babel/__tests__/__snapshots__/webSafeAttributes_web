@@ -2,8 +2,6 @@
 
 exports[`zacs example: webSafeAttributes, web 1`] = `
 "/* eslint-disable */
-
-/* === Component attributes === */
 // custom props -- different JSX syntaxes (will be cut out on web)
 const customProps = <div className={style.root} __zacs_original_name=\\"Root\\" />; // DOM-safe attributes
 

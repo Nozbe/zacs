@@ -1,8 +1,6 @@
 /* eslint-disable */
 import zacs from 'zacs'
 
-/* === Added, conditional, main styles === */
-
 const Mix1 = zacs.view(
   styles.box,
   {

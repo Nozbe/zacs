@@ -6,8 +6,6 @@ exports[`zacs example: declaration_manyStyleSources, native 1`] = `
 const ZACS_RN_View = zacsReactNative.View;
 
 /* eslint-disable */
-
-/* === Added, conditional, main styles === */
 const mix1_none = <ZACS_RN_View style={styles.box} __zacs_original_name=\\"Mix1\\" />;
 const mix1_add = <ZACS_RN_View style={[styles.box, {
   width: 500
