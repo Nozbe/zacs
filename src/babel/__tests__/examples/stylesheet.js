@@ -6,13 +6,6 @@ const styles = zacs.stylesheet({
     backgroundColor: 'red',
     height: 50,
     width: '100%',
-    // check emulated mixins
-    // ...{
-    //   flex: 1,
-    //   zIndex: -1000,
-    // },
-    _mixin: { flex: 1, zIndex: -1000 },
-    _mixin: { zIndex: -2 },
     // native-only
     native: {
       width: 1337,
