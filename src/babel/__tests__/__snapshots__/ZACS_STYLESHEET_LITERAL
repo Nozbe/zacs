@@ -1,18 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs doesn't add __zacs_original_name in production 1`] = `
-"/* eslint-disable */
-const root = <div className={style.root} />;"
-`;
-
-exports[`zacs preserves declarations if requested 1`] = `
-"/* eslint-disable */
-import zacs from 'zacs';
-const Root = zacs.view(style.root);
-const root = <div className={style.root} />;"
-`;
-
-exports[`zacs transforms experimental stylesheets (native, android) 1`] = `
+exports[`zacs transforms ZACS_STYLESHEET_LITERAL 1`] = `
 "const zacsReactNative = require('react-native');
 
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;

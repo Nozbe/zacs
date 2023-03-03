@@ -77,12 +77,14 @@ describe('zacs', () => {
     )
   })
   it(`doesn't add __zacs_original_name in production`, () => {
-    expect(transform(example('production'), 'web', { production: true })).toMatchSnapshot()
+    expect(transform(example('production'), 'web', { production: true })).toMatchSpecificSnapshot(
+      snapshot('production'),
+    )
   })
   it(`preserves declarations if requested`, () => {
     expect(
       transform(example('production'), 'web', { production: true, keepDeclarations: true }),
-    ).toMatchSnapshot()
+    ).toMatchSpecificSnapshot('production_keepDeclarations')
   })
   it(`exporting declarations not alowed`, () => {
     expect(() => transform(example('exportingDeclarationsNotAllowed'), 'web')).toThrow(
@@ -130,9 +132,11 @@ describe('zacs', () => {
     expect(
       transform(example('stylesheet'), 'native', { target: 'android' }),
     ).toMatchSpecificSnapshot(snapshot('stylesheets_android'))
+  })
+  it(`transforms ZACS_STYLESHEET_LITERAL`, () => {
     expect(
-      transform(example('stylesheetNative'), 'native', { target: 'android' }),
-    ).toMatchSnapshot()
+      transform(example('ZACS_STYLESHEET_LITERAL'), 'native', { target: 'android' }),
+    ).toMatchSpecificSnapshot(snapshot('ZACS_STYLESHEET_LITERAL'))
   })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>
