@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets example: stylesheet_nesting, android 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+
+/* eslint-disable */
+const styles = ZACS_RN_StyleSheet.create({
+  root: {
+    backgroundColor: 'red',
+    opacity: 50,
+    width: '100%',
+    width: 1337,
+    opacity: 0.1
+  }
+});"
+`;

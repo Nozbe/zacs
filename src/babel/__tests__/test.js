@@ -129,6 +129,7 @@ describe('zacs stylesheets', () => {
   ]
   const webIosAndroidExamples = [
     //
+    'stylesheet_nesting',
     'stylesheet_nativeExpressions',
   ]
   webNativeExamples.forEach(exampleName => {
@@ -152,26 +153,6 @@ describe('zacs stylesheets', () => {
         ).toMatchSpecificSnapshot(snapshot(`${exampleName}_${platform}`))
       })
     })
-  })
-  it(`transforms experimental stylesheets (web)`, () => {
-    expect(transform(example('stylesheet'), 'web')).toMatchSpecificSnapshot(
-      snapshot('stylesheets_web'),
-    )
-  })
-  it(`transforms experimental stylesheets (native)`, () => {
-    expect(transform(example('stylesheet'), 'native')).toMatchSpecificSnapshot(
-      snapshot('stylesheets_native'),
-    )
-  })
-  it(`transforms experimental stylesheets (native, ios)`, () => {
-    expect(transform(example('stylesheet'), 'native', { target: 'ios' })).toMatchSpecificSnapshot(
-      snapshot('stylesheets_ios'),
-    )
-  })
-  it(`transforms experimental stylesheets (native, android)`, () => {
-    expect(
-      transform(example('stylesheet'), 'native', { target: 'android' }),
-    ).toMatchSpecificSnapshot(snapshot('stylesheets_android'))
   })
   it(`transforms ZACS_STYLESHEET_LITERAL (android)`, () => {
     expect(
