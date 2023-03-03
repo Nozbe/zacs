@@ -162,39 +162,7 @@ const RCTText = 'RCTText'; // passing string directly won't work because it's up
 const p = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</RCTText>;
 const p_attrs = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\" foo={foo} title=\\"DOM attr\\" />;
 const platform_zacs = <ZACS_RN_Text __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;
-/* === Defined stylable component === */
-
-const stylableBlank = <ZACS_RN_View style={[].concat(props.style || [])} __zacs_original_name=\\"StylableBlank\\" />;
-const stylableMain = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_highlighted = <ZACS_RN_Text style={[style.main, style.highlighted].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_color = <ZACS_RN_Text style={[style.main, {
-  color: \\"red\\"
-}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_colorAlt = <ZACS_RN_Text style={[style.main, {
-  color: 'red'
-}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_all = <ZACS_RN_Text style={[style.main, style.highlighted, {
-  color: \\"red\\"
-}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_splat = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
-
-export const StylableButton = props => {
-  const {
-    title,
-    isHighlighted,
-    color
-  } = props;
-  return <ZACS_RN_Text style={[style.main, isHighlighted && style.highlighted, {
-    color: factoryColor(color)
-  }].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\">
-      {title}
-    </ZACS_RN_Text>;
-}; // second-order stylable component (no zacs definition)
-
-const ImportedComponent = require('ImportedComponent');
-
-const stylable2nd = <ImportedComponent style={props.style} />;"
+const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
 `;
 
 exports[`zacs example: basic, web 1`] = `
@@ -349,39 +317,7 @@ const RCTText = 'RCTText'; // passing string directly won't work because it's up
 const p = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</p>;
 const p_attrs = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\" title=\\"DOM attr\\" />;
 const platform_zacs = <article __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;
-/* === Defined stylable component === */
-
-const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name=\\"StylableBlank\\" />;
-const stylableMain = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_color = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: \\"red\\"
-}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: 'red'
-}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_all = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-  color: \\"red\\"
-}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
-const stylableMain_splat = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
-
-export const StylableButton = props => {
-  const {
-    title,
-    isHighlighted,
-    color
-  } = props;
-  return <span className={style.main + (isHighlighted ? \\" \\" + style.highlighted : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
-    color: factoryColor(color)
-  }, props.style)} __zacs_original_name=\\"StylableMain\\">
-      {title}
-    </span>;
-}; // second-order stylable component (no zacs definition)
-
-const ImportedComponent = require('ImportedComponent');
-
-const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
+const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
 `;
 
 exports[`zacs example: createdComponents, native 1`] = `
@@ -469,6 +405,83 @@ const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
 const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} className={props.className} __zacs_style={{
   width: 199
 }} />;"
+`;
+
+exports[`zacs example: stylableComponents, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_Text = zacsReactNative.Text;
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === Defined stylable component === */
+const stylableBlank = <ZACS_RN_View style={[].concat(props.style || [])} __zacs_original_name=\\"StylableBlank\\" />;
+const stylableMain = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_highlighted = <ZACS_RN_Text style={[style.main, style.highlighted].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_color = <ZACS_RN_Text style={[style.main, {
+  color: \\"red\\"
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <ZACS_RN_Text style={[style.main, {
+  color: 'red'
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_all = <ZACS_RN_Text style={[style.main, style.highlighted, {
+  color: \\"red\\"
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_splat = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
+
+export const StylableButton = props => {
+  const {
+    title,
+    isHighlighted,
+    color
+  } = props;
+  return <ZACS_RN_Text style={[style.main, isHighlighted && style.highlighted, {
+    color: factoryColor(color)
+  }].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\">
+      {title}
+    </ZACS_RN_Text>;
+}; // second-order stylable component (no zacs definition)
+
+const ImportedComponent = require('ImportedComponent');
+
+const stylable2nd = <ImportedComponent style={props.style} />;"
+`;
+
+exports[`zacs example: stylableComponents, web 1`] = `
+"/* eslint-disable */
+
+/* === Defined stylable component === */
+const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name=\\"StylableBlank\\" />;
+const stylableMain = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_color = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: \\"red\\"
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: 'red'
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_all = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: \\"red\\"
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_splat = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
+
+export const StylableButton = props => {
+  const {
+    title,
+    isHighlighted,
+    color
+  } = props;
+  return <span className={style.main + (isHighlighted ? \\" \\" + style.highlighted : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+    color: factoryColor(color)
+  }, props.style)} __zacs_original_name=\\"StylableMain\\">
+      {title}
+    </span>;
+}; // second-order stylable component (no zacs definition)
+
+const ImportedComponent = require('ImportedComponent');
+
+const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
 `;
 
 exports[`zacs preserves declarations if requested 1`] = `
