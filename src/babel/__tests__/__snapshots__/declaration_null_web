@@ -3,8 +3,8 @@
 exports[`zacs example: declaration_null, web 1`] = `
 "/* eslint-disable */
 
-const view0 = <div __zacs_original_name=\\"View0\\" />;
-const view1 = <div __zacs_original_name=\\"View1\\" />;
-const view2 = <div __zacs_original_name=\\"View2\\" />;
-const view3 = <div __zacs_original_name=\\"View3\\" />;"
+const view0 = <div __zacs_original_name="View0" />;
+const view1 = <div __zacs_original_name="View1" />;
+const view2 = <div __zacs_original_name="View2" />;
+const view3 = <div __zacs_original_name="View3" />;"
 `;

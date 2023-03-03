@@ -8,10 +8,10 @@ const ZACS_RN_View = zacsReactNative.View;
 const addedViaProp = <ZACS_RN_View style={{
   width: 100,
   height: 50
-}} __zacs_original_name=\\"View\\" />;
+}} __zacs_original_name="View" />;
 const stylesToAddViaProp = {
   width: 100,
   height: 50
 };
-const addedViaProp_2 = <ZACS_RN_View style={stylesToAddViaProp} __zacs_original_name=\\"View\\" />;"
+const addedViaProp_2 = <ZACS_RN_View style={stylesToAddViaProp} __zacs_original_name="View" />;"
 `;

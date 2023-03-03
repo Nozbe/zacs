@@ -18,8 +18,4 @@ module.exports = {
   // collectCoverageFrom: ['!**/node_modules/**', 'src/**'],
   // coverageDirectory: 'coverage',
   // coverageReporters: ['html', 'json'],
-  snapshotFormat: {
-    escapeString: true,
-    printBasicPrototype: true,
-  },
 }

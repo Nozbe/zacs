@@ -7,15 +7,15 @@ PRO TIP: If you get a ReferenceError on the line below, it means that your Webpa
 If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
 */
 /* eslint-disable */
-const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
-.root { \\\\n\\\\
-  background-color: red; \\\\n\\\\
-  opacity: 0.5; \\\\n\\\\
-  width: 100px; \\\\n\\\\
-  height: 100%; \\\\n\\\\
-  -webkit-padding-start: 20px; \\\\n\\\\
-  background-color: @theme(onSurface1); \\\\n\\\\
-} \\\\n\\\\
-ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
+.root { \\n\\
+  background-color: red; \\n\\
+  opacity: 0.5; \\n\\
+  width: 100px; \\n\\
+  height: 100%; \\n\\
+  -webkit-padding-start: 20px; \\n\\
+  background-color: @theme(onSurface1); \\n\\
+} \\n\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");
 /* ZACS-generated CSS stylesheet ends above */"
 `;

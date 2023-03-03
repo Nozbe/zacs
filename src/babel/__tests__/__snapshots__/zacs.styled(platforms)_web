@@ -3,13 +3,13 @@
 exports[`zacs example: zacs.styled(platforms), web 1`] = `
 "/* eslint-disable */
 
-const platbox = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" />;
-const platbox_attrs = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const platbox = <WebBox className={style.box} __zacs_original_name="PlatformBox" />;
+const platbox_attrs = <WebBox className={style.box} __zacs_original_name="PlatformBox" foo={foo} bar title="hello" />;
 
 // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
 const RCTText = 'RCTText';
-const p = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</p>;
-const p_attrs = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\" title=\\"DOM attr\\" />;
-const platform_zacs = <article __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
+const p = <p className={style.p} __zacs_original_name="PlatformParagraph">Hello</p>;
+const p_attrs = <p className={style.p} __zacs_original_name="PlatformParagraph" title="DOM attr" />;
+const platform_zacs = <article __zacs_original_name="PlatformZacsBuiltin" />;
+const platform_zacs2 = <div __zacs_original_name="PlatformZacsBuiltin2" />;"
 `;

@@ -7,28 +7,28 @@ PRO TIP: If you get a ReferenceError on the line below, it means that your Webpa
 If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
 */
 /* eslint-disable */
-const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
-.with_css { \\\\n\\\\
-  opacity: 0.5; color: #abbaba; \\\\n\\\\
-   \\\\n\\\\
-      opacity: 0.5; \\\\n\\\\
-      color: #abbaba; \\\\n\\\\
-     \\\\n\\\\
-  &:hover { \\\\n\\\\
-      opacity: .8; \\\\n\\\\
-      color: #abbaba; \\\\n\\\\
-    } \\\\n\\\\
-  & > div { \\\\n\\\\
-    border: 1px solid red; \\\\n\\\\
-  } \\\\n\\\\
-} \\\\n\\\\
- \\\\n\\\\
- \\\\n\\\\
-  @keyframes hello { \\\\n\\\\
-    from { opacity: 0 } \\\\n\\\\
-    to { opacity: 0 } \\\\n\\\\
-  } \\\\n\\\\
-   \\\\n\\\\
-ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
+.with_css { \\n\\
+  opacity: 0.5; color: #abbaba; \\n\\
+   \\n\\
+      opacity: 0.5; \\n\\
+      color: #abbaba; \\n\\
+     \\n\\
+  &:hover { \\n\\
+      opacity: .8; \\n\\
+      color: #abbaba; \\n\\
+    } \\n\\
+  & > div { \\n\\
+    border: 1px solid red; \\n\\
+  } \\n\\
+} \\n\\
+ \\n\\
+ \\n\\
+  @keyframes hello { \\n\\
+    from { opacity: 0 } \\n\\
+    to { opacity: 0 } \\n\\
+  } \\n\\
+   \\n\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");
 /* ZACS-generated CSS stylesheet ends above */"
 `;

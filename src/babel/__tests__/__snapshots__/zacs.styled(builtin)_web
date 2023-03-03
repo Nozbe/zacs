@@ -5,5 +5,5 @@ exports[`zacs example: zacs.styled(builtin), web 1`] = `
 
 // you wouldn't do it in shared code, only in .{native,web}.js
 
-const li = <li __zacs_original_name=\\"StyledLi\\" title=\\"hello\\" />;"
+const li = <li __zacs_original_name="StyledLi" title="hello" />;"
 `;

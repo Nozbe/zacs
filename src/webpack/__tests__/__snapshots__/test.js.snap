@@ -7,7 +7,7 @@ ZACS-generated CSS stylesheet begins below.
 PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
 If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
 */
-const styles = require(\\"../../../../.zacs-cache/src/webpack/__tests__/examples/basic.zacs.css\\")
+const styles = require("../../../../.zacs-cache/src/webpack/__tests__/examples/basic.zacs.css")
 
 
 
@@ -31,7 +31,7 @@ exports[`zacs-loader extracts CSS 2`] = `
 
 exports[`zacs-loader extracts CSS 3`] = `
 "// extracted by mini-css-extract-plugin
-export const someName = \\"basic-zacs__someName\\";"
+export const someName = "basic-zacs__someName";"
 `;
 
 exports[`zacs-loader extracts CSS with slightly malformed whitespace 1`] = `
@@ -41,7 +41,7 @@ ZACS-generated CSS stylesheet begins below.
 PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
 If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
 */
-const styles = require(\\"../../../../.zacs-cache/src/webpack/__tests__/examples/brokenWhitespace.zacs.css\\")
+const styles = require("../../../../.zacs-cache/src/webpack/__tests__/examples/brokenWhitespace.zacs.css")
 
 
 
@@ -61,5 +61,5 @@ zacs.view(styles.someName)
 
 exports[`zacs-loader has configurable cache directory and extension 1`] = `
 "// extracted by mini-css-extract-plugin
-export const someName = \\"basic-zacstest__someName\\";"
+export const someName = "basic-zacstest__someName";"
 `;

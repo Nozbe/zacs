@@ -4,13 +4,13 @@ exports[`zacs example: zacs.styled(platforms), native 1`] = `
 "const zacsReactNative = require('react-native');
 /* eslint-disable */
 
-const platbox = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" />;
-const platbox_attrs = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const platbox = <NativeBox style={style.box} __zacs_original_name="PlatformBox" />;
+const platbox_attrs = <NativeBox style={style.box} __zacs_original_name="PlatformBox" foo={foo} bar title="hello" />;
 
 // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
 const RCTText = 'RCTText';
-const p = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</RCTText>;
-const p_attrs = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\" foo={foo} title=\\"DOM attr\\" />;
-const platform_zacs = <ZACS_RN_Text __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
-const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
+const p = <RCTText style={style.p} __zacs_original_name="PlatformParagraph">Hello</RCTText>;
+const p_attrs = <RCTText style={style.p} __zacs_original_name="PlatformParagraph" foo={foo} title="DOM attr" />;
+const platform_zacs = <ZACS_RN_Text __zacs_original_name="PlatformZacsBuiltin" />;
+const platform_zacs2 = <NativeBox __zacs_original_name="PlatformZacsBuiltin2" />;"
 `;

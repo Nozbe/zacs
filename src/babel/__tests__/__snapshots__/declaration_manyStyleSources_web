@@ -3,39 +3,39 @@
 exports[`zacs example: declaration_manyStyleSources, web 1`] = `
 "/* eslint-disable */
 
-const mix1_none = <div className={styles.box} __zacs_original_name=\\"Mix1\\" />;
+const mix1_none = <div className={styles.box} __zacs_original_name="Mix1" />;
 const mix1_add = <div className={styles.box} style={{
   width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_true1 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={{
+}} __zacs_original_name="Mix1" />;
+const mix1_add_true1 = <div className={styles.box + (" " + style.mixFoo)} style={{
   width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_true2 = <div className={styles.box + (\\" \\" + style.mixFoo) + (\\" \\" + style.mixBar)} style={{
+}} __zacs_original_name="Mix1" />;
+const mix1_add_true2 = <div className={styles.box + (" " + style.mixFoo) + (" " + style.mixBar)} style={{
   width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_1 = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\")} style={{
+}} __zacs_original_name="Mix1" />;
+const mix1_add_1 = <div className={styles.box + (isFoo ? " " + style.mixFoo : "")} style={{
   width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_2 = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\") + (\\" \\" + style.mixBar)} style={{
+}} __zacs_original_name="Mix1" />;
+const mix1_add_2 = <div className={styles.box + (isFoo ? " " + style.mixFoo : "") + (" " + style.mixBar)} style={{
   width: 500
-}} __zacs_original_name=\\"Mix1\\" />;
-const mix_splat = <div className={styles.box + (isFoo ? \\" \\" + style.mixFoo : \\"\\") + (\\" \\" + style.mixBar)} style={{
+}} __zacs_original_name="Mix1" />;
+const mix_splat = <div className={styles.box + (isFoo ? " " + style.mixFoo : "") + (" " + style.mixBar)} style={{
   width: 500
-}} __zacs_original_name=\\"Mix1\\" {...props} />;
+}} __zacs_original_name="Mix1" {...props} />;
 const mix1_zacsStyle = <div className={styles.box} style={{
   width: 100
-}} __zacs_original_name=\\"Mix1\\" />;
+}} __zacs_original_name="Mix1" />;
 const mix1_add_zacsStyle = <div className={styles.box} style={Object.assign({
   width: 50
 }, {
   width: 100
-})} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle_2 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
+})} __zacs_original_name="Mix1" />;
+const mix1_add_zacsStyle_2 = <div className={styles.box + (" " + style.mixFoo)} style={Object.assign({
   width: 50
 }, {
   width: 100
-})} __zacs_original_name=\\"Mix1\\" />;
-const mix1_add_zacsStyle_3 = <div className={styles.box + (\\" \\" + style.mixFoo)} style={Object.assign({
+})} __zacs_original_name="Mix1" />;
+const mix1_add_zacsStyle_3 = <div className={styles.box + (" " + style.mixFoo)} style={Object.assign({
   width: 50
-}, stylesToAddViaProp)} __zacs_original_name=\\"Mix1\\" />;"
+}, stylesToAddViaProp)} __zacs_original_name="Mix1" />;"
 `;

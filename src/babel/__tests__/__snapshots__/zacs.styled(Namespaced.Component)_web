@@ -3,5 +3,5 @@
 exports[`zacs example: zacs.styled(Namespaced.Component), web 1`] = `
 "/* eslint-disable */
 
-const modalText = <Modal.Text className={style.foo} __zacs_original_name=\\"StyledModalText\\" />;"
+const modalText = <Modal.Text className={style.foo} __zacs_original_name="StyledModalText" />;"
 `;

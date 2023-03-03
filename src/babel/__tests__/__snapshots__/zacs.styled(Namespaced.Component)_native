@@ -4,5 +4,5 @@ exports[`zacs example: zacs.styled(Namespaced.Component), native 1`] = `
 "const zacsReactNative = require('react-native');
 /* eslint-disable */
 
-const modalText = <Modal.Text style={style.foo} __zacs_original_name=\\"StyledModalText\\" />;"
+const modalText = <Modal.Text style={style.foo} __zacs_original_name="StyledModalText" />;"
 `;

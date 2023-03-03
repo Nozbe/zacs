@@ -5,20 +5,20 @@ exports[`zacs example: declaration_literalStyleSpec, native 1`] = `
 const ZACS_RN_View = zacsReactNative.View;
 /* eslint-disable */
 
-const added1_none = <ZACS_RN_View __zacs_original_name=\\"AddedStyles1\\" />;
+const added1_none = <ZACS_RN_View __zacs_original_name="AddedStyles1" />;
 const added1_one = <ZACS_RN_View style={{
   width: width
-}} __zacs_original_name=\\"AddedStyles1\\" />;
+}} __zacs_original_name="AddedStyles1" />;
 const added1_two = <ZACS_RN_View style={{
   width: width,
   backgroundColor: factoryColor(color)
-}} __zacs_original_name=\\"AddedStyles1\\" />;
+}} __zacs_original_name="AddedStyles1" />;
 const added1_literals = <ZACS_RN_View style={{
   width: 500,
-  backgroundColor: \\"#abcdef\\"
-}} __zacs_original_name=\\"AddedStyles1\\" />;
+  backgroundColor: "#abcdef"
+}} __zacs_original_name="AddedStyles1" />;
 const added1_propKeys = <ZACS_RN_View style={{
-  \\"--background\\": \\"white\\",
+  "--background": "white",
   1: 1
-}} __zacs_original_name=\\"AddedStyles1\\" />;"
+}} __zacs_original_name="AddedStyles1" />;"
 `;

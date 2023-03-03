@@ -4,16 +4,16 @@ exports[`zacs example: webSafeAttributes, web 1`] = `
 "/* eslint-disable */
 
 // custom props -- different JSX syntaxes (will be cut out on web)
-const customProps = <div className={style.root} __zacs_original_name=\\"Root\\" />;
+const customProps = <div className={style.root} __zacs_original_name="Root" />;
 
 // DOM-safe attributes
-const domSafeAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />;
+const domSafeAttributes = <div className={style.root} __zacs_original_name="Root" onClick={onPress} href="http://example.com" data-foo="foo" />;
 
 // React attributes
-const reactAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />;
+const reactAttributes = <div className={style.root} __zacs_original_name="Root" key={element.id} ref={reference} />;
 
 // legacy nozbe styled components hack
-const styledhack = <div className={style.root} __zacs_original_name=\\"Root\\" />;
+const styledhack = <div className={style.root} __zacs_original_name="Root" />;
 
 // react splat
 const splat = <Root2 {...props} />;"

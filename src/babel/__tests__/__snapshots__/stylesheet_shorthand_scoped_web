@@ -7,11 +7,11 @@ PRO TIP: If you get a ReferenceError on the line below, it means that your Webpa
 If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
 */
 /* eslint-disable */
-const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(\\" \\\\n\\\\
-.scoped { \\\\n\\\\
-  margin: 5px 10px; \\\\n\\\\
-  border: 1px solid red; \\\\n\\\\
-} \\\\n\\\\
-ZACS_MAGIC_CSS_STYLESHEET_MARKER_END\\");
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
+.scoped { \\n\\
+  margin: 5px 10px; \\n\\
+  border: 1px solid red; \\n\\
+} \\n\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");
 /* ZACS-generated CSS stylesheet ends above */"
 `;
