@@ -14,8 +14,6 @@ const styles = zacs.stylesheet({
       _mixin: { left: 0, right: 0 },
     },
     ios: {
-      // check replacement by babel
-      width: REPLACE_INTO_NUMBER,
       marginHorizontal: foo(0),
     },
     android: {

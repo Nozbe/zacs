@@ -16,8 +16,6 @@ const styles = ZACS_RN_StyleSheet.create({
     backgroundColor: foo ? rgba(a, b) : bar,
     left: 0,
     right: 0,
-    // check replacement by babel
-    width: 2137,
     marginHorizontal: foo(0)
   },
   text: {
