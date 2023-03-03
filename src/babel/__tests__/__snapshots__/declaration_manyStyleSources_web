@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs example: manyStyleSources, web 1`] = `
+exports[`zacs example: declaration_manyStyleSources, web 1`] = `
 "/* eslint-disable */
 
 /* === Added, conditional, main styles === */

@@ -43,10 +43,10 @@ describe('zacs', () => {
     'declaration_conditionalStyleSpec',
     'declaration_literalStyleSpec',
     'zacs:style',
-    'manyStyleSources',
-    'zacsStyled',
-    'stylableComponents',
-    'createdComponents',
+    'declaration_manyStyleSources',
+    'zacs:inherit',
+    'zacs.styled',
+    'zacs.createX',
   ]
   examples.forEach(exampleName => {
     it(`example: ${exampleName}, web`, () => {

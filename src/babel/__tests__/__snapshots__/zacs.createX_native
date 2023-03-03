@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs example: createdComponents, native 1`] = `
+exports[`zacs example: zacs.createX, native 1`] = `
 "const zacsReactNative = require('react-native');
 
 const ZACS_RN_Text = zacsReactNative.Text;

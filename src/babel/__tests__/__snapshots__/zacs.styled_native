@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs example: zacsStyled, native 1`] = `
+exports[`zacs example: zacs.styled, native 1`] = `
 "const zacsReactNative = require('react-native');
 
 /* eslint-disable */

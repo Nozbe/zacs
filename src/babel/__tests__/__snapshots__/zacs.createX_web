@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs example: createdComponents, web 1`] = `
+exports[`zacs example: zacs.createX, web 1`] = `
 "/* eslint-disable */
 
 /* === createView/Text/Styled === */

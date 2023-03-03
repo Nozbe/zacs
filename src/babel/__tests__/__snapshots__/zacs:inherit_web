@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs example: stylableComponents, web 1`] = `
+exports[`zacs example: zacs:inherit, web 1`] = `
 "/* eslint-disable */
 
 /* === Defined stylable component === */
