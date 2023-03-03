@@ -6,15 +6,15 @@ const ZACS_RN_Text = zacsReactNative.Text;
 const ZACS_RN_View = zacsReactNative.View;
 /* eslint-disable */
 
-const view = <ZACS_RN_View style={style.root} __zacs_original_name="Root" />;
-const view2 = <ZACS_RN_View style={styles.root2} __zacs_original_name="Root2" />;
+const view = <ZACS_RN_View __zacs_original_name="Root" style={style.root} />;
+const view2 = <ZACS_RN_View __zacs_original_name="Root2" style={styles.root2} />;
 const composition = <>
-    <ZACS_RN_View style={style.root} __zacs_original_name="Root">
-      <ZACS_RN_Text style={style.text} __zacs_original_name="Text" />
+    <ZACS_RN_View __zacs_original_name="Root" style={style.root}>
+      <ZACS_RN_Text __zacs_original_name="Text" style={style.text} />
     </ZACS_RN_View>
   </>;
 function AnotherComponent() {
-  const helper = <ZACS_RN_View style={style.root} __zacs_original_name="Root" />;
-  return <ZACS_RN_View style={styles.root2} __zacs_original_name="Root2">{helper}</ZACS_RN_View>;
+  const helper = <ZACS_RN_View __zacs_original_name="Root" style={style.root} />;
+  return <ZACS_RN_View __zacs_original_name="Root2" style={styles.root2}>{helper}</ZACS_RN_View>;
 }"
 `;

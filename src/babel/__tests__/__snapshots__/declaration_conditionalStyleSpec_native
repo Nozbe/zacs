@@ -5,28 +5,28 @@ exports[`zacs example: declaration_conditionalStyleSpec, native 1`] = `
 const ZACS_RN_View = zacsReactNative.View;
 /* eslint-disable */
 
-const cond1_root = <ZACS_RN_View style={style.root} __zacs_original_name="Conditional1" />;
-const cond1_one = <ZACS_RN_View style={[style.root, foo && style.rootFoo]} __zacs_original_name="Conditional1" />;
-const cond1_two = <ZACS_RN_View style={[style.root, foo && style.rootFoo, barCount > 0 && style.rootBar]} __zacs_original_name="Conditional1" />;
+const cond1_root = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
+const cond1_one = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, foo && style.rootFoo]} />;
+const cond1_two = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, foo && style.rootFoo, barCount > 0 && style.rootBar]} />;
 
 // infer that a style is to be included / not included
-const cond1_true = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name="Conditional1" />;
-const cond1_true2 = <ZACS_RN_View style={[style.root, style.rootFoo, style.rootBar]} __zacs_original_name="Conditional1" />;
-const cond1_trueShort = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name="Conditional1" />;
-const cond1_true2Short = <ZACS_RN_View style={[style.root, style.rootFoo, style.rootBar]} __zacs_original_name="Conditional1" />;
-const cond1_false = <ZACS_RN_View style={style.root} __zacs_original_name="Conditional1" />;
-const cond1_truthy = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name="Conditional1" />;
-const cond1_truthy2 = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name="Conditional1" />;
-const cond1_truthy3 = <ZACS_RN_View style={[style.root, style.rootFoo]} __zacs_original_name="Conditional1" />;
-const cond1_falsy = <ZACS_RN_View style={style.root} __zacs_original_name="Conditional1" />;
-const cond1_falsy2 = <ZACS_RN_View style={style.root} __zacs_original_name="Conditional1" />;
-const cond1_falsy3 = <ZACS_RN_View style={style.root} __zacs_original_name="Conditional1" />;
-const cond1_falsy4 = <ZACS_RN_View style={style.root} __zacs_original_name="Conditional1" />;
-const cond1_falsy5 = <ZACS_RN_View style={style.root} __zacs_original_name="Conditional1" />;
+const cond1_true = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, style.rootFoo]} />;
+const cond1_true2 = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, style.rootFoo, style.rootBar]} />;
+const cond1_trueShort = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, style.rootFoo]} />;
+const cond1_true2Short = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, style.rootFoo, style.rootBar]} />;
+const cond1_false = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
+const cond1_truthy = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, style.rootFoo]} />;
+const cond1_truthy2 = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, style.rootFoo]} />;
+const cond1_truthy3 = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, style.rootFoo]} />;
+const cond1_falsy = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
+const cond1_falsy2 = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
+const cond1_falsy3 = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
+const cond1_falsy4 = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
+const cond1_falsy5 = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
 
 // check with mainStyle=null
 
-const cond2_one = <ZACS_RN_View style={foo && style.cond2Foo} __zacs_original_name="Conditional2" />;
-const cond2_two = <ZACS_RN_View style={[foo && style.cond2Foo, bCount > 100 && style.cond2Bar]} __zacs_original_name="Conditional2" />;
-const cond2_true2 = <ZACS_RN_View style={[style.cond2Foo, style.cond2Bar]} __zacs_original_name="Conditional2" />;"
+const cond2_one = <ZACS_RN_View __zacs_original_name="Conditional2" style={foo && style.cond2Foo} />;
+const cond2_two = <ZACS_RN_View __zacs_original_name="Conditional2" style={[foo && style.cond2Foo, bCount > 100 && style.cond2Bar]} />;
+const cond2_true2 = <ZACS_RN_View __zacs_original_name="Conditional2" style={[style.cond2Foo, style.cond2Bar]} />;"
 `;

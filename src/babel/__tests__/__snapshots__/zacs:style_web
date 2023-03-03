@@ -3,13 +3,13 @@
 exports[`zacs example: zacs:style, web 1`] = `
 "/* eslint-disable */
 
-const addedViaProp = <div style={{
+const addedViaProp = <div __zacs_original_name="View" style={{
   width: 100,
   height: 50
-}} __zacs_original_name="View" />;
+}} />;
 const stylesToAddViaProp = {
   width: 100,
   height: 50
 };
-const addedViaProp_2 = <div style={stylesToAddViaProp} __zacs_original_name="View" />;"
+const addedViaProp_2 = <div __zacs_original_name="View" style={stylesToAddViaProp} />;"
 `;

@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- `__zacs_original_name` debug attribute is now placed at the beginning of output elements
+
 ## 2.0.0 (2023-02-20)
 
 - BREAKING: If you use Flow, you need to upgrade to >=0.199.0

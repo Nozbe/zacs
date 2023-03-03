@@ -391,13 +391,6 @@ function convertZacsElement(t, path, declaration, state) {
     zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
   const originalAttributes = openingElement.attributes
 
-  // add debug info
-  if (!isProduction(state)) {
-    openingElement.attributes.unshift(
-      t.jSXAttribute(t.jSXIdentifier('__zacs_original_name'), t.stringLiteral(originalName)),
-    )
-  }
-
   // filter out styling props
   // TODO: Combine this and web safe attributes into one step
   openingElement.attributes = withoutStylingProps(
@@ -430,6 +423,13 @@ function convertZacsElement(t, path, declaration, state) {
   openingElement.attributes.unshift(
     ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, originalAttributes),
   )
+
+  // add debug info
+  if (!isProduction(state)) {
+    openingElement.attributes.unshift(
+      t.jSXAttribute(t.jSXIdentifier('__zacs_original_name'), t.stringLiteral(originalName)),
+    )
+  }
 }
 
 module.exports = { convertZacsElement, getElementName, isAttributeWebSafe, styleAttributes }

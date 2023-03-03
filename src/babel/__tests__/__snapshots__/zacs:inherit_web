@@ -3,19 +3,19 @@
 exports[`zacs example: zacs:inherit, web 1`] = `
 "/* eslint-disable */
 
-const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name="StylableBlank" />;
-const stylableMain = <span className={style.main + (" " + (props.className || ""))} style={props.style} __zacs_original_name="StylableMain" />;
-const stylableMain_highlighted = <span className={style.main + (" " + style.highlighted) + (" " + (props.className || ""))} style={props.style} __zacs_original_name="StylableMain" />;
-const stylableMain_color = <span className={style.main + (" " + (props.className || ""))} style={Object.assign({
+const stylableBlank = <div __zacs_original_name="StylableBlank" className={props.className} style={props.style} />;
+const stylableMain = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={props.style} />;
+const stylableMain_highlighted = <span __zacs_original_name="StylableMain" className={style.main + (" " + style.highlighted) + (" " + (props.className || ""))} style={props.style} />;
+const stylableMain_color = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={Object.assign({
   color: "red"
-}, props.style)} __zacs_original_name="StylableMain" />;
-const stylableMain_colorAlt = <span className={style.main + (" " + (props.className || ""))} style={Object.assign({
+}, props.style)} />;
+const stylableMain_colorAlt = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={Object.assign({
   color: 'red'
-}, props.style)} __zacs_original_name="StylableMain" />;
-const stylableMain_all = <span className={style.main + (" " + style.highlighted) + (" " + (props.className || ""))} style={Object.assign({
+}, props.style)} />;
+const stylableMain_all = <span __zacs_original_name="StylableMain" className={style.main + (" " + style.highlighted) + (" " + (props.className || ""))} style={Object.assign({
   color: "red"
-}, props.style)} __zacs_original_name="StylableMain" />;
-const stylableMain_splat = <span className={style.main + (" " + (props.className || ""))} style={props.style} __zacs_original_name="StylableMain" {...props} />; // dangerous territory!
+}, props.style)} />;
+const stylableMain_splat = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={props.style} {...props} />; // dangerous territory!
 
 export const StylableButton = props => {
   const {
@@ -23,9 +23,9 @@ export const StylableButton = props => {
     isHighlighted,
     color
   } = props;
-  return <span className={style.main + (isHighlighted ? " " + style.highlighted : "") + (" " + (props.className || ""))} style={Object.assign({
+  return <span __zacs_original_name="StylableMain" className={style.main + (isHighlighted ? " " + style.highlighted : "") + (" " + (props.className || ""))} style={Object.assign({
     color: factoryColor(color)
-  }, props.style)} __zacs_original_name="StylableMain">
+  }, props.style)}>
       {title}
     </span>;
 };

@@ -5,13 +5,13 @@ exports[`zacs example: zacs:style, native 1`] = `
 const ZACS_RN_View = zacsReactNative.View;
 /* eslint-disable */
 
-const addedViaProp = <ZACS_RN_View style={{
+const addedViaProp = <ZACS_RN_View __zacs_original_name="View" style={{
   width: 100,
   height: 50
-}} __zacs_original_name="View" />;
+}} />;
 const stylesToAddViaProp = {
   width: 100,
   height: 50
 };
-const addedViaProp_2 = <ZACS_RN_View style={stylesToAddViaProp} __zacs_original_name="View" />;"
+const addedViaProp_2 = <ZACS_RN_View __zacs_original_name="View" style={stylesToAddViaProp} />;"
 `;

@@ -5,10 +5,10 @@ exports[`zacs example: zacs.styled(Component), web 1`] = `
 
 const box = <Box __zacs_original_name="StyledBox" isFoo />;
 const box_ref = <Box __zacs_original_name="StyledBox" ref={boxRef} />;
-const link = <Link className={styles.link} __zacs_original_name="StyledLink" />;
-const link_visited = <Link className={styles.link + (" " + style.visitedLink)} __zacs_original_name="StyledLink" />;
-const link_colored = <Link className={styles.link + (visited ? " " + style.visitedLink : "")} style={{
+const link = <Link __zacs_original_name="StyledLink" className={styles.link} />;
+const link_visited = <Link __zacs_original_name="StyledLink" className={styles.link + (" " + style.visitedLink)} />;
+const link_colored = <Link __zacs_original_name="StyledLink" className={styles.link + (visited ? " " + style.visitedLink : "")} style={{
   color: factoryColor(color)
-}} __zacs_original_name="StyledLink" href={href} />;
-const link_attrs = <Link className={styles.link} __zacs_original_name="StyledLink" foo={foo} bar title="hello" />;"
+}} href={href} />;
+const link_attrs = <Link __zacs_original_name="StyledLink" className={styles.link} foo={foo} bar title="hello" />;"
 `;

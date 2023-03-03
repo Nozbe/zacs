@@ -5,39 +5,39 @@ exports[`zacs example: declaration_manyStyleSources, native 1`] = `
 const ZACS_RN_View = zacsReactNative.View;
 /* eslint-disable */
 
-const mix1_none = <ZACS_RN_View style={styles.box} __zacs_original_name="Mix1" />;
-const mix1_add = <ZACS_RN_View style={[styles.box, {
+const mix1_none = <ZACS_RN_View __zacs_original_name="Mix1" style={styles.box} />;
+const mix1_add = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, {
   width: 500
-}]} __zacs_original_name="Mix1" />;
-const mix1_add_true1 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+}]} />;
+const mix1_add_true1 = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, style.mixFoo, {
   width: 500
-}]} __zacs_original_name="Mix1" />;
-const mix1_add_true2 = <ZACS_RN_View style={[styles.box, style.mixFoo, style.mixBar, {
+}]} />;
+const mix1_add_true2 = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, style.mixFoo, style.mixBar, {
   width: 500
-}]} __zacs_original_name="Mix1" />;
-const mix1_add_1 = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, {
+}]} />;
+const mix1_add_1 = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, isFoo && style.mixFoo, {
   width: 500
-}]} __zacs_original_name="Mix1" />;
-const mix1_add_2 = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
+}]} />;
+const mix1_add_2 = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
   width: 500
-}]} __zacs_original_name="Mix1" />;
-const mix_splat = <ZACS_RN_View style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
+}]} />;
+const mix_splat = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, isFoo && style.mixFoo, style.mixBar, {
   width: 500
-}]} __zacs_original_name="Mix1" {...props} />;
-const mix1_zacsStyle = <ZACS_RN_View style={[styles.box, {
+}]} {...props} />;
+const mix1_zacsStyle = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, {
   width: 100
-}]} __zacs_original_name="Mix1" />;
-const mix1_add_zacsStyle = <ZACS_RN_View style={[styles.box, {
+}]} />;
+const mix1_add_zacsStyle = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, {
   width: 50
 }, {
   width: 100
-}]} __zacs_original_name="Mix1" />;
-const mix1_add_zacsStyle_2 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+}]} />;
+const mix1_add_zacsStyle_2 = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, style.mixFoo, {
   width: 50
 }, {
   width: 100
-}]} __zacs_original_name="Mix1" />;
-const mix1_add_zacsStyle_3 = <ZACS_RN_View style={[styles.box, style.mixFoo, {
+}]} />;
+const mix1_add_zacsStyle_3 = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, style.mixFoo, {
   width: 50
-}, stylesToAddViaProp]} __zacs_original_name="Mix1" />;"
+}, stylesToAddViaProp]} />;"
 `;
