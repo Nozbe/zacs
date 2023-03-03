@@ -10,7 +10,8 @@
     "playground": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js\"",
     "playground:native": "chokidar \"src/babel/**/*.js\" --initial -c \"node src/babel/__playground__/index.js --native\"",
     "prettier": "prettier --config ./.prettierrc --write \"./src/**/*.js\"",
-    "ci:check": "concurrently 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail"
+    "ci:check": "concurrently -n 'test,eslint,flow' -c 'auto' 'npm run test' 'npm run eslint' 'npm run flow' --kill-others-on-fail",
+    "ci": "npm run ci:check"
   },
   "files": [
     "src/index.js",
