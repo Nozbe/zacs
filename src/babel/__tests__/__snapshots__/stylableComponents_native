@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: stylableComponents, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_Text = zacsReactNative.Text;
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === Defined stylable component === */
+const stylableBlank = <ZACS_RN_View style={[].concat(props.style || [])} __zacs_original_name=\\"StylableBlank\\" />;
+const stylableMain = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_highlighted = <ZACS_RN_Text style={[style.main, style.highlighted].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_color = <ZACS_RN_Text style={[style.main, {
+  color: \\"red\\"
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <ZACS_RN_Text style={[style.main, {
+  color: 'red'
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_all = <ZACS_RN_Text style={[style.main, style.highlighted, {
+  color: \\"red\\"
+}].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_splat = <ZACS_RN_Text style={[style.main].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
+
+export const StylableButton = props => {
+  const {
+    title,
+    isHighlighted,
+    color
+  } = props;
+  return <ZACS_RN_Text style={[style.main, isHighlighted && style.highlighted, {
+    color: factoryColor(color)
+  }].concat(props.style || [])} __zacs_original_name=\\"StylableMain\\">
+      {title}
+    </ZACS_RN_Text>;
+}; // second-order stylable component (no zacs definition)
+
+const ImportedComponent = require('ImportedComponent');
+
+const stylable2nd = <ImportedComponent style={props.style} />;"
+`;

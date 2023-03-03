@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: stylableComponents, web 1`] = `
+"/* eslint-disable */
+
+/* === Defined stylable component === */
+const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name=\\"StylableBlank\\" />;
+const stylableMain = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_color = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: \\"red\\"
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_colorAlt = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: 'red'
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_all = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+  color: \\"red\\"
+}, props.style)} __zacs_original_name=\\"StylableMain\\" />;
+const stylableMain_splat = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" {...props} />; // dangerous territory!
+
+export const StylableButton = props => {
+  const {
+    title,
+    isHighlighted,
+    color
+  } = props;
+  return <span className={style.main + (isHighlighted ? \\" \\" + style.highlighted : \\"\\") + (\\" \\" + (props.className || \\"\\"))} style={Object.assign({
+    color: factoryColor(color)
+  }, props.style)} __zacs_original_name=\\"StylableMain\\">
+      {title}
+    </span>;
+}; // second-order stylable component (no zacs definition)
+
+const ImportedComponent = require('ImportedComponent');
+
+const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
+`;

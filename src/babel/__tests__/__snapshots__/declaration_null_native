@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: declaration_null, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === No styles === */
+const noStyles = <ZACS_RN_View __zacs_original_name=\\"NoStyles\\" />;
+const noStyles2 = <ZACS_RN_View __zacs_original_name=\\"NoStyles2\\" />;"
+`;

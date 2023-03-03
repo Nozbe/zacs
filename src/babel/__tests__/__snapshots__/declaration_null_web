@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: declaration_null, web 1`] = `
+"/* eslint-disable */
+
+/* === No styles === */
+const noStyles = <div __zacs_original_name=\\"NoStyles\\" />;
+const noStyles2 = <div __zacs_original_name=\\"NoStyles2\\" />;"
+`;

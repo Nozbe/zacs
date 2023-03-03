@@ -31,6 +31,10 @@ function example(name) {
   return fs.readFileSync(path.resolve(__dirname, 'examples', `${name}.js`)).toString()
 }
 
+function snapshot(name) {
+  return `./__snapshots__/${name}`
+}
+
 describe('zacs', () => {
   const examples = [
     'declaration_unconditionalStyle',
@@ -46,10 +50,14 @@ describe('zacs', () => {
   ]
   examples.forEach(exampleName => {
     it(`example: ${exampleName}, web`, () => {
-      expect(transform(example(exampleName), 'web')).toMatchSnapshot()
+      expect(transform(example(exampleName), 'web')).toMatchSpecificSnapshot(
+        snapshot(`${exampleName}_web`),
+      )
     })
     it(`example: ${exampleName}, native`, () => {
-      expect(transform(example(exampleName), 'native')).toMatchSnapshot()
+      expect(transform(example(exampleName), 'native')).toMatchSpecificSnapshot(
+        snapshot(`${exampleName}_native`),
+      )
     })
   })
   it('className in components not allowed', () => {
@@ -105,23 +113,23 @@ describe('zacs', () => {
   })
   it(`transforms experimental stylesheets (web)`, () => {
     expect(transform(example('stylesheet'), 'web')).toMatchSpecificSnapshot(
-      './__snapshots__/stylesheets_web',
+      snapshot('stylesheets_web'),
     )
   })
   it(`transforms experimental stylesheets (native)`, () => {
     expect(transform(example('stylesheet'), 'native')).toMatchSpecificSnapshot(
-      './__snapshots__/stylesheets_native',
+      snapshot('stylesheets_native'),
     )
   })
   it(`transforms experimental stylesheets (native, ios)`, () => {
     expect(transform(example('stylesheet'), 'native', { target: 'ios' })).toMatchSpecificSnapshot(
-      './__snapshots__/stylesheets_ios',
+      snapshot('stylesheets_ios'),
     )
   })
   it(`transforms experimental stylesheets (native, android)`, () => {
     expect(
       transform(example('stylesheet'), 'native', { target: 'android' }),
-    ).toMatchSpecificSnapshot('./__snapshots__/stylesheets_android')
+    ).toMatchSpecificSnapshot(snapshot('stylesheets_android'))
     expect(
       transform(example('stylesheetNative'), 'native', { target: 'android' }),
     ).toMatchSnapshot()

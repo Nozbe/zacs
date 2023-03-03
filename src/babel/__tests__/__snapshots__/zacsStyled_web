@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: zacsStyled, web 1`] = `
+"/* eslint-disable */
+
+/* === styled(Component) === */
+const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
+const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
+const link = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" />;
+const link_visited = <Link className={styles.link + (\\" \\" + style.visitedLink)} __zacs_original_name=\\"StyledLink\\" />;
+const link_colored = <Link className={styles.link + (visited ? \\" \\" + style.visitedLink : \\"\\")} style={{
+  color: factoryColor(color)
+}} __zacs_original_name=\\"StyledLink\\" href={href} />;
+const link_attrs = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
+/* === styled(Namespaced.Component) === */
+
+const modalText = <Modal.Text className={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
+/* === styled('builtin') === */
+// you wouldn't do it in shared code, only in .{native,web}.js
+
+const li = <li __zacs_original_name=\\"Li\\" title=\\"hello\\" />;
+/* === styled(web,native) === */
+
+const platbox = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" />;
+const platbox_attrs = <WebBox className={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
+
+const p = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</p>;
+const p_attrs = <p className={style.p} __zacs_original_name=\\"PlatformParagraph\\" title=\\"DOM attr\\" />;
+const platform_zacs = <article __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
+const platform_zacs2 = <div __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
+`;

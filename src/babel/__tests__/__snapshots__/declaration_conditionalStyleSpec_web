@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: declaration_conditionalStyleSpec, web 1`] = `
+"/* eslint-disable */
+
+/* === Conditional styles === */
+const cond1_root = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_one = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\")} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_two = <div className={style.root + (foo ? \\" \\" + style.rootFoo : \\"\\") + (barCount > 0 ? \\" \\" + style.rootBar : \\"\\")} __zacs_original_name=\\"Conditional1\\" />; // infer that a style is to be included / not included
+
+const cond1_true = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_true2 = <div className={style.root + (\\" \\" + style.rootFoo) + (\\" \\" + style.rootBar)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_trueShort = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_true2Short = <div className={style.root + (\\" \\" + style.rootFoo) + (\\" \\" + style.rootBar)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_false = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy2 = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_truthy3 = <div className={style.root + (\\" \\" + style.rootFoo)} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy2 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy3 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy4 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />;
+const cond1_falsy5 = <div className={style.root} __zacs_original_name=\\"Conditional1\\" />; // check with mainStyle=null
+
+const cond2_one = <div className={foo ? style.cond2Foo : \\"\\"} __zacs_original_name=\\"Conditional2\\" />;
+const cond2_two = <div className={(foo ? style.cond2Foo : \\"\\") + (bCount > 100 ? \\" \\" + style.cond2Bar : \\"\\")} __zacs_original_name=\\"Conditional2\\" />;
+const cond2_true2 = <div className={style.cond2Foo + (\\" \\" + style.cond2Bar)} __zacs_original_name=\\"Conditional2\\" />; // check with null
+
+const condNull = <div __zacs_original_name=\\"ConditionalNull\\" />;"
+`;

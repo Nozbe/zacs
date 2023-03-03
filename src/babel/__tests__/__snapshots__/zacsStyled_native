@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: zacsStyled, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+/* eslint-disable */
+
+/* === styled(Component) === */
+const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
+const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
+const link = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" />;
+const link_visited = <Link style={[styles.link, style.visitedLink]} __zacs_original_name=\\"StyledLink\\" />;
+const link_colored = <Link style={[styles.link, visited && style.visitedLink, {
+  color: factoryColor(color)
+}]} __zacs_original_name=\\"StyledLink\\" href={href} />;
+const link_attrs = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" foo={foo} bar title=\\"hello\\" />;
+/* === styled(Namespaced.Component) === */
+
+const modalText = <Modal.Text style={style.foo} __zacs_original_name=\\"StyledModalText\\" />;
+/* === styled('builtin') === */
+// you wouldn't do it in shared code, only in .{native,web}.js
+
+const li = <li __zacs_original_name=\\"Li\\" foo={foo} title=\\"hello\\" />;
+/* === styled(web,native) === */
+
+const platbox = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" />;
+const platbox_attrs = <NativeBox style={style.box} __zacs_original_name=\\"PlatformBox\\" foo={foo} bar title=\\"hello\\" />;
+const RCTText = 'RCTText'; // passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
+
+const p = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\">Hello</RCTText>;
+const p_attrs = <RCTText style={style.p} __zacs_original_name=\\"PlatformParagraph\\" foo={foo} title=\\"DOM attr\\" />;
+const platform_zacs = <ZACS_RN_Text __zacs_original_name=\\"PlatformZacsBuiltin\\" />;
+const platform_zacs2 = <NativeBox __zacs_original_name=\\"PlatformZacsBuiltin2\\" />;"
+`;
