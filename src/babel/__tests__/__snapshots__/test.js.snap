@@ -25,20 +25,7 @@ const composition = <>
 function AnotherComponent() {
   const helper = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" />;
   return <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</ZACS_RN_View>;
-}
-/* === Component attributes === */
-// custom props -- different JSX syntaxes (will be cut out on web)
-
-
-const customProps = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" foo={foo} isHighlighted={true} isBlocked bar=\\"bar\\" Component={<Hello />} />; // DOM-safe attributes
-
-const domSafeAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
-
-const reactAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
-
-const styledhack = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" __forwardedRef={__forwardedRef} />; // react splat
-
-const splat = <ZACS_RN_View style={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;"
+}"
 `;
 
 exports[`zacs example: basic, web 1`] = `
@@ -56,20 +43,7 @@ const composition = <>
 function AnotherComponent() {
   const helper = <div className={style.root} __zacs_original_name=\\"Root\\" />;
   return <div className={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</div>;
-}
-/* === Component attributes === */
-// custom props -- different JSX syntaxes (will be cut out on web)
-
-
-const customProps = <div className={style.root} __zacs_original_name=\\"Root\\" />; // DOM-safe attributes
-
-const domSafeAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
-
-const reactAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
-
-const styledhack = <div className={style.root} __zacs_original_name=\\"Root\\" />; // react splat
-
-const splat = <div className={styles.root2} __zacs_original_name=\\"Root2\\" {...props} />;"
+}"
 `;
 
 exports[`zacs example: createdComponents, native 1`] = `
@@ -454,6 +428,42 @@ export const StylableButton = props => {
 const ImportedComponent = require('ImportedComponent');
 
 const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
+`;
+
+exports[`zacs example: webSafeAttributes, native 1`] = `
+"const zacsReactNative = require('react-native');
+
+const ZACS_RN_View = zacsReactNative.View;
+
+/* eslint-disable */
+
+/* === Component attributes === */
+// custom props -- different JSX syntaxes (will be cut out on web)
+const customProps = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" foo={foo} isHighlighted={true} isBlocked bar=\\"bar\\" Component={<Hello />} />; // DOM-safe attributes
+
+const domSafeAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
+
+const reactAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
+
+const styledhack = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" __forwardedRef={__forwardedRef} />; // react splat
+
+const splat = <Root2 {...props} />;"
+`;
+
+exports[`zacs example: webSafeAttributes, web 1`] = `
+"/* eslint-disable */
+
+/* === Component attributes === */
+// custom props -- different JSX syntaxes (will be cut out on web)
+const customProps = <div className={style.root} __zacs_original_name=\\"Root\\" />; // DOM-safe attributes
+
+const domSafeAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
+
+const reactAttributes = <div className={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
+
+const styledhack = <div className={style.root} __zacs_original_name=\\"Root\\" />; // react splat
+
+const splat = <Root2 {...props} />;"
 `;
 
 exports[`zacs example: zacs:style, native 1`] = `
