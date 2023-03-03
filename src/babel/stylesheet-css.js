@@ -3,9 +3,15 @@ const { unitlessCssAttributes } = require('./attributes')
 
 const comment = (text) => `/*${text} */`
 
-const encodeComment = (node, spaces) => {
+const leadingComments = (node, spaces = '') => {
   if (node && node.leadingComments) {
     return `${node.leadingComments.map((c) => spaces + comment(c.value)).join('\n')}\n`
+  }
+  return ''
+}
+const trailingComments = (node, spaces = '') => {
+  if (node && node.trailingComments) {
+    return `\n${node.trailingComments.map((c) => spaces + comment(c.value)).join('\n')}`
   }
   return ''
 }
@@ -89,7 +95,12 @@ function encodeCSSStyle(property, spaces) {
 
 function encodeCSSStyles(styleset, spaces = '  ') {
   return styleset.properties
-    .map((style) => encodeComment(style, spaces) + encodeCSSStyle(style, spaces))
+    .map(
+      (style) =>
+        leadingComments(style, spaces) +
+        encodeCSSStyle(style, spaces) +
+        trailingComments(style, spaces),
+    )
     .filter(Boolean)
     .join('\n')
 }
@@ -101,7 +112,9 @@ function encodeCSSStyleset(styleset) {
     return strval(styleset.value)
   }
 
-  return `.${name} {\n${encodeCSSStyles(styleset.value)}\n}`
+  return `${leadingComments(styleset)}.${name} {\n${encodeCSSStyles(
+    styleset.value,
+  )}\n}${trailingComments(styleset)}`
 }
 
 function encodeCSSStylesheet(stylesheet) {

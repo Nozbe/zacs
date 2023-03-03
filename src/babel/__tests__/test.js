@@ -127,6 +127,7 @@ describe('zacs stylesheets', () => {
     'stylesheet_shorthand_border',
     'stylesheet_shorthand_scoped',
     'stylesheet_merge',
+    'stylesheet_comments',
   ]
   const webIosAndroidExamples = [
     //

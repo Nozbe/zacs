@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets example: stylesheet_comments, web 1`] = `
+"/*
+ZACS-generated CSS stylesheet begins below.
+PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
+If you only see this comment and the one below in generated code, this is normal, nothing to worry about!
+*/
+const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
+/* comment before styleset */ \\n\\
+.root { \\n\\
+  /* comment before property */ \\n\\
+  height: 100px; \\n\\
+  /* comment before scope */ \\n\\
+ \\n\\
+  /* trailing comment */ \\n\\
+} \\n\\
+ \\n\\
+/* \\n\\
+  multiline block comment \\n\\
+   */ \\n\\
+.baz { \\n\\
+  color: red; \\n\\
+} \\n\\
+/* trailing comment */ \\n\\
+ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");
+/* ZACS-generated CSS stylesheet ends above */"
+`;
