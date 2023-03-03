@@ -8,9 +8,14 @@ const styles = ZACS_RN_StyleSheet.create({
   root: {
     // comment before property
     height: 100,
+    // comment before scope
+
     // comment before property
     width: 1337
+
+    // trailing comment
   },
+
   /*
   multiline block comment
   */

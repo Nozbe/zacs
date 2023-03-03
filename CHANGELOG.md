@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - `__zacs_original_name` debug attribute is now placed at the beginning of output elements
 - stylesheets: overriden properties are stripped on native to save space and silence Hermes warnings
+- stylesheets: try to preserve comments in output
 
 ## 2.0.0 (2023-02-20)
 

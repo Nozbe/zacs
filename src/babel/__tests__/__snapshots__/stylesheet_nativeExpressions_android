@@ -5,6 +5,8 @@ exports[`zacs stylesheets example: stylesheet_nativeExpressions, android 1`] = `
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
 const styles = ZACS_RN_StyleSheet.create({
   root: {
+    // check native-only expressions
+
     backgroundColor: foo ? rgba(a, b) : bar,
     marginVertical: foo(0)
   }

@@ -5,8 +5,18 @@ exports[`zacs stylesheets example: stylesheet_mixins, native 1`] = `
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
 const styles = ZACS_RN_StyleSheet.create({
   root: {
+    // TODO: check emulated mixins
+    // ...{
+    //   flex: 1,
+    //   zIndex: -1000,
+    // },
+
+    // _mixin syntax
     flex: 1,
+    // second mixin with override
     zIndex: -2,
+    // mixins in nested scoped
+
     backgroundColor: 'native'
   }
 });"

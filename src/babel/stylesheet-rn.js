@@ -73,79 +73,148 @@ function deduplicatedProperties(input) {
   // of the LAST property, not the first one
   const output = []
   const seen = new Set()
-  input.reverse().forEach((property) => {
-    const { name } = property.key
-    if (seen.has(name)) {
-      return
+  input.reverse().forEach((node) => {
+    if (node.key) {
+      // looks property-ish
+      const { name } = node.key
+      if (seen.has(name)) {
+        return
+      }
+      seen.add(name)
+      output.push(node)
+    } else {
+      // looks comment-ish
+      output.push(node)
     }
-    seen.add(name)
-    output.push(property)
   })
   return output.reverse()
+}
+
+const unshiftComments = (node, type, comments) => {
+  const key = `${type}Comments`
+  if (!node[key]) {
+    node[key] = []
+  }
+  node[key].unshift(...comments)
+  return node
+}
+
+// NOTE: Adding comments in Babel is a bit tricky (they should be put into leading/trailing/innerComments,
+// depending on where they are in relation to other AST nodes), so when trying to preserve comments
+// of deleted nodes, we just add comment nodes to an array incorrectly and here we're trying to recreate the
+// proper placement
+function preserveComments(t, parent, childNodes) {
+  const output = []
+  let pendingComments = []
+  childNodes.forEach((node) => {
+    if (node.type.startsWith('Comment')) {
+      pendingComments.push(node)
+      return
+    }
+
+    // Add any pending comments to the following node as leading comments
+    if (pendingComments.length) {
+      unshiftComments(node, 'leading', pendingComments)
+      pendingComments = []
+    }
+
+    output.push(node)
+  })
+
+  if (!pendingComments) {
+    return output
+  }
+
+  // Add any pending comments to the last node as trailing comments if possible
+  const lastNode = output[output.length - 1]
+  if (lastNode) {
+    unshiftComments(lastNode, 'trailing', pendingComments)
+    return output
+  }
+
+  // Otherwise add them as inner comments to the parent node
+  unshiftComments(parent, 'inner', pendingComments)
+  return output
+}
+
+function resolveStylesetProperties(t, target, originalProperties) {
+  const resolvedProperties = []
+  const pushProp = (property) => {
+    if (isZacsStylesheetLiteral(t, property.value)) {
+      // strip ZACS_STYLESHEET_LITERAL(x)
+      const [wrappedValue] = property.value.arguments
+      property.value = wrappedValue
+    }
+    resolvedProperties.push(property)
+  }
+  const pushComments = (node, type) => {
+    const key = `${type}Comments`
+    if (node[key]) {
+      resolvedProperties.push(...node[key])
+    }
+  }
+  const pushFromObject = (object) => {
+    Object.entries(object).forEach(([key, value]) => {
+      pushProp(t.objectProperty(t.identifier(key), value))
+    })
+  }
+  const pushPropOrShorthands = (property) => {
+    const key = property.key.name
+    const shorthandLines = resolveShorthands(key, property.value)
+    if (shorthandLines) {
+      pushFromObject(shorthandLines)
+    } else {
+      pushProp(property)
+    }
+  }
+  const pushFromProperty = (node) => {
+    pushComments(node, 'leading')
+    const objectExpr = node.value
+    objectExpr.properties.forEach((property) => {
+      if (
+        property.type === 'ObjectProperty' &&
+        property.key.name === '_mixin' &&
+        property.value.type === 'ObjectExpression'
+      ) {
+        pushFromProperty(property)
+      } else {
+        pushPropOrShorthands(property)
+      }
+    })
+    pushComments(node, 'trailing')
+  }
+  originalProperties.forEach((property) => {
+    // if (property.type === 'SpreadElement') {
+    //   pushFromInner(property.argument)
+    //   return
+    // }
+
+    const key = property.key.name
+    if (key === 'web' || key === 'css') {
+      // do nothing
+    } else if (property.key.value) {
+      // css inner selector - do nothing
+    } else if (key === 'native' || key === '_mixin') {
+      pushFromProperty(property)
+    } else if (key === 'ios' || key === 'android') {
+      if (target === key) {
+        pushFromProperty(property)
+      }
+    } else {
+      pushPropOrShorthands(property)
+    }
+  })
+
+  return deduplicatedProperties(resolvedProperties)
 }
 
 function resolveRNStylesheet(t, target, stylesheet) {
   stylesheet.properties = stylesheet.properties
     .filter((styleset) => styleset.key.name !== 'css')
     .map((styleset) => {
-      const resolvedProperties = []
-      const pushProp = (property) => {
-        if (isZacsStylesheetLiteral(t, property.value)) {
-          // strip ZACS_STYLESHEET_LITERAL(x)
-          const [wrappedValue] = property.value.arguments
-          property.value = wrappedValue
-        }
-        resolvedProperties.push(property)
-      }
-      const pushFromObject = (object) => {
-        Object.entries(object).forEach(([key, value]) => {
-          pushProp(t.objectProperty(t.identifier(key), value))
-        })
-      }
-      const pushPropOrShorthands = (property) => {
-        const key = property.key.name
-        const shorthandLines = resolveShorthands(key, property.value)
-        if (shorthandLines) {
-          pushFromObject(shorthandLines)
-        } else {
-          pushProp(property)
-        }
-      }
-      const pushFromInner = (objectExpr) => {
-        objectExpr.properties.forEach((property) => {
-          if (
-            property.type === 'ObjectProperty' &&
-            property.key.name === '_mixin' &&
-            property.value.type === 'ObjectExpression'
-          ) {
-            pushFromInner(property.value)
-          } else {
-            pushPropOrShorthands(property)
-          }
-        })
-      }
-      styleset.value.properties.forEach((property) => {
-        if (property.type === 'SpreadElement') {
-          pushFromInner(property.argument)
-          return
-        }
-
-        const key = property.key.name
-        if (key === 'web' || key === 'css') {
-          // do nothing
-        } else if (property.key.value) {
-          // css inner selector - do nothing
-        } else if (key === 'native' || key === '_mixin') {
-          pushFromInner(property.value)
-        } else if (key === 'ios' || key === 'android') {
-          if (target === key) {
-            pushFromInner(property.value)
-          }
-        } else {
-          pushPropOrShorthands(property)
-        }
-      })
-      styleset.value.properties = deduplicatedProperties(resolvedProperties)
+      const objExpr = styleset.value
+      const resolvedProperties = resolveStylesetProperties(t, target, objExpr.properties)
+      objExpr.properties = preserveComments(t, objExpr, resolvedProperties)
       return styleset
     })
 
