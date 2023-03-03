@@ -2,6 +2,7 @@
 
 exports[`zacs example: zacs.styled(Component), web 1`] = `
 "/* eslint-disable */
+
 const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
 const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
 const link = <Link className={styles.link} __zacs_original_name=\\"StyledLink\\" />;

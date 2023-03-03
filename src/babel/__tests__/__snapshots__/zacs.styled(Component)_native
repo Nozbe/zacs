@@ -2,8 +2,8 @@
 
 exports[`zacs example: zacs.styled(Component), native 1`] = `
 "const zacsReactNative = require('react-native');
-
 /* eslint-disable */
+
 const box = <Box __zacs_original_name=\\"StyledBox\\" isFoo />;
 const box_ref = <Box __zacs_original_name=\\"StyledBox\\" ref={boxRef} />;
 const link = <Link style={styles.link} __zacs_original_name=\\"StyledLink\\" />;

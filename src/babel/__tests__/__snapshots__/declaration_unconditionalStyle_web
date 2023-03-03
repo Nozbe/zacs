@@ -2,6 +2,7 @@
 
 exports[`zacs example: declaration_unconditionalStyle, web 1`] = `
 "/* eslint-disable */
+
 const view = <div className={style.root} __zacs_original_name=\\"Root\\" />;
 const view2 = <div className={styles.root2} __zacs_original_name=\\"Root2\\" />;
 const composition = <>
@@ -9,7 +10,6 @@ const composition = <>
       <span className={style.text} __zacs_original_name=\\"Text\\" />
     </div>
   </>;
-
 function AnotherComponent() {
   const helper = <div className={style.root} __zacs_original_name=\\"Root\\" />;
   return <div className={styles.root2} __zacs_original_name=\\"Root2\\">{helper}</div>;

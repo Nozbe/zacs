@@ -2,6 +2,7 @@
 
 exports[`zacs example: declaration_literalStyleSpec, web 1`] = `
 "/* eslint-disable */
+
 const added1_none = <div __zacs_original_name=\\"AddedStyles1\\" />;
 const added1_one = <div style={{
   width: width

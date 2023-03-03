@@ -2,18 +2,21 @@
 
 exports[`zacs example: webSafeAttributes, native 1`] = `
 "const zacsReactNative = require('react-native');
-
 const ZACS_RN_View = zacsReactNative.View;
-
 /* eslint-disable */
+
 // custom props -- different JSX syntaxes (will be cut out on web)
-const customProps = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" foo={foo} isHighlighted={true} isBlocked bar=\\"bar\\" Component={<Hello />} />; // DOM-safe attributes
+const customProps = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" foo={foo} isHighlighted={true} isBlocked bar=\\"bar\\" Component={<Hello />} />;
 
-const domSafeAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />; // React attributes
+// DOM-safe attributes
+const domSafeAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" onClick={onPress} href=\\"http://example.com\\" data-foo=\\"foo\\" />;
 
-const reactAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />; // legacy nozbe styled components hack
+// React attributes
+const reactAttributes = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" key={element.id} ref={reference} />;
 
-const styledhack = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" __forwardedRef={__forwardedRef} />; // react splat
+// legacy nozbe styled components hack
+const styledhack = <ZACS_RN_View style={style.root} __zacs_original_name=\\"Root\\" __forwardedRef={__forwardedRef} />;
 
+// react splat
 const splat = <Root2 {...props} />;"
 `;

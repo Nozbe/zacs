@@ -2,6 +2,7 @@
 
 exports[`zacs example: declaration_manyStyleSources, web 1`] = `
 "/* eslint-disable */
+
 const mix1_none = <div className={styles.box} __zacs_original_name=\\"Mix1\\" />;
 const mix1_add = <div className={styles.box} style={{
   width: 500

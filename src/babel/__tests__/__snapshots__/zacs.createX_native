@@ -2,11 +2,10 @@
 
 exports[`zacs example: zacs.createX, native 1`] = `
 "const zacsReactNative = require('react-native');
-
 const ZACS_RN_Text = zacsReactNative.Text;
 const ZACS_RN_View = zacsReactNative.View;
-
 /* eslint-disable */
+
 export const ExportedView = props => <ZACS_RN_View>{props.children}</ZACS_RN_View>;
 export const ExportedText = props => <ZACS_RN_Text style={style.text}>{props.children}</ZACS_RN_Text>;
 export const ExportedButton = props => <Button style={[style.button, props.isHighlighted && style.highlighted, {
@@ -23,19 +22,23 @@ export const ExportedStylable2 = props => <ZACS_RN_Text style={[style.text, prop
 export const ExportedCombo = React.forwardRef((props, ref) => <Native.Combo style={[style.combo, props.isFoo && style.foo, props.isBar && style.bar, {
   color: props.color,
   height: props.height
-}].concat(props.style || [])} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</Native.Combo>); // regression test
+}].concat(props.style || [])} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</Native.Combo>);
 
-export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_View>; // Make sure nothing breaks if I use created component in the same file
+// regression test
+export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_View>;
+
+// Make sure nothing breaks if I use created component in the same file
 
 const combo = <ExportedCombo />;
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
 const combo_styles = <ExportedCombo style={props.style} />;
 const combo_styles2 = <ExportedCombo style={props.style} __zacs_style={{
   width: 500
-}} />; // Pretend we're using an exported component
+}} />;
+
+// Pretend we're using an exported component
 
 const ImportedComponent2 = require('ImportedComponent');
-
 const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
   width: 199
 }} />;

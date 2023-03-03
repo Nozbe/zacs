@@ -2,6 +2,7 @@
 
 exports[`zacs example: zacs:inherit, web 1`] = `
 "/* eslint-disable */
+
 const stylableBlank = <div className={props.className} style={props.style} __zacs_original_name=\\"StylableBlank\\" />;
 const stylableMain = <span className={style.main + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
 const stylableMain_highlighted = <span className={style.main + (\\" \\" + style.highlighted) + (\\" \\" + (props.className || \\"\\"))} style={props.style} __zacs_original_name=\\"StylableMain\\" />;
@@ -27,9 +28,9 @@ export const StylableButton = props => {
   }, props.style)} __zacs_original_name=\\"StylableMain\\">
       {title}
     </span>;
-}; // second-order stylable component (no zacs definition)
+};
 
+// second-order stylable component (no zacs definition)
 const ImportedComponent = require('ImportedComponent');
-
 const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
 `;
