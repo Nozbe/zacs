@@ -123,6 +123,7 @@ describe('zacs stylesheets', () => {
     'stylesheet_babelReplacement',
     'stylesheet_mixins',
     'stylesheet_css',
+    'stylesheet_css_order',
     'stylesheet_shorthand_box',
     'stylesheet_shorthand_border',
     'stylesheet_shorthand_scoped',
