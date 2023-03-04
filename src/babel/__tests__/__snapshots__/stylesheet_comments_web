@@ -16,11 +16,17 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
   /* trailing comment */ \\n\\
 } \\n\\
  \\n\\
+/* comment before top-scope css */ \\n\\
+foo \\n\\
+ \\n\\
 /* \\n\\
   multiline block comment \\n\\
    */ \\n\\
 .baz { \\n\\
   color: red; \\n\\
+  /* comment before css */ \\n\\
+  foo \\n\\
+  /* comment after css */ \\n\\
 } \\n\\
 /* trailing comment */ \\n\\
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");

@@ -26,6 +26,7 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
   } \\n\\
 } \\n\\
  \\n\\
+/* global scope */ \\n\\
  \\n\\
   @keyframes hello { \\n\\
     from { opacity: 0 } \\n\\

@@ -109,7 +109,7 @@ function encodeCSSStyleset(styleset) {
   const { name } = styleset.key
 
   if (name === 'css') {
-    return strval(styleset.value)
+    return leadingComments(styleset) + strval(styleset.value) + trailingComments(styleset)
   }
 
   return `${leadingComments(styleset)}.${name} {\n${encodeCSSStyles(

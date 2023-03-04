@@ -12,11 +12,16 @@ const styles = zacs.stylesheet({
     },
     // trailing comment
   },
+  // comment before top-scope css
+  css: 'foo',
   /*
   multiline block comment
   */
   baz: {
     color: 'red',
+    // comment before css
+    css: 'foo',
+    // comment after css
   },
   // trailing comment
 })
