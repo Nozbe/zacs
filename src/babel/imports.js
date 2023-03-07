@@ -18,6 +18,18 @@ function validateZacsImport(t, path) {
   }
 }
 
+// TODO: This is ugly, the need to import should be cleanly abstracted
+// instead of comparing magic strings
+function setUsesRN(state, elementName) {
+  if (elementName === 'ZACS_RN_View') {
+    state.set('uses_rn', true)
+    state.set('uses_rn_view', true)
+  } else if (elementName === 'ZACS_RN_Text') {
+    state.set('uses_rn', true)
+    state.set('uses_rn_text', true)
+  }
+}
+
 function handleImportDeclaration(t, path, state) {
   const { node } = path
 
@@ -62,4 +74,4 @@ function injectNativeImportsIfNeeded(babel, path, state) {
   }
 }
 
-module.exports = { handleImportDeclaration, injectNativeImportsIfNeeded }
+module.exports = { setUsesRN, handleImportDeclaration, injectNativeImportsIfNeeded }

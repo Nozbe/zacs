@@ -2,6 +2,7 @@
 
 exports[`zacs example: zacs.styled(platforms), native 1`] = `
 "const zacsReactNative = require('react-native');
+const ZACS_RN_Text = zacsReactNative.Text;
 const platbox = /*#__PURE__*/React.createElement(NativeBox, {
   __zacs_original_name: "PlatformBox",
   style: style.box

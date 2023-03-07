@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - stylesheets: overriden properties are stripped on native to save space and silence Hermes warnings
 - stylesheets: try to preserve comments in output
 - Fix `zacs.styled('UppercaseBuiltin')`, e.g. `'RCTText'`
+- Fix unnecessary `require('react-native')` insertions
+- Fix broken `zacs.styled({ web: ..., native: zacs.text })`
 
 ## 2.0.0 (2023-02-20)
 

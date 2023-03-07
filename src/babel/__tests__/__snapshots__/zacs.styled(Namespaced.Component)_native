@@ -1,6 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs example: zacs.styled(Namespaced.Component), native 1`] = `
-"const zacsReactNative = require('react-native');
-const modalText = <Modal.Text __zacs_original_name="StyledModalText" style={style.foo} />;"
-`;
+exports[`zacs example: zacs.styled(Namespaced.Component), native 1`] = `"const modalText = <Modal.Text __zacs_original_name="StyledModalText" style={style.foo} />;"`;

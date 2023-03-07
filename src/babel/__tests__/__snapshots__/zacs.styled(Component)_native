@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(Component), native 1`] = `
-"const zacsReactNative = require('react-native');
-const box = <Box __zacs_original_name="StyledBox" isFoo />;
+"const box = <Box __zacs_original_name="StyledBox" isFoo />;
 const box_ref = <Box __zacs_original_name="StyledBox" ref={boxRef} />;
 const link = <Link __zacs_original_name="StyledLink" style={styles.link} />;
 const link_visited = <Link __zacs_original_name="StyledLink" style={[styles.link, style.visitedLink]} />;

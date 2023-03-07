@@ -1,5 +1,6 @@
 const { htmlAttributes, htmlElements } = require('./attributes')
 const { getPlatform, isProduction } = require('./state')
+const { setUsesRN } = require('./imports')
 const {
   jsxAttr,
   jsxRenameElement,
@@ -413,11 +414,7 @@ function convertZacsElement(t, path, declaration, state) {
       openingElement.attributes = webSafeAttributes(openingElement.attributes)
     }
   } else if (platform === 'native') {
-    // TODO: Reuse global `react-native` import if there already is one
-    // FIXME: Using state is ugly, but if if I insert an import/require, it doesn't show up
-    // as a binding on next attempt (as to not duplicate imports)
-    state.set(`uses_rn`, true)
-    state.set(`uses_rn_${zacsMethod}`, true)
+    setUsesRN(state, elementName)
   } else {
     throw new Error('Unknown platform')
   }

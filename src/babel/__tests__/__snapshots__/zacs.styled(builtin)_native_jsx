@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(builtin), native 1`] = `
-"const zacsReactNative = require('react-native');
-// web builtins
+"// web builtins
 
 const li = /*#__PURE__*/React.createElement("li", {
   __zacs_original_name: "StyledLi",

@@ -2,6 +2,7 @@ const { htmlElements } = require('./attributes')
 const { getPlatform } = require('./state')
 const { jsxName, jsxAttr } = require('./jsxUtils')
 const { getElementName, isAttributeWebSafe, styleAttributes } = require('./elements')
+const { setUsesRN } = require('./imports')
 
 function propsChildren(t) {
   return [
@@ -53,11 +54,7 @@ function createZacsComponent(t, state, path) {
     zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
 
   if (platform === 'native') {
-    // TODO: Reuse global `react-native` import if there already is one
-    // FIXME: Using state is ugly, but if if I insert an import/require, it doesn't show up
-    // as a binding on next attempt (as to not duplicate imports)
-    state.set(`uses_rn`, true)
-    state.set(`uses_rn_${zacsMethod}`, true)
+    setUsesRN(state, elementName)
   }
 
   const passedProps = arrayExprToStringArray(t, passedPropsExpr)
