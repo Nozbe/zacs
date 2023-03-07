@@ -401,9 +401,9 @@ function convertZacsElement(t, path, declaration, state) {
   )
 
   // replace component
-  if (platform === 'web') {
-    jsxRenameElement(t, node, elementName)
+  jsxRenameElement(t, node, elementName)
 
+  if (platform === 'web') {
     // filter out non-DOM attributes (React will throw errors at us for this)
     if (htmlElements.has(elementName)) {
       openingElement.attributes = webSafeAttributes(openingElement.attributes)
@@ -414,7 +414,6 @@ function convertZacsElement(t, path, declaration, state) {
     // as a binding on next attempt (as to not duplicate imports)
     state.set(`uses_rn`, true)
     state.set(`uses_rn_${zacsMethod}`, true)
-    jsxRenameElement(t, node, elementName)
   } else {
     throw new Error('Unknown platform')
   }
