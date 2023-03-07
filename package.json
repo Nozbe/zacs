@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@babel/generator": "7.21.1",
+    "@babel/plugin-transform-react-jsx": "^7.21.0",
     "@babel/types": "^7.21.2",
     "ajv-errors": "^1.0.1",
     "babel-eslint": "^10.0.3",
