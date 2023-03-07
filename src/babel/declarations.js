@@ -1,4 +1,6 @@
-function isZacsDeclaration(t, node) {
+const { types: t } = require('@babel/core')
+
+function isZacsDeclaration(node) {
   if (!t.isVariableDeclarator(node)) {
     return false
   }
@@ -17,7 +19,7 @@ function isZacsDeclaration(t, node) {
   return true
 }
 
-function validateZacsDeclaration(t, path) {
+function validateZacsDeclaration(path) {
   const { node } = path
   const { init } = node
   const zacsMethod = init.callee.property.name
@@ -102,7 +104,7 @@ function validateZacsDeclaration(t, path) {
 
 const declarationStateKey = (name) => `declaration_${name}`
 
-function registerDeclaration(t, path, state) {
+function registerDeclaration(path, state) {
   const { node } = path
 
   const id = node.id.name
@@ -117,7 +119,7 @@ function registerDeclaration(t, path, state) {
   }
 }
 
-function getDeclaration(t, path, state, name) {
+function getDeclaration(path, state, name) {
   const stateKey = declarationStateKey(name)
   const declaration = state.get(stateKey)
   return declaration

@@ -1,5 +1,6 @@
 exports.__esModule = true
 
+const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
 const { jsxAttr, jsxFindNamespacedAttr } = require('./jsxUtils')
 const { transformStylesheet } = require('./stylesheet')
@@ -13,14 +14,14 @@ const { convertZacsElement } = require('./elements')
 const { createZacsComponent } = require('./components')
 const { handleImportDeclaration, injectNativeImportsIfNeeded } = require('./imports')
 
-function transformZacsAttributesOnNonZacsElement(t, platform, path) {
+function transformZacsAttributesOnNonZacsElement(platform, path) {
   // this is called on a JSXElement that doesn't (directly) reference a zacs declaration
   // we need to spread zacs:inherit and zacs:style into separate props or it won't work
   const { node } = path
   const { openingElement } = node
 
-  const inheritedPropsAttr = jsxFindNamespacedAttr(t, openingElement.attributes, 'inherit')
-  const zacsStyleAttr = jsxFindNamespacedAttr(t, openingElement.attributes, 'style')
+  const inheritedPropsAttr = jsxFindNamespacedAttr(openingElement.attributes, 'inherit')
+  const zacsStyleAttr = jsxFindNamespacedAttr(openingElement.attributes, 'style')
   if (!inheritedPropsAttr && !zacsStyleAttr) {
     return
   }
@@ -29,12 +30,11 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
 
   if (inheritedPropsAttr) {
     const inheritedProps = inheritedPropsAttr.value.expression
-    const styleAttr = jsxAttr(t, 'style', t.memberExpression(inheritedProps, t.identifier('style')))
+    const styleAttr = jsxAttr('style', t.memberExpression(inheritedProps, t.identifier('style')))
     addedAttrs.push(styleAttr)
 
     if (platform === 'web') {
       const classNameAttr = jsxAttr(
-        t,
         'className',
         t.memberExpression(inheritedProps, t.identifier('className')),
       )
@@ -44,7 +44,7 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
 
   if (zacsStyleAttr) {
     // rewrite zacs:style to __zacs_style, otherwise React babel plugin will have a problem
-    addedAttrs.push(jsxAttr(t, '__zacs_style', zacsStyleAttr.value.expression))
+    addedAttrs.push(jsxAttr('__zacs_style', zacsStyleAttr.value.expression))
   }
 
   openingElement.attributes = openingElement.attributes
@@ -52,19 +52,17 @@ function transformZacsAttributesOnNonZacsElement(t, platform, path) {
     .concat(addedAttrs)
 }
 
-exports.default = function (babel) {
-  const { types: t } = babel
-
+exports.default = function () {
   return {
     name: 'zacs',
     visitor: {
       VariableDeclarator: {
         enter(path, state) {
-          if (!isZacsDeclaration(t, path.node)) {
+          if (!isZacsDeclaration(path.node)) {
             return
           }
 
-          validateZacsDeclaration(t, path)
+          validateZacsDeclaration(path)
 
           const { node } = path
           const { init } = node
@@ -75,16 +73,16 @@ exports.default = function (babel) {
             // eslint-disable-next-line no-useless-return
             return
           } else if (zacsMethod.startsWith('create')) {
-            node.init = createZacsComponent(t, state, path)
+            node.init = createZacsComponent(state, path)
           } else {
-            registerDeclaration(t, path, state)
+            registerDeclaration(path, state)
           }
         },
         // Stylesheets must be processed on exit so that other babel plugins that transform
         // inline expressions into literals can do their work first
         // TODO: Deduplicate
         exit(path, state) {
-          if (!isZacsDeclaration(t, path.node)) {
+          if (!isZacsDeclaration(path.node)) {
             return
           }
 
@@ -92,7 +90,7 @@ exports.default = function (babel) {
           if (zacsMethod !== 'stylesheet') {
             return
           }
-          transformStylesheet(t, state, path)
+          transformStylesheet(state, path)
         },
       },
       JSXElement(path, state) {
@@ -102,21 +100,21 @@ exports.default = function (babel) {
         const platform = getPlatform(state)
 
         // check if it's a ZACS element
-        const declaration = getDeclaration(t, path, state, name)
+        const declaration = getDeclaration(path, state, name)
         if (!declaration) {
-          transformZacsAttributesOnNonZacsElement(t, platform, path)
+          transformZacsAttributesOnNonZacsElement(platform, path)
           return
         }
 
-        convertZacsElement(t, path, declaration, state)
+        convertZacsElement(path, declaration, state)
       },
       Program: {
         exit(path, state) {
-          injectNativeImportsIfNeeded(babel, path, state)
+          injectNativeImportsIfNeeded(path, state)
         },
       },
       ImportDeclaration(path, state) {
-        handleImportDeclaration(t, path, state)
+        handleImportDeclaration(path, state)
       },
       TaggedTemplateExpression(path) {
         const { node } = path

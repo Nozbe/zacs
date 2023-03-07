@@ -1,6 +1,7 @@
+const { types: t, template } = require('@babel/core')
 const { getPlatform } = require('./state')
 
-function validateZacsImport(t, path) {
+function validateZacsImport(path) {
   const { node } = path
   if (
     !(
@@ -30,7 +31,7 @@ function setUsesRN(state, elementName) {
   }
 }
 
-function handleImportDeclaration(t, path, state) {
+function handleImportDeclaration(path, state) {
   const { node } = path
 
   if (
@@ -41,34 +42,32 @@ function handleImportDeclaration(t, path, state) {
     return
   }
 
-  validateZacsImport(t, path)
+  validateZacsImport(path)
 
   if (!state.opts.keepDeclarations) {
     path.remove()
   }
 }
 
-function injectNativeImportsIfNeeded(babel, path, state) {
+function injectNativeImportsIfNeeded(path, state) {
   const platform = getPlatform(state)
 
   if (platform === 'native' && state.get('uses_rn')) {
-    const myImport = babel.template(`const zacsReactNative = require('react-native')`)
+    const myImport = template(`const zacsReactNative = require('react-native')`)
     const [zacsRN] = path.get('body')[0].insertBefore(myImport())
 
     if (state.get('uses_rn_view')) {
-      const makeZacsElement = babel.template(`const ZACS_RN_View = zacsReactNative.View`)
+      const makeZacsElement = template(`const ZACS_RN_View = zacsReactNative.View`)
       zacsRN.insertAfter(makeZacsElement())
     }
 
     if (state.get('uses_rn_text')) {
-      const makeZacsElement = babel.template(`const ZACS_RN_Text = zacsReactNative.Text`)
+      const makeZacsElement = template(`const ZACS_RN_Text = zacsReactNative.Text`)
       zacsRN.insertAfter(makeZacsElement())
     }
 
     if (state.get('uses_rn_stylesheet')) {
-      const makeZacsElement = babel.template(
-        `const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet`,
-      )
+      const makeZacsElement = template(`const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet`)
       zacsRN.insertAfter(makeZacsElement())
     }
   }

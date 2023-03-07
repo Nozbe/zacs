@@ -1,3 +1,4 @@
+const { types: t } = require('@babel/core')
 const { getTarget } = require('./state')
 const { isZacsStylesheetLiteral, resolveInsetsShorthand } = require('./stylesheet-utils')
 
@@ -103,7 +104,7 @@ const unshiftComments = (node, type, comments) => {
 // depending on where they are in relation to other AST nodes), so when trying to preserve comments
 // of deleted nodes, we just add comment nodes to an array incorrectly and here we're trying to recreate the
 // proper placement
-function preserveComments(t, parent, childNodes) {
+function preserveComments(parent, childNodes) {
   const output = []
   let pendingComments = []
   childNodes.forEach((node) => {
@@ -137,10 +138,10 @@ function preserveComments(t, parent, childNodes) {
   return output
 }
 
-function resolveStylesetProperties(t, target, originalProperties) {
+function resolveStylesetProperties(target, originalProperties) {
   const resolvedProperties = []
   const pushProp = (property) => {
-    if (isZacsStylesheetLiteral(t, property.value)) {
+    if (isZacsStylesheetLiteral(property.value)) {
       // strip ZACS_STYLESHEET_LITERAL(x)
       const [wrappedValue] = property.value.arguments
       property.value = wrappedValue
@@ -208,26 +209,26 @@ function resolveStylesetProperties(t, target, originalProperties) {
   return deduplicatedProperties(resolvedProperties)
 }
 
-function resolveRNStylesheet(t, target, stylesheet) {
+function resolveRNStylesheet(target, stylesheet) {
   stylesheet.properties = stylesheet.properties
     .filter((styleset) => styleset.key.name !== 'css')
     .map((styleset) => {
       const objExpr = styleset.value
-      const resolvedProperties = resolveStylesetProperties(t, target, objExpr.properties)
-      objExpr.properties = preserveComments(t, objExpr, resolvedProperties)
+      const resolvedProperties = resolveStylesetProperties(target, objExpr.properties)
+      objExpr.properties = preserveComments(objExpr, resolvedProperties)
       return styleset
     })
 
   return stylesheet
 }
 
-function transformStylesheetRN(t, path, stylesheet, state) {
+function transformStylesheetRN(path, stylesheet, state) {
   state.set(`uses_rn`, true)
   state.set(`uses_rn_stylesheet`, true)
 
   const target = getTarget(state)
 
-  const resolvedRules = resolveRNStylesheet(t, target, stylesheet)
+  const resolvedRules = resolveRNStylesheet(target, stylesheet)
   const rnStylesheet = t.callExpression(
     t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
     [resolvedRules],

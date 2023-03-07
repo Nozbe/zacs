@@ -1,4 +1,5 @@
 /* eslint-disable no-use-before-define */
+const { types: t } = require('@babel/core')
 const { unitlessCssAttributes } = require('./attributes')
 
 const comment = (text) => `/*${text} */`
@@ -122,7 +123,7 @@ function encodeCSSStylesheet(stylesheet) {
   return `${stylesets}\n`
 }
 
-function transformStylesheetCSS(t, path, stylesheet) {
+function transformStylesheetCSS(path, stylesheet) {
   const css = encodeCSSStylesheet(stylesheet)
   const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
   const formattedCss = t.stringLiteral(preparedCss)

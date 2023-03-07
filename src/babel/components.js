@@ -1,16 +1,17 @@
+const { types: t } = require('@babel/core')
 const { htmlElements } = require('./attributes')
 const { getPlatform } = require('./state')
 const { jsxName, jsxAttr } = require('./jsxUtils')
 const { getElementName, isAttributeWebSafe, styleAttributes } = require('./elements')
 const { setUsesRN } = require('./imports')
 
-function propsChildren(t) {
+function propsChildren() {
   return [
     t.jSXExpressionContainer(t.memberExpression(t.identifier('props'), t.identifier('children'))),
   ]
 }
 
-function forwardRef(t, component) {
+function forwardRef(component) {
   return t.callExpression(t.memberExpression(t.identifier('React'), t.identifier('forwardRef')), [
     component,
   ])
@@ -22,7 +23,7 @@ const createMethodToZacsMethod = {
   createStyled: 'styled',
 }
 
-function arrayExprToStringArray(t, expr) {
+function arrayExprToStringArray(expr) {
   if (!expr || t.isNullLiteral(expr)) {
     return []
   }
@@ -37,14 +38,13 @@ function arrayExprToStringArray(t, expr) {
   })
 }
 
-function createZacsComponent(t, state, path) {
+function createZacsComponent(state, path) {
   const { node } = path
   const { init } = node
   const platform = getPlatform(state)
 
   const zacsMethod = createMethodToZacsMethod[init.callee.property.name]
   const [elementName, isBuiltin] = getElementName(
-    t,
     platform,
     path, // should be path to declaration
     undefined, // TODO: this should be the name of the component
@@ -57,7 +57,7 @@ function createZacsComponent(t, state, path) {
     setUsesRN(state, elementName)
   }
 
-  const passedProps = arrayExprToStringArray(t, passedPropsExpr)
+  const passedProps = arrayExprToStringArray(passedPropsExpr)
   const shouldForwardRef = passedProps.includes('ref')
 
   const jsxAttributes = []
@@ -66,31 +66,31 @@ function createZacsComponent(t, state, path) {
       platform === 'web' && htmlElements.has(elementName) ? isAttributeWebSafe(prop) : true
     if (prop !== 'zacs:inherit' && prop !== 'zacs:style' && prop !== 'ref' && isAttrWebSafe) {
       jsxAttributes.push(
-        jsxAttr(t, prop, t.memberExpression(t.identifier('props'), t.identifier(prop))),
+        jsxAttr(prop, t.memberExpression(t.identifier('props'), t.identifier(prop))),
       )
     }
   })
 
   if (shouldForwardRef) {
-    jsxAttributes.push(jsxAttr(t, 'ref', t.identifier('ref')))
+    jsxAttributes.push(jsxAttr('ref', t.identifier('ref')))
   }
 
   jsxAttributes.unshift(
-    ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
+    ...styleAttributes(platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
   )
 
-  const jsxId = jsxName(t, elementName, isBuiltin)
+  const jsxId = jsxName(elementName, isBuiltin)
 
   const component = t.arrowFunctionExpression(
     shouldForwardRef ? [t.identifier('props'), t.identifier('ref')] : [t.identifier('props')],
     t.jSXElement(
       t.jSXOpeningElement(jsxId, jsxAttributes),
       t.jSXClosingElement(jsxId),
-      propsChildren(t),
+      propsChildren(),
     ),
   )
 
-  return shouldForwardRef ? forwardRef(t, component) : component
+  return shouldForwardRef ? forwardRef(component) : component
 }
 
 module.exports = { createZacsComponent }

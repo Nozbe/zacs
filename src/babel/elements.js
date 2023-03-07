@@ -1,3 +1,4 @@
+const { types: t } = require('@babel/core')
 const { htmlAttributes, htmlElements } = require('./attributes')
 const { getPlatform, isProduction } = require('./state')
 const { setUsesRN } = require('./imports')
@@ -35,7 +36,7 @@ function webSafeAttributes(attributes) {
   })
 }
 
-function withoutStylingProps(t, attributes, condStyles, literalStyleSpec) {
+function withoutStylingProps(attributes, condStyles, literalStyleSpec) {
   const stylingProps = []
 
   if (condStyles && condStyles.properties) {
@@ -65,7 +66,7 @@ function withoutStylingProps(t, attributes, condStyles, literalStyleSpec) {
 }
 
 const identifierRegex = /^[a-zA-Z][a-zA-Z0-9]*$/
-function objectKey(t, key) {
+function objectKey(key) {
   if (typeof key === 'string' && identifierRegex.test(key)) {
     return t.identifier(key)
   } else if (typeof key === 'number') {
@@ -74,13 +75,13 @@ function objectKey(t, key) {
   return t.stringLiteral(String(key))
 }
 
-function objectExpressionFromPairs(t, keyValuePairs) {
+function objectExpressionFromPairs(keyValuePairs) {
   return t.objectExpression(
-    keyValuePairs.map(([key, value]) => t.objectProperty(objectKey(t, key), value)),
+    keyValuePairs.map(([key, value]) => t.objectProperty(objectKey(key), value)),
   )
 }
 
-function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passedProps) {
+function getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passedProps) {
   const stylesets = []
   const literalStyles = []
 
@@ -103,7 +104,7 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
           return
         }
 
-        const flag = jsxInferAttrTruthiness(t, attr)
+        const flag = jsxInferAttrTruthiness(attr)
 
         if (flag === true) {
           stylesets.push([style])
@@ -129,7 +130,7 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
           return
         }
 
-        const styleValue = jsxGetAttrValue(t, attr)
+        const styleValue = jsxGetAttrValue(attr)
         literalStyles.push([styleAttr, styleValue])
       } else {
         literalStyles.push([
@@ -143,7 +144,7 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
   // TODO: Validate zacs:style value
   // TODO: If the value is a simple object, we could merge them into literalStyles. OTOH, maybe another
   // optimizer Babel plugin can do it further down the line?
-  const zacsStyleAttribute = jsxAttributes && jsxFindNamespacedAttr(t, jsxAttributes, 'style')
+  const zacsStyleAttribute = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'style')
   const hasZacsStyleAttr = zacsStyleAttribute || passedProps.includes('zacs:style')
   const zacsStyle = hasZacsStyleAttr
     ? (zacsStyleAttribute && zacsStyleAttribute.value.expression) ||
@@ -151,7 +152,7 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
     : null
 
   // TODO: Validate inherited props value
-  const inheritedPropsAttr = jsxAttributes && jsxFindNamespacedAttr(t, jsxAttributes, 'inherit')
+  const inheritedPropsAttr = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'inherit')
   const hasInheritedProps = inheritedPropsAttr || passedProps.includes('zacs:inherit')
   const inheritedProps = hasInheritedProps
     ? (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props')
@@ -159,13 +160,13 @@ function getStyles(t, uncondStyles, condStyles, literalStyleSpec, jsxAttributes,
 
   return [
     stylesets,
-    literalStyles.length ? objectExpressionFromPairs(t, literalStyles) : null,
+    literalStyles.length ? objectExpressionFromPairs(literalStyles) : null,
     inheritedProps,
     zacsStyle,
   ]
 }
 
-function webClassNameExpr(t, classNamesExpr, inheritedProps) {
+function webClassNameExpr(classNamesExpr, inheritedProps) {
   if (inheritedProps) {
     const inheritedClassNames = t.memberExpression(inheritedProps, t.identifier('className'))
 
@@ -190,7 +191,7 @@ function webClassNameExpr(t, classNamesExpr, inheritedProps) {
   return classNamesExpr
 }
 
-function webStyleExpr(t, styles, inheritedProps, zacsStyle) {
+function webStyleExpr(styles, inheritedProps, zacsStyle) {
   const inheritedStyles = inheritedProps
     ? t.memberExpression(inheritedProps, t.identifier('style'))
     : null
@@ -215,7 +216,7 @@ function webStyleExpr(t, styles, inheritedProps, zacsStyle) {
   )
 }
 
-function webStyleAttributes(t, [classNames, styles, inheritedProps, zacsStyle]) {
+function webStyleAttributes([classNames, styles, inheritedProps, zacsStyle]) {
   const attributes = []
 
   const classNamesExpr = classNames.reduce((expr, [className, condition]) => {
@@ -232,20 +233,20 @@ function webStyleAttributes(t, [classNames, styles, inheritedProps, zacsStyle]) 
     return isFirstExpr ? classNameExpr : t.binaryExpression('+', expr, classNameExpr)
   }, null)
 
-  const classNamesValue = webClassNameExpr(t, classNamesExpr, inheritedProps)
+  const classNamesValue = webClassNameExpr(classNamesExpr, inheritedProps)
   if (classNamesValue) {
-    attributes.push(jsxAttr(t, 'className', classNamesValue))
+    attributes.push(jsxAttr('className', classNamesValue))
   }
 
-  const stylesValue = webStyleExpr(t, styles, inheritedProps, zacsStyle)
+  const stylesValue = webStyleExpr(styles, inheritedProps, zacsStyle)
   if (stylesValue) {
-    attributes.push(jsxAttr(t, 'style', stylesValue))
+    attributes.push(jsxAttr('style', stylesValue))
   }
 
   return attributes
 }
 
-function nativeStyleAttributes(t, [stylesets, literalStyleset, inheritedProps, zacsStyle]) {
+function nativeStyleAttributes([stylesets, literalStyleset, inheritedProps, zacsStyle]) {
   const styles = stylesets.map(([styleName, condition]) =>
     condition ? t.logicalExpression('&&', condition, styleName) : styleName,
   )
@@ -276,11 +277,10 @@ function nativeStyleAttributes(t, [stylesets, literalStyleset, inheritedProps, z
         ),
       ])
     : stylesExpr
-  return [jsxAttr(t, 'style', exprWithInherited)]
+  return [jsxAttr('style', exprWithInherited)]
 }
 
 function styleAttributes(
-  t,
   platform,
   uncondStyles,
   condStyles,
@@ -288,19 +288,12 @@ function styleAttributes(
   jsxAttributes,
   passedProps = [],
 ) {
-  const styles = getStyles(
-    t,
-    uncondStyles,
-    condStyles,
-    literalStyleSpec,
-    jsxAttributes,
-    passedProps,
-  )
+  const styles = getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passedProps)
   switch (platform) {
     case 'web':
-      return webStyleAttributes(t, styles)
+      return webStyleAttributes(styles)
     case 'native':
-      return nativeStyleAttributes(t, styles)
+      return nativeStyleAttributes(styles)
     default:
       throw new Error('Unknown platform passed to ZACS config')
   }
@@ -318,7 +311,7 @@ const builtinElements = {
 }
 
 // 'Foo' (uppercase) builtins need special treatment, hence second arg
-function getElementName(t, platform, path, originalName, component) {
+function getElementName(platform, path, originalName, component) {
   if (typeof component === 'string') {
     const identifier = builtinElements[platform][component]
     return [identifier, false]
@@ -349,7 +342,7 @@ function getElementName(t, platform, path, originalName, component) {
       )
     }
 
-    return getElementName(t, platform, path, originalName, platformComponent.value)
+    return getElementName(platform, path, originalName, platformComponent.value)
   }
 
   throw path.buildCodeFrameError(
@@ -357,34 +350,33 @@ function getElementName(t, platform, path, originalName, component) {
   )
 }
 
-function validateElementHasNoIllegalAttributes(t, path) {
+function validateElementHasNoIllegalAttributes(path) {
   const { openingElement } = path.node
   const { attributes } = openingElement
-  if (jsxHasAttrNamed(t, 'style', attributes)) {
+  if (jsxHasAttrNamed('style', attributes)) {
     throw path.buildCodeFrameError(
       "It's not allowed to pass `style` attribute to ZACS-styled components",
     )
   }
-  if (jsxHasAttrNamed(t, 'className', attributes)) {
+  if (jsxHasAttrNamed('className', attributes)) {
     throw path.buildCodeFrameError(
       "It's not allowed to pass `className` attribute to ZACS-styled components",
     )
   }
 }
 
-function convertZacsElement(t, path, declaration, state) {
+function convertZacsElement(path, declaration, state) {
   const { node } = path
   const { openingElement } = node
   const platform = getPlatform(state)
 
-  validateElementHasNoIllegalAttributes(t, path)
+  validateElementHasNoIllegalAttributes(path)
 
   // get ZACS element info
   const { id, init } = declaration
   const originalName = id.name
   const zacsMethod = init.callee.property.name
   const [elementName, isBuiltin] = getElementName(
-    t,
     platform,
     // should be path to declaration, not use, but the path gets removed after visiting
     // (unless keepDeclarations: true)
@@ -399,14 +391,13 @@ function convertZacsElement(t, path, declaration, state) {
   // filter out styling props
   // TODO: Combine this and web safe attributes into one step
   openingElement.attributes = withoutStylingProps(
-    t,
     openingElement.attributes,
     condStyles,
     literalStyleSpec,
   )
 
   // replace component
-  jsxRenameElement(t, node, elementName, isBuiltin)
+  jsxRenameElement(node, elementName, isBuiltin)
 
   if (platform === 'web') {
     // filter out non-DOM attributes (React will throw errors at us for this)
@@ -421,7 +412,7 @@ function convertZacsElement(t, path, declaration, state) {
 
   // add styling attributes
   openingElement.attributes.unshift(
-    ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, originalAttributes),
+    ...styleAttributes(platform, uncondStyles, condStyles, literalStyleSpec, originalAttributes),
   )
 
   // add debug info

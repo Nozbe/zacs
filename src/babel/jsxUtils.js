@@ -1,10 +1,12 @@
+const { types: t } = require('@babel/core')
+
 // Note: Uppercase JSXIdentifiers won't be converted to React.createElement('Foo'), but
 // React.createElement(Foo).
 function jsxIsBuiltinSafe(name) {
   return !!/^[a-z]/.test(name)
 }
 
-function jsxName(t, name, isBuiltin) {
+function jsxName(name, isBuiltin) {
   if (isBuiltin && !jsxIsBuiltinSafe(name)) {
     // HACK: Return a StringLiteral instead of JSXIdentifier to force
     // createElement("Foo"), not createElement(Foo).
@@ -26,13 +28,13 @@ function jsxName(t, name, isBuiltin) {
   return t.jSXIdentifier(name)
 }
 
-function jsxAttr(t, name, value) {
+function jsxAttr(name, value) {
   return t.jSXAttribute(t.jSXIdentifier(name), t.jSXExpressionContainer(value))
 }
 
-function jsxRenameElement(t, node, name, isBuiltin) {
+function jsxRenameElement(node, name, isBuiltin) {
   const { openingElement, closingElement } = node
-  const jsxId = jsxName(t, name, isBuiltin)
+  const jsxId = jsxName(name, isBuiltin)
 
   openingElement.name = jsxId
   if (closingElement) {
@@ -40,7 +42,7 @@ function jsxRenameElement(t, node, name, isBuiltin) {
   }
 }
 
-function jsxGetAttrValue(t, attr) {
+function jsxGetAttrValue(attr) {
   if (attr.value === null) {
     return t.booleanLiteral(true)
   } else if (t.isJSXExpressionContainer(attr.value)) {
@@ -51,8 +53,8 @@ function jsxGetAttrValue(t, attr) {
   throw new Error('Unknown JSX Attribute value type')
 }
 
-function jsxInferAttrTruthiness(t, attr) {
-  const value = jsxGetAttrValue(t, attr)
+function jsxInferAttrTruthiness(attr) {
+  const value = jsxGetAttrValue(attr)
 
   if (
     t.isBooleanLiteral(value, { value: true }) ||
@@ -76,11 +78,11 @@ function jsxInferAttrTruthiness(t, attr) {
   return value
 }
 
-function jsxHasAttrNamed(t, name, attributes) {
+function jsxHasAttrNamed(name, attributes) {
   return attributes.find((attribute) => t.isJSXAttribute(attribute) && attribute.name.name === name)
 }
 
-function jsxFindNamespacedAttr(t, attributes, attrName) {
+function jsxFindNamespacedAttr(attributes, attrName) {
   return attributes.find(
     ({ name }) =>
       t.isJSXNamespacedName(name) && name.namespace.name === 'zacs' && name.name.name === attrName,
