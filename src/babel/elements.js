@@ -10,6 +10,7 @@ const {
   jsxHasAttrNamed,
   jsxFindNamespacedAttr,
 } = require('./jsxUtils')
+const { objectSpread } = require('./babelUtils')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -81,7 +82,7 @@ function objectExpressionFromPairs(keyValuePairs) {
   )
 }
 
-function getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passedProps) {
+function getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passthroughProps) {
   const stylesets = []
   const literalStyles = []
 
@@ -145,7 +146,7 @@ function getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, pa
   // TODO: If the value is a simple object, we could merge them into literalStyles. OTOH, maybe another
   // optimizer Babel plugin can do it further down the line?
   const zacsStyleAttribute = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'style')
-  const hasZacsStyleAttr = zacsStyleAttribute || passedProps.includes('zacs:style')
+  const hasZacsStyleAttr = zacsStyleAttribute || passthroughProps.includes('zacs:style')
   const zacsStyle = hasZacsStyleAttr
     ? (zacsStyleAttribute && zacsStyleAttribute.value.expression) ||
       t.memberExpression(t.identifier('props'), t.identifier('__zacs_style'))
@@ -153,7 +154,7 @@ function getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, pa
 
   // TODO: Validate inherited props value
   const inheritedPropsAttr = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'inherit')
-  const hasInheritedProps = inheritedPropsAttr || passedProps.includes('zacs:inherit')
+  const hasInheritedProps = inheritedPropsAttr || passthroughProps.includes('zacs:inherit')
   const inheritedProps = hasInheritedProps
     ? (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props')
     : null
@@ -203,17 +204,11 @@ function webStyleExpr(styles, inheritedProps, zacsStyle) {
     return allStyles[0]
   }
 
-  // prevent Object.assign(props.__zacs_style, ...), because if it's not an object, it will crash
-  if (!styles && zacsStyle && inheritedProps && !t.isObjectExpression(zacsStyle)) {
-    allStyles.unshift(t.objectExpression([]))
-  }
+  // TODO: Is this correct? Looks fishy
+  const isFirstObjectNonNull =
+    styles || !zacsStyle || !inheritedProps || t.isObjectExpression(zacsStyle)
 
-  // Object.assign({styles:'values'}, props.style)
-  // TODO: Maybe we can use spread operator and babel will transpile it into ES5 if necessary?
-  return t.callExpression(
-    t.memberExpression(t.identifier('Object'), t.identifier('assign')),
-    allStyles,
-  )
+  return objectSpread(allStyles, isFirstObjectNonNull)
 }
 
 function webStyleAttributes([classNames, styles, inheritedProps, zacsStyle]) {
