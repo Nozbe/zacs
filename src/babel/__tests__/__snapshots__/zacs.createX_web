@@ -27,17 +27,17 @@ export const ExporterZacsStyleInherit = props => <div className={style.foo + (" 
 const combo = <ExportedCombo />;
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
 const combo_styles = <ExportedCombo style={props.style} className={props.className} />;
-const combo_styles2 = <ExportedCombo style={props.style} className={props.className} __zacs_style={{
+const combo_styles2 = <ExportedCombo style={Object.assign({}, {
   width: 500
-}} />;
+}, props.style)} className={props.className} />;
 
 // Pretend we're using an exported component
 
 const ImportedComponent2 = require('ImportedComponent');
-const passZacsStyledWithoutDef = <ImportedComponent2 __zacs_style={{
+const passZacsStyledWithoutDef = <ImportedComponent2 style={{
   width: 199
 }} />;
-const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={props.style} className={props.className} __zacs_style={{
+const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={Object.assign({}, {
   width: 199
-}} />;"
+}, props.style)} className={props.className} />;"
 `;

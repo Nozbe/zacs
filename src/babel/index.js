@@ -3,6 +3,7 @@ exports.__esModule = true
 const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
 const { jsxAttr, jsxFindNamespacedAttr } = require('./jsxUtils')
+const { objectSpread } = require('./babelUtils')
 const { transformStylesheet } = require('./stylesheet')
 const {
   isZacsDeclaration,
@@ -27,11 +28,15 @@ function transformZacsAttributesOnNonZacsElement(platform, path) {
   }
 
   const addedAttrs = []
+  const addedStyles = []
+
+  // zacs:style come before zacs:inherit
+  if (zacsStyleAttr) {
+    addedStyles.push(zacsStyleAttr.value.expression)
+  }
 
   if (inheritedPropsAttr) {
     const inheritedProps = inheritedPropsAttr.value.expression
-    const styleAttr = jsxAttr('style', t.memberExpression(inheritedProps, t.identifier('style')))
-    addedAttrs.push(styleAttr)
 
     if (platform === 'web') {
       const classNameAttr = jsxAttr(
@@ -40,12 +45,14 @@ function transformZacsAttributesOnNonZacsElement(platform, path) {
       )
       addedAttrs.push(classNameAttr)
     }
+
+    addedStyles.push(t.memberExpression(inheritedProps, t.identifier('style')))
   }
 
-  if (zacsStyleAttr) {
-    // rewrite zacs:style to __zacs_style, otherwise React babel plugin will have a problem
-    addedAttrs.push(jsxAttr('__zacs_style', zacsStyleAttr.value.expression))
-  }
+  // Merge styles coming from zacs:inherit and zacs:style
+  addedAttrs.unshift(
+    jsxAttr('style', addedStyles.length === 1 ? addedStyles[0] : objectSpread(addedStyles)),
+  )
 
   openingElement.attributes = openingElement.attributes
     .filter((attr) => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
