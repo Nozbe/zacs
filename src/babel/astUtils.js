@@ -60,4 +60,21 @@ function concatArraysOfObjects(inputArray, right) {
   return null
 }
 
-module.exports = { mergeObjects, concatArraysOfObjects }
+const identifierRegex = /^[a-zA-Z][a-zA-Z0-9]*$/
+function objectKey(key) {
+  if (typeof key === 'string' && identifierRegex.test(key)) {
+    return t.identifier(key)
+  } else if (typeof key === 'number') {
+    return t.numericLiteral(key)
+  }
+  return t.stringLiteral(String(key))
+}
+
+// Converts an array of [string, node] pairs into an object expression
+function objectExpressionFromPairs(keyValuePairs) {
+  return t.objectExpression(
+    keyValuePairs.map(([key, value]) => t.objectProperty(objectKey(key), value)),
+  )
+}
+
+module.exports = { mergeObjects, concatArraysOfObjects, objectExpressionFromPairs }

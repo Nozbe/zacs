@@ -1,6 +1,6 @@
 const { types: t } = require('@babel/core')
 const { jsxAttr, jsxFindNamespacedAttr } = require('./jsxUtils')
-const { mergeObjects, concatArraysOfObjects } = require('./babelUtils')
+const { mergeObjects, concatArraysOfObjects } = require('./astUtils')
 
 function mergeStyles(platform, maybeZacsStyleExpr, maybeZacsInheritStyleExpr) {
   // NOTE: zacs:style comes before zacs:inherit

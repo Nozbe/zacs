@@ -10,7 +10,7 @@ const {
   jsxHasAttrNamed,
   jsxFindNamespacedAttr,
 } = require('./jsxUtils')
-const { mergeObjects, concatArraysOfObjects } = require('./babelUtils')
+const { mergeObjects, concatArraysOfObjects, objectExpressionFromPairs } = require('./astUtils')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -64,22 +64,6 @@ function withoutStylingProps(attributes, condStyles, literalStyleSpec) {
     }
     throw new Error('Unknown JSX Attribute type')
   })
-}
-
-const identifierRegex = /^[a-zA-Z][a-zA-Z0-9]*$/
-function objectKey(key) {
-  if (typeof key === 'string' && identifierRegex.test(key)) {
-    return t.identifier(key)
-  } else if (typeof key === 'number') {
-    return t.numericLiteral(key)
-  }
-  return t.stringLiteral(String(key))
-}
-
-function objectExpressionFromPairs(keyValuePairs) {
-  return t.objectExpression(
-    keyValuePairs.map(([key, value]) => t.objectProperty(objectKey(key), value)),
-  )
 }
 
 function getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passthroughProps) {
