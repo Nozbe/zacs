@@ -10,7 +10,7 @@ const {
   jsxHasAttrNamed,
   jsxFindNamespacedAttr,
 } = require('./jsxUtils')
-const { mergeObjects } = require('./babelUtils')
+const { mergeObjects, concatArraysOfObjects } = require('./babelUtils')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -244,25 +244,17 @@ function nativeStyleAttributes([stylesets, literalStyleset, inheritedProps, zacs
     styles.push(zacsStyle)
   }
 
-  if (!styles.length && !inheritedProps) {
-    return []
-  }
+  // Depending on arguments:
+  //   {style}
+  //   [{style}, {style}]
+  //   [{style}, {style}].concat(props.styles || [])
+  //   props.styles
+  const stylesExpr = concatArraysOfObjects(
+    styles,
+    inheritedProps && t.memberExpression(inheritedProps, t.identifier('style')),
+  )
 
-  // {style} or [{styles}, {styles}]
-  const stylesExpr = styles.length === 1 ? styles[0] : t.arrayExpression(styles)
-
-  // [originalStyles].concat(props.styles || [])
-  // TODO: Skip originalStyles if empty, only pass inheritedProps
-  const exprWithInherited = inheritedProps
-    ? t.callExpression(t.memberExpression(t.arrayExpression(styles), t.identifier('concat')), [
-        t.logicalExpression(
-          '||',
-          t.memberExpression(inheritedProps, t.identifier('style')),
-          t.arrayExpression([]),
-        ),
-      ])
-    : stylesExpr
-  return [jsxAttr('style', exprWithInherited)]
+  return stylesExpr ? [jsxAttr('style', stylesExpr)] : []
 }
 
 function styleAttributes(

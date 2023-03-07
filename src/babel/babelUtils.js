@@ -35,4 +35,28 @@ function mergeObjects(optionalObjects) {
   )
 }
 
-module.exports = { mergeObjects }
+// Given Node[] and ?Node that represents ?(object | object[]), returns an expression that represents:
+//
+// [arrayEl, arrayEl].concat(foo || [])
+//
+// This will evaluate at runtime to an array of objects
+function concatArraysOfObjects(array, right) {
+  const arrayLength = array.length
+
+  if (arrayLength && right) {
+    // `[{}, {}].concat(foo || [])`
+    return t.callExpression(t.memberExpression(t.arrayExpression(array), t.identifier('concat')), [
+      t.logicalExpression('||', right, t.arrayExpression([])),
+    ])
+  } else if (arrayLength && !right) {
+    // `{}` or `[{}, {}]`
+    return array.length === 1 ? array[0] : t.arrayExpression(array)
+  } else if (!arrayLength && right) {
+    // `foo`
+    return right
+  }
+
+  return null
+}
+
+module.exports = { mergeObjects, concatArraysOfObjects }
