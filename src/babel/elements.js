@@ -332,7 +332,7 @@ function validateElementHasNoIllegalAttributes(path) {
   const { attributes } = openingElement
   if (jsxHasAttrNamed('style', attributes)) {
     throw path.buildCodeFrameError(
-      "It's not allowed to pass `style` attribute to ZACS-styled components",
+      "It's not allowed to pass `style` attribute to ZACS-styled components. You can pass inline style object using `zacs:style` attribute instead.",
     )
   }
   if (jsxHasAttrNamed('className', attributes)) {
