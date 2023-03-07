@@ -1,6 +1,19 @@
 const { types: t } = require('@babel/core')
 const { jsxAttr, jsxFindNamespacedAttr } = require('./jsxUtils')
-const { mergeObjects } = require('./babelUtils')
+const { mergeObjects, concatArraysOfObjects } = require('./babelUtils')
+
+function mergeStyles(platform, maybeZacsStyleExpr, maybeZacsInheritStyleExpr) {
+  // NOTE: zacs:style comes before zacs:inherit
+  if (platform === 'web') {
+    // { ...a, ...b }
+    return mergeObjects([maybeZacsStyleExpr, maybeZacsInheritStyleExpr])
+  } else if (platform === 'native') {
+    // [a].concat(b || [])
+    return concatArraysOfObjects([maybeZacsStyleExpr], maybeZacsInheritStyleExpr)
+  }
+
+  throw new Error('Unknown platform')
+}
 
 function transformZacsAttributesOnNonZacsElement(platform, path) {
   // this is called on a JSXElement that doesn't (directly) reference a zacs declaration
@@ -8,39 +21,37 @@ function transformZacsAttributesOnNonZacsElement(platform, path) {
   const { node } = path
   const { openingElement } = node
 
-  const inheritedPropsAttr = jsxFindNamespacedAttr(openingElement.attributes, 'inherit')
+  const zacsInheritAttr = jsxFindNamespacedAttr(openingElement.attributes, 'inherit')
   const zacsStyleAttr = jsxFindNamespacedAttr(openingElement.attributes, 'style')
-  if (!inheritedPropsAttr && !zacsStyleAttr) {
+  if (!zacsInheritAttr && !zacsStyleAttr) {
     return
   }
 
   const addedAttrs = []
-  const addedStyles = []
 
-  // zacs:style come before zacs:inherit
-  if (zacsStyleAttr) {
-    addedStyles.push(zacsStyleAttr.value.expression)
-  }
+  const zacsStyleExpr = zacsStyleAttr && zacsStyleAttr.value.expression
+  const zacsInheritExpr = zacsInheritAttr && zacsInheritAttr.value.expression
 
-  if (inheritedPropsAttr) {
-    const inheritedProps = inheritedPropsAttr.value.expression
-
-    if (platform === 'web') {
-      const classNameAttr = jsxAttr(
-        'className',
-        t.memberExpression(inheritedProps, t.identifier('className')),
-      )
-      addedAttrs.push(classNameAttr)
-    }
-
-    addedStyles.push(t.memberExpression(inheritedProps, t.identifier('style')))
+  if (zacsInheritExpr && platform === 'web') {
+    const classNameAttr = jsxAttr(
+      'className',
+      t.memberExpression(zacsInheritExpr, t.identifier('className')),
+    )
+    addedAttrs.push(classNameAttr)
   }
 
   // Merge styles coming from zacs:inherit and zacs:style
-  addedAttrs.unshift(jsxAttr('style', mergeObjects(addedStyles)))
+  const resolvedStyleExpr = mergeStyles(
+    platform,
+    zacsStyleExpr,
+    zacsInheritExpr && t.memberExpression(zacsInheritExpr, t.identifier('style')),
+  )
+  // console.log(resolvedStyleExpr)
+
+  addedAttrs.unshift(jsxAttr('style', resolvedStyleExpr))
 
   openingElement.attributes = openingElement.attributes
-    .filter((attr) => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
+    .filter((attr) => attr !== zacsInheritAttr && attr !== zacsStyleAttr)
     .concat(addedAttrs)
 }
 

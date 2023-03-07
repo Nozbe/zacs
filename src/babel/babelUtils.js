@@ -40,7 +40,8 @@ function mergeObjects(optionalObjects) {
 // [arrayEl, arrayEl].concat(foo || [])
 //
 // This will evaluate at runtime to an array of objects
-function concatArraysOfObjects(array, right) {
+function concatArraysOfObjects(inputArray, right) {
+  const array = inputArray.filter(Boolean)
   const arrayLength = array.length
 
   if (arrayLength && right) {

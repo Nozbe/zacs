@@ -30,9 +30,9 @@ export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo
 const combo = <ExportedCombo />;
 const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
 const combo_styles = <ExportedCombo style={props.style} />;
-const combo_styles2 = <ExportedCombo style={Object.assign({
+const combo_styles2 = <ExportedCombo style={[{
   width: 500
-}, props.style)} />;
+}].concat(props.style || [])} />;
 
 // Pretend we're using an exported component
 
@@ -40,7 +40,7 @@ const ImportedComponent2 = require('ImportedComponent');
 const passZacsStyledWithoutDef = <ImportedComponent2 style={{
   width: 199
 }} />;
-const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={Object.assign({
+const passZacsStyledWithoutDefInherit = <ImportedComponent2 style={[{
   width: 199
-}, props.style)} />;"
+}].concat(props.style || [])} />;"
 `;
