@@ -2,8 +2,6 @@ exports.__esModule = true
 
 const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
-const { jsxAttr, jsxFindNamespacedAttr } = require('./jsxUtils')
-const { mergeObjects } = require('./babelUtils')
 const { transformStylesheet } = require('./stylesheet')
 const {
   isZacsDeclaration,
@@ -14,48 +12,7 @@ const {
 const { convertZacsElement } = require('./elements')
 const { createZacsComponent } = require('./components')
 const { handleImportDeclaration, injectNativeImportsIfNeeded } = require('./imports')
-
-function transformZacsAttributesOnNonZacsElement(platform, path) {
-  // this is called on a JSXElement that doesn't (directly) reference a zacs declaration
-  // we need to spread zacs:inherit and zacs:style into separate props or it won't work
-  const { node } = path
-  const { openingElement } = node
-
-  const inheritedPropsAttr = jsxFindNamespacedAttr(openingElement.attributes, 'inherit')
-  const zacsStyleAttr = jsxFindNamespacedAttr(openingElement.attributes, 'style')
-  if (!inheritedPropsAttr && !zacsStyleAttr) {
-    return
-  }
-
-  const addedAttrs = []
-  const addedStyles = []
-
-  // zacs:style come before zacs:inherit
-  if (zacsStyleAttr) {
-    addedStyles.push(zacsStyleAttr.value.expression)
-  }
-
-  if (inheritedPropsAttr) {
-    const inheritedProps = inheritedPropsAttr.value.expression
-
-    if (platform === 'web') {
-      const classNameAttr = jsxAttr(
-        'className',
-        t.memberExpression(inheritedProps, t.identifier('className')),
-      )
-      addedAttrs.push(classNameAttr)
-    }
-
-    addedStyles.push(t.memberExpression(inheritedProps, t.identifier('style')))
-  }
-
-  // Merge styles coming from zacs:inherit and zacs:style
-  addedAttrs.unshift(jsxAttr('style', mergeObjects(addedStyles)))
-
-  openingElement.attributes = openingElement.attributes
-    .filter((attr) => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
-    .concat(addedAttrs)
-}
+const { transformZacsAttributesOnNonZacsElement } = require('./nonZacsElements')
 
 exports.default = function () {
   return {
@@ -104,14 +61,12 @@ exports.default = function () {
         const { name } = openingElement.name
         const platform = getPlatform(state)
 
-        // check if it's a ZACS element
         const declaration = getDeclaration(path, state, name)
-        if (!declaration) {
+        if (declaration) {
+          convertZacsElement(path, declaration, state)
+        } else {
           transformZacsAttributesOnNonZacsElement(platform, path)
-          return
         }
-
-        convertZacsElement(path, declaration, state)
       },
       Program: {
         exit(path, state) {
