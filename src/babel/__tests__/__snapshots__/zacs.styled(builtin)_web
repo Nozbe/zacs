@@ -1,7 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(builtin), web 1`] = `
-"// you wouldn't do it in shared code, only in .{native,web}.js
+"// web builtins
 
-const li = <li __zacs_original_name="StyledLi" title="hello" />;"
+const li = <li __zacs_original_name="StyledLi" title="hello" />;
+
+// react-native builtins
+
+const text = <"RCTText" __zacs_original_name="StyledRCTText" foo={foo} title="hello" />;"
 `;

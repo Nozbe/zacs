@@ -316,23 +316,27 @@ const builtinElements = {
   },
 }
 
+// 'Foo' (uppercase) builtins need special treatment, hence second arg
 function getElementName(t, platform, path, originalName, component) {
   if (typeof component === 'string') {
-    return builtinElements[platform][component]
+    const identifier = builtinElements[platform][component]
+    return [identifier, false]
   } else if (
     t.isMemberExpression(component) &&
     t.isIdentifier(component.object, { name: 'zacs' }) &&
     t.isIdentifier(component.property) &&
     ['text', 'view'].includes(component.property.name)
   ) {
-    return builtinElements[platform][component.property.name]
+    const identifier = builtinElements[platform][component.property.name]
+    return [identifier, false]
   } else if (t.isIdentifier(component)) {
-    return component.name
+    return [component.name, false]
   } else if (t.isStringLiteral(component)) {
-    return component.value
+    return [component.value, true]
   } else if (t.isMemberExpression(component)) {
     // assuming it was already validated to be id.id
-    return `${component.object.name}.${component.property.name}`
+    const identifier = `${component.object.name}.${component.property.name}`
+    return [identifier, false]
   } else if (t.isObjectExpression(component)) {
     const platformComponent = component.properties.find(
       (property) => property.key.name === platform,
@@ -378,7 +382,7 @@ function convertZacsElement(t, path, declaration, state) {
   const { id, init } = declaration
   const originalName = id.name
   const zacsMethod = init.callee.property.name
-  const elementName = getElementName(
+  const [elementName, isBuiltin] = getElementName(
     t,
     platform,
     // should be path to declaration, not use, but the path gets removed after visiting
@@ -401,7 +405,7 @@ function convertZacsElement(t, path, declaration, state) {
   )
 
   // replace component
-  jsxRenameElement(t, node, elementName)
+  jsxRenameElement(t, node, elementName, isBuiltin)
 
   if (platform === 'web') {
     // filter out non-DOM attributes (React will throw errors at us for this)

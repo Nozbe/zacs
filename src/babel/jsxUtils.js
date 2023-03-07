@@ -1,4 +1,20 @@
-function jsxName(t, name) {
+// Note: Uppercase JSXIdentifiers won't be converted to React.createElement('Foo'), but
+// React.createElement(Foo).
+function jsxIsBuiltinSafe(name) {
+  return !!/^[a-z]/.test(name)
+}
+
+function jsxName(t, name, isBuiltin) {
+  if (isBuiltin && !jsxIsBuiltinSafe(name)) {
+    // HACK: Return a StringLiteral instead of JSXIdentifier to force
+    // createElement("Foo"), not createElement(Foo).
+    // This is wrong and will break if this path changes:
+    //   https://github.com/babel/babel/blob/a547f8724a5c6b4395b8a8f597e3edd44de74bf3/packages/babel-plugin-transform-react-jsx/src/create-plugin.ts#L414
+    // Alternative is to emit `const Foo = 'Foo'` and use that,
+    // but that's unnecessary code emitted, and this is ZACS!
+    return t.stringLiteral(name)
+  }
+
   if (name.includes('.')) {
     const segments = name.split('.')
     if (segments.length !== 2) {
@@ -14,9 +30,9 @@ function jsxAttr(t, name, value) {
   return t.jSXAttribute(t.jSXIdentifier(name), t.jSXExpressionContainer(value))
 }
 
-function jsxRenameElement(t, node, name) {
+function jsxRenameElement(t, node, name, isBuiltin) {
   const { openingElement, closingElement } = node
-  const jsxId = jsxName(t, name)
+  const jsxId = jsxName(t, name, isBuiltin)
 
   openingElement.name = jsxId
   if (closingElement) {
@@ -79,4 +95,5 @@ module.exports = {
   jsxInferAttrTruthiness,
   jsxHasAttrNamed,
   jsxFindNamespacedAttr,
+  jsxIsBuiltinSafe,
 }

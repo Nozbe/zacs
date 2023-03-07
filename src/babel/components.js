@@ -42,7 +42,7 @@ function createZacsComponent(t, state, path) {
   const platform = getPlatform(state)
 
   const zacsMethod = createMethodToZacsMethod[init.callee.property.name]
-  const elementName = getElementName(
+  const [elementName, isBuiltin] = getElementName(
     t,
     platform,
     path, // should be path to declaration
@@ -82,7 +82,7 @@ function createZacsComponent(t, state, path) {
     ...styleAttributes(t, platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
   )
 
-  const jsxId = jsxName(t, elementName)
+  const jsxId = jsxName(t, elementName, isBuiltin)
 
   const component = t.arrowFunctionExpression(
     shouldForwardRef ? [t.identifier('props'), t.identifier('ref')] : [t.identifier('props')],

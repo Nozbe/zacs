@@ -19,10 +19,15 @@ function testBabelPlugin(pluginBabel) {
   }
 }
 
-function transform(input, platform, extra = {}) {
+function transform(input, platform, extra = {}, extraPlugins = []) {
   const { code } = babel.transform(input, {
     configFile: false,
-    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }], testBabelPlugin],
+    plugins: [
+      '@babel/plugin-syntax-jsx',
+      [plugin, { platform, ...extra }],
+      testBabelPlugin,
+      ...extraPlugins,
+    ],
   })
   return code
 }
@@ -62,6 +67,13 @@ describe('zacs', () => {
         snapshot(`${exampleName}_native`),
       )
     })
+  })
+  // NOTE: This is a special case, double check that JSX is transformed correctly
+  it(`transforms builtins`, () => {
+    const exampleName = 'zacs.styled(builtin)'
+    expect(
+      transform(example(exampleName), 'web', {}, [['@babel/plugin-transform-react-jsx']]),
+    ).toMatchSpecificSnapshot(snapshot(`${exampleName}_jsx`))
   })
   it('className in components not allowed', () => {
     expect(() => transform(example('classNameNotAllowed'), 'web')).toThrow(
