@@ -10,7 +10,7 @@ const {
   jsxHasAttrNamed,
   jsxFindNamespacedAttr,
 } = require('./jsxUtils')
-const { objectSpread } = require('./babelUtils')
+const { mergeObjects } = require('./babelUtils')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -196,19 +196,9 @@ function webStyleExpr(styles, inheritedProps, zacsStyle) {
   const inheritedStyles = inheritedProps
     ? t.memberExpression(inheritedProps, t.identifier('style'))
     : null
-  const allStyles = [styles, zacsStyle, inheritedStyles].filter(Boolean)
+  const allStyles = [styles, zacsStyle, inheritedStyles]
 
-  if (!allStyles.length) {
-    return null
-  } else if (allStyles.length === 1) {
-    return allStyles[0]
-  }
-
-  // TODO: Is this correct? Looks fishy
-  const isFirstObjectNonNull =
-    styles || !zacsStyle || !inheritedProps || t.isObjectExpression(zacsStyle)
-
-  return objectSpread(allStyles, isFirstObjectNonNull)
+  return mergeObjects(allStyles)
 }
 
 function webStyleAttributes([classNames, styles, inheritedProps, zacsStyle]) {

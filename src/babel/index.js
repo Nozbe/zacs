@@ -3,7 +3,7 @@ exports.__esModule = true
 const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
 const { jsxAttr, jsxFindNamespacedAttr } = require('./jsxUtils')
-const { objectSpread } = require('./babelUtils')
+const { mergeObjects } = require('./babelUtils')
 const { transformStylesheet } = require('./stylesheet')
 const {
   isZacsDeclaration,
@@ -50,9 +50,7 @@ function transformZacsAttributesOnNonZacsElement(platform, path) {
   }
 
   // Merge styles coming from zacs:inherit and zacs:style
-  addedAttrs.unshift(
-    jsxAttr('style', addedStyles.length === 1 ? addedStyles[0] : objectSpread(addedStyles)),
-  )
+  addedAttrs.unshift(jsxAttr('style', mergeObjects(addedStyles)))
 
   openingElement.attributes = openingElement.attributes
     .filter((attr) => attr !== inheritedPropsAttr && attr !== zacsStyleAttr)
