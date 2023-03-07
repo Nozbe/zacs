@@ -73,9 +73,11 @@ function validateZacsDeclaration(path) {
           t.isObjectExpression(componentToStyle))
       )
     ) {
-      throw path.buildCodeFrameError(
-        'zacs.styled() requires an argument - a `Component`, `Namespaced.Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
-      )
+      throw path
+        .get('init')
+        .buildCodeFrameError(
+          'zacs.styled() requires an argument - a `Component`, `Namespaced.Component`, a `{ web: Component, native: Component }` specifier, or a `"builtin"` (e.g. `"div"` on web)',
+        )
     }
   }
 
@@ -85,9 +87,11 @@ function validateZacsDeclaration(path) {
       : init.arguments
 
   if (condStyles && !(t.isObjectExpression(condStyles) || t.isNullLiteral(condStyles))) {
-    throw path.buildCodeFrameError(
-      'Conditional styles (second argument to ZACS) should be an object expression',
-    )
+    throw path
+      .get('init')
+      .buildCodeFrameError(
+        'Conditional styles (second argument to ZACS) should be an object expression',
+      )
 
     // TODO: Validate keys / values too
   }
@@ -96,9 +100,9 @@ function validateZacsDeclaration(path) {
     literalStyleSpec &&
     !(t.isObjectExpression(literalStyleSpec) || t.isNullLiteral(literalStyleSpec))
   ) {
-    throw path.buildCodeFrameError(
-      'Literal styles (third argument to ZACS) should be an object expression',
-    )
+    throw path
+      .get('init')
+      .buildCodeFrameError('Literal styles (third argument to ZACS) should be an object expression')
 
     // TODO: Validate keys / values too
   }
@@ -117,10 +121,14 @@ const builtinElements = {
 
 // 'Foo' (uppercase) builtins need special treatment, hence second arg
 function getElementName(platform, path, originalName, component) {
+  // zacs.view, zacs.text
   if (typeof component === 'string') {
     const identifier = builtinElements[platform][component]
     return [identifier, false]
-  } else if (
+  }
+
+  // zacs.styled()
+  if (
     t.isMemberExpression(component) &&
     t.isIdentifier(component.object, { name: 'zacs' }) &&
     t.isIdentifier(component.property) &&
@@ -142,17 +150,18 @@ function getElementName(platform, path, originalName, component) {
     )
 
     if (!platformComponent) {
-      throw path.buildCodeFrameError(
-        `Invalid component specifier in ZACS declaration - no ${platform} key specified for ${originalName}`,
-      )
+      throw path
+        .get('init.arguments.0')
+        .buildCodeFrameError(
+          `Invalid component specifier in ZACS declaration - no ${platform} key specified for ${originalName}`,
+        )
     }
 
     return getElementName(platform, path, originalName, platformComponent.value)
   }
 
-  throw path.buildCodeFrameError(
-    `Invalid component type in ZACS declaration -- look at the const ${originalName} = zacs.styled/createStyled(...) declaration. The component to style that was passed is not of valid syntax.`,
-  )
+  // This is checked before by validateZacsDeclaration
+  throw new Error('unreachable')
 }
 
 function createDeclarationMetadata(path, state) {
@@ -165,8 +174,6 @@ function createDeclarationMetadata(path, state) {
   const zacsMethod = init.callee.property.name
   const [elementName, isBuiltin] = getElementName(
     platform,
-    // should be path to declaration, not use, but the path gets removed after visiting
-    // (unless keepDeclarations: true)
     path,
     originalName,
     zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
