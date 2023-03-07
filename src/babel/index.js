@@ -1,8 +1,9 @@
 exports.__esModule = true
 
-const { types: t } = require('@babel/core')
+// const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
 const { transformStylesheet } = require('./stylesheet')
+const { isZacsCssTaggedTemplate } = require('./stylesheet-utils')
 const {
   isZacsDeclaration,
   validateZacsDeclaration,
@@ -78,20 +79,11 @@ exports.default = function () {
       },
       TaggedTemplateExpression(path) {
         const { node } = path
-        const { tag } = node
 
         // Strip zacs.css`` tag (only an annotation for editor highlighting)
-        if (
-          !(
-            t.isMemberExpression(tag) &&
-            t.isIdentifier(tag.object, { name: 'zacs' }) &&
-            t.isIdentifier(tag.property, { name: 'css' })
-          )
-        ) {
-          return
+        if (isZacsCssTaggedTemplate(node)) {
+          path.replaceWith(node.quasi)
         }
-
-        path.replaceWith(node.quasi)
       },
     },
   }

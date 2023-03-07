@@ -10,6 +10,15 @@ function isNumberLiteral(node) {
   )
 }
 
+function isZacsCssTaggedTemplate(node) {
+  const { tag } = node
+  return (
+    t.isMemberExpression(tag) &&
+    t.isIdentifier(tag.object, { name: 'zacs' }) &&
+    t.isIdentifier(tag.property, { name: 'css' })
+  )
+}
+
 // ZACS_STYLESHEET_LITERAL(xxx) - magic syntax that passes validation
 // for use by babel plugins that transform dynamic expressions into static literals
 function isZacsStylesheetLiteral(node) {
@@ -61,4 +70,9 @@ function resolveInsetsShorthand(node) {
   return [node, node, node, node]
 }
 
-module.exports = { isValueAllowed, isZacsStylesheetLiteral, resolveInsetsShorthand }
+module.exports = {
+  isZacsCssTaggedTemplate,
+  isValueAllowed,
+  isZacsStylesheetLiteral,
+  resolveInsetsShorthand,
+}
