@@ -77,7 +77,7 @@ function createZacsComponent(state, path) {
   }
 
   jsxAttributes.unshift(
-    ...styleAttributes(platform, uncondStyles, condStyles, literalStyleSpec, null, passedProps),
+    ...styleAttributes(platform, { uncondStyles, condStyles, literalStyleSpec }, null, passedProps),
   )
 
   const jsxId = jsxName(elementName, isBuiltin)

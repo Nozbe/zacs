@@ -66,7 +66,14 @@ function withoutStylingProps(attributes, condStyles, literalStyleSpec) {
   })
 }
 
-function getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passthroughProps) {
+function resolveStyles(
+  // ZACS declaration
+  { uncondStyles, condStyles, literalStyleSpec },
+  // IF zacs element:
+  jsxAttributes,
+  // IF zacs component:
+  passthroughProps,
+) {
   const stylesets = []
   const literalStyles = []
 
@@ -241,20 +248,13 @@ function nativeStyleAttributes([stylesets, literalStyleset, inheritedProps, zacs
   return stylesExpr ? [jsxAttr('style', stylesExpr)] : []
 }
 
-function styleAttributes(
-  platform,
-  uncondStyles,
-  condStyles,
-  literalStyleSpec,
-  jsxAttributes,
-  passedProps = [],
-) {
-  const styles = getStyles(uncondStyles, condStyles, literalStyleSpec, jsxAttributes, passedProps)
+function styleAttributes(platform, declaration, jsxAttributes, passedProps = []) {
+  const resolvedStyles = resolveStyles(declaration, jsxAttributes, passedProps)
   switch (platform) {
     case 'web':
-      return webStyleAttributes(styles)
+      return webStyleAttributes(resolvedStyles)
     case 'native':
-      return nativeStyleAttributes(styles)
+      return nativeStyleAttributes(resolvedStyles)
     default:
       throw new Error('Unknown platform passed to ZACS config')
   }
@@ -312,7 +312,7 @@ function convertZacsElement(path, declaration, state) {
 
   // add styling attributes
   openingElement.attributes.unshift(
-    ...styleAttributes(platform, uncondStyles, condStyles, literalStyleSpec, jsxAttributes),
+    ...styleAttributes(platform, { uncondStyles, condStyles, literalStyleSpec }, jsxAttributes),
   )
 
   // add debug info
