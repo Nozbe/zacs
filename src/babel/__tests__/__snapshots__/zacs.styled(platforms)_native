@@ -4,11 +4,8 @@ exports[`zacs example: zacs.styled(platforms), native 1`] = `
 "const zacsReactNative = require('react-native');
 const platbox = <NativeBox __zacs_original_name="PlatformBox" style={style.box} />;
 const platbox_attrs = <NativeBox __zacs_original_name="PlatformBox" style={style.box} foo={foo} bar title="hello" />;
-
-// passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
-const RCTText = 'RCTText';
-const p = <RCTText __zacs_original_name="PlatformParagraph" style={style.p}>Hello</RCTText>;
-const p_attrs = <RCTText __zacs_original_name="PlatformParagraph" style={style.p} foo={foo} title="DOM attr" />;
+const p = <"RCTText" __zacs_original_name="PlatformParagraph" style={style.p}>Hello</"RCTText">;
+const p_attrs = <"RCTText" __zacs_original_name="PlatformParagraph" style={style.p} foo={foo} title="DOM attr" />;
 const platform_zacs = <ZACS_RN_Text __zacs_original_name="PlatformZacsBuiltin" />;
 const platform_zacs2 = <NativeBox __zacs_original_name="PlatformZacsBuiltin2" />;"
 `;

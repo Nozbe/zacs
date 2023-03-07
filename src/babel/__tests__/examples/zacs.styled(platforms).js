@@ -5,9 +5,7 @@ const PlatformBox = zacs.styled({ web: WebBox, native: NativeBox }, style.box)
 const platbox = <PlatformBox />
 const platbox_attrs = <PlatformBox foo={foo} bar title="hello" />
 
-// passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
-const RCTText = 'RCTText'
-const PlatformParagraph = zacs.styled({ web: 'p', native: RCTText }, style.p)
+const PlatformParagraph = zacs.styled({ web: 'p', native: 'RCTText' }, style.p)
 
 const p = <PlatformParagraph>Hello</PlatformParagraph>
 const p_attrs = <PlatformParagraph foo={foo} title="DOM attr" />

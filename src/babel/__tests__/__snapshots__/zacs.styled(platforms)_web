@@ -3,9 +3,6 @@
 exports[`zacs example: zacs.styled(platforms), web 1`] = `
 "const platbox = <WebBox __zacs_original_name="PlatformBox" className={style.box} />;
 const platbox_attrs = <WebBox __zacs_original_name="PlatformBox" className={style.box} foo={foo} bar title="hello" />;
-
-// passing string directly won't work because it's uppercase (won't get transpiled to createElement correctly)
-const RCTText = 'RCTText';
 const p = <p __zacs_original_name="PlatformParagraph" className={style.p}>Hello</p>;
 const p_attrs = <p __zacs_original_name="PlatformParagraph" className={style.p} title="DOM attr" />;
 const platform_zacs = <article __zacs_original_name="PlatformZacsBuiltin" />;

@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: zacs.styled(platforms), native 1`] = `
+"const zacsReactNative = require('react-native');
+const platbox = /*#__PURE__*/React.createElement(NativeBox, {
+  __zacs_original_name: "PlatformBox",
+  style: style.box
+});
+const platbox_attrs = /*#__PURE__*/React.createElement(NativeBox, {
+  __zacs_original_name: "PlatformBox",
+  style: style.box,
+  foo: foo,
+  bar: true,
+  title: "hello"
+});
+const p = /*#__PURE__*/React.createElement("RCTText", {
+  __zacs_original_name: "PlatformParagraph",
+  style: style.p
+}, "Hello");
+const p_attrs = /*#__PURE__*/React.createElement("RCTText", {
+  __zacs_original_name: "PlatformParagraph",
+  style: style.p,
+  foo: foo,
+  title: "DOM attr"
+});
+const platform_zacs = /*#__PURE__*/React.createElement(ZACS_RN_Text, {
+  __zacs_original_name: "PlatformZacsBuiltin"
+});
+const platform_zacs2 = /*#__PURE__*/React.createElement(NativeBox, {
+  __zacs_original_name: "PlatformZacsBuiltin2"
+});"
+`;

@@ -56,24 +56,21 @@ describe('zacs', () => {
     'zacs.styled(platforms)',
     'zacs.createX',
   ]
+  const examplesWithJSXCheck = new Set(['zacs.styled(builtin)', 'zacs.styled(platforms)'])
   examples.forEach((exampleName) => {
-    it(`example: ${exampleName}, web`, () => {
-      expect(transform(example(exampleName), 'web')).toMatchSpecificSnapshot(
-        snapshot(`${exampleName}_web`),
-      )
+    const platforms = ['web', 'native']
+    platforms.forEach((platform) => {
+      it(`example: ${exampleName}, ${platform}`, () => {
+        expect(transform(example(exampleName), platform)).toMatchSpecificSnapshot(
+          snapshot(`${exampleName}_${platform}`),
+        )
+        if (examplesWithJSXCheck.has(exampleName)) {
+          expect(
+            transform(example(exampleName), platform, {}, ['@babel/plugin-transform-react-jsx']),
+          ).toMatchSpecificSnapshot(snapshot(`${exampleName}_${platform}_jsx`))
+        }
+      })
     })
-    it(`example: ${exampleName}, native`, () => {
-      expect(transform(example(exampleName), 'native')).toMatchSpecificSnapshot(
-        snapshot(`${exampleName}_native`),
-      )
-    })
-  })
-  // NOTE: This is a special case, double check that JSX is transformed correctly
-  it(`transforms builtins`, () => {
-    const exampleName = 'zacs.styled(builtin)'
-    expect(
-      transform(example(exampleName), 'web', {}, [['@babel/plugin-transform-react-jsx']]),
-    ).toMatchSpecificSnapshot(snapshot(`${exampleName}_jsx`))
   })
   it('className in components not allowed', () => {
     expect(() => transform(example('classNameNotAllowed'), 'web')).toThrow(
