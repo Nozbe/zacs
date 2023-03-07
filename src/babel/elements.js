@@ -260,57 +260,6 @@ function styleAttributes(
   }
 }
 
-const builtinElements = {
-  web: {
-    view: 'div',
-    text: 'span',
-  },
-  native: {
-    view: 'ZACS_RN_View',
-    text: 'ZACS_RN_Text',
-  },
-}
-
-// 'Foo' (uppercase) builtins need special treatment, hence second arg
-function getElementName(platform, path, originalName, component) {
-  if (typeof component === 'string') {
-    const identifier = builtinElements[platform][component]
-    return [identifier, false]
-  } else if (
-    t.isMemberExpression(component) &&
-    t.isIdentifier(component.object, { name: 'zacs' }) &&
-    t.isIdentifier(component.property) &&
-    ['text', 'view'].includes(component.property.name)
-  ) {
-    const identifier = builtinElements[platform][component.property.name]
-    return [identifier, false]
-  } else if (t.isIdentifier(component)) {
-    return [component.name, false]
-  } else if (t.isStringLiteral(component)) {
-    return [component.value, true]
-  } else if (t.isMemberExpression(component)) {
-    // assuming it was already validated to be id.id
-    const identifier = `${component.object.name}.${component.property.name}`
-    return [identifier, false]
-  } else if (t.isObjectExpression(component)) {
-    const platformComponent = component.properties.find(
-      (property) => property.key.name === platform,
-    )
-
-    if (!platformComponent) {
-      throw path.buildCodeFrameError(
-        `Invalid component specifier in ZACS declaration - no ${platform} key specified for ${originalName}`,
-      )
-    }
-
-    return getElementName(platform, path, originalName, platformComponent.value)
-  }
-
-  throw path.buildCodeFrameError(
-    `Invalid component type in ZACS declaration -- look at the const ${originalName} = zacs.styled/createStyled(...) declaration. The component to style that was passed is not of valid syntax.`,
-  )
-}
-
 function validateElementHasNoIllegalAttributes(path) {
   const { openingElement } = path.node
   const { attributes } = openingElement
@@ -334,20 +283,10 @@ function convertZacsElement(path, declaration, state) {
   validateElementHasNoIllegalAttributes(path)
 
   // get ZACS element info
-  const { id, init } = declaration
-  const originalName = id.name
-  const zacsMethod = init.callee.property.name
-  const [elementName, isBuiltin] = getElementName(
-    platform,
-    // should be path to declaration, not use, but the path gets removed after visiting
-    // (unless keepDeclarations: true)
-    path,
-    originalName,
-    zacsMethod === 'styled' ? init.arguments[0] : zacsMethod,
-  )
-  const [uncondStyles, condStyles, literalStyleSpec] =
-    zacsMethod === 'styled' ? init.arguments.slice(1) : init.arguments
-  const originalAttributes = openingElement.attributes
+  const { elementName, originalName, isBuiltin, uncondStyles, condStyles, literalStyleSpec } =
+    declaration
+
+  const jsxAttributes = openingElement.attributes
 
   // filter out styling props
   // TODO: Combine this and web safe attributes into one step
@@ -373,7 +312,7 @@ function convertZacsElement(path, declaration, state) {
 
   // add styling attributes
   openingElement.attributes.unshift(
-    ...styleAttributes(platform, uncondStyles, condStyles, literalStyleSpec, originalAttributes),
+    ...styleAttributes(platform, uncondStyles, condStyles, literalStyleSpec, jsxAttributes),
   )
 
   // add debug info
@@ -384,4 +323,4 @@ function convertZacsElement(path, declaration, state) {
   }
 }
 
-module.exports = { convertZacsElement, getElementName, isAttributeWebSafe, styleAttributes }
+module.exports = { convertZacsElement, isAttributeWebSafe, styleAttributes }

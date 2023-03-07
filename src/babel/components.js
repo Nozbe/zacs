@@ -2,7 +2,8 @@ const { types: t } = require('@babel/core')
 const { htmlElements } = require('./attributes')
 const { getPlatform } = require('./state')
 const { jsxName, jsxAttr } = require('./jsxUtils')
-const { getElementName, isAttributeWebSafe, styleAttributes } = require('./elements')
+const { getElementName } = require('./declarations')
+const { isAttributeWebSafe, styleAttributes } = require('./elements')
 const { setUsesRN } = require('./imports')
 
 function propsChildren() {
