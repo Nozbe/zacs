@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Fix `zacs.styled('UppercaseBuiltin')`, e.g. `'RCTText'`
 - Fix unnecessary `require('react-native')` insertions
 - Fix broken `zacs.styled({ web: ..., native: zacs.text })`
+- You can now use `zacs:style` on all elements, not just ZACS-styled elements.
 
 ## 2.0.0 (2023-02-20)
 
