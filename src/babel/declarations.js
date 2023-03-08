@@ -1,5 +1,6 @@
 const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
+const { setUsesRN } = require('./imports')
 
 // is ANY kind of zacs declaration (zacs.text, zacs.createX, zacs.stylesheet)
 function isZacsDeclaration(node) {
@@ -202,7 +203,13 @@ function registerDeclaration(path, state) {
   if (state.get(stateKey)) {
     throw path.buildCodeFrameError(`Duplicate ZACS declaration for name: ${name}`)
   }
-  state.set(stateKey, createDeclarationMetadata(path, state))
+
+  const declaration = createDeclarationMetadata(path, state)
+  state.set(stateKey, declaration)
+
+  if (getPlatform(state) === 'native') {
+    setUsesRN(state, declaration.elementName)
+  }
 
   if (!state.opts.keepDeclarations) {
     path.remove()

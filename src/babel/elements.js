@@ -1,7 +1,6 @@
 const { types: t } = require('@babel/core')
 const { htmlAttributes, htmlElements } = require('./attributes')
 const { getPlatform, isProduction } = require('./state')
-const { setUsesRN } = require('./imports')
 const {
   jsxAttr,
   jsxRenameElement,
@@ -146,21 +145,21 @@ function resolveStyles(
   // TODO: Validate inherited props value
   const inheritedPropsAttr = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'inherit')
   const hasInheritedProps = inheritedPropsAttr || passthroughProps.includes('zacs:inherit')
-  const inheritedProps = hasInheritedProps
+  const inheritFrom = hasInheritedProps
     ? (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props')
     : null
 
   return [
     stylesets,
     literalStyles.length ? objectExpressionFromPairs(literalStyles) : null,
-    inheritedProps,
     zacsStyle,
+    inheritFrom,
   ]
 }
 
-function webClassNameExpr(classNamesExpr, inheritedProps) {
-  if (inheritedProps) {
-    const inheritedClassNames = t.memberExpression(inheritedProps, t.identifier('className'))
+function webClassNameExpr(classNamesExpr, inheritFrom) {
+  if (inheritFrom) {
+    const inheritedClassNames = t.memberExpression(inheritFrom, t.identifier('className'))
 
     if (classNamesExpr) {
       // classNames + ' ' + (props.className || '')
@@ -183,16 +182,16 @@ function webClassNameExpr(classNamesExpr, inheritedProps) {
   return classNamesExpr
 }
 
-function webStyleExpr(styles, inheritedProps, zacsStyle) {
-  const inheritedStyles = inheritedProps
-    ? t.memberExpression(inheritedProps, t.identifier('style'))
+function webStyleExpr(styles, zacsStyle, inheritFrom) {
+  const inheritedStyles = inheritFrom
+    ? t.memberExpression(inheritFrom, t.identifier('style'))
     : null
   const allStyles = [styles, zacsStyle, inheritedStyles]
 
   return mergeObjects(allStyles)
 }
 
-function webStyleAttributes([classNames, styles, inheritedProps, zacsStyle]) {
+function webStyleAttributes([classNames, styles, zacsStyle, inheritFrom]) {
   const attributes = []
 
   const classNamesExpr = classNames.reduce((expr, [className, condition]) => {
@@ -209,12 +208,12 @@ function webStyleAttributes([classNames, styles, inheritedProps, zacsStyle]) {
     return isFirstExpr ? classNameExpr : t.binaryExpression('+', expr, classNameExpr)
   }, null)
 
-  const classNamesValue = webClassNameExpr(classNamesExpr, inheritedProps)
+  const classNamesValue = webClassNameExpr(classNamesExpr, inheritFrom)
   if (classNamesValue) {
     attributes.push(jsxAttr('className', classNamesValue))
   }
 
-  const stylesValue = webStyleExpr(styles, inheritedProps, zacsStyle)
+  const stylesValue = webStyleExpr(styles, zacsStyle, inheritFrom)
   if (stylesValue) {
     attributes.push(jsxAttr('style', stylesValue))
   }
@@ -222,7 +221,7 @@ function webStyleAttributes([classNames, styles, inheritedProps, zacsStyle]) {
   return attributes
 }
 
-function nativeStyleAttributes([stylesets, literalStyleset, inheritedProps, zacsStyle]) {
+function nativeStyleAttributes([stylesets, literalStyleset, zacsStyle, inheritFrom]) {
   const styles = stylesets.map(([styleName, condition]) =>
     condition ? t.logicalExpression('&&', condition, styleName) : styleName,
   )
@@ -242,7 +241,7 @@ function nativeStyleAttributes([stylesets, literalStyleset, inheritedProps, zacs
   //   props.styles
   const stylesExpr = concatArraysOfObjects(
     styles,
-    inheritedProps && t.memberExpression(inheritedProps, t.identifier('style')),
+    inheritFrom && t.memberExpression(inheritFrom, t.identifier('style')),
   )
 
   return stylesExpr ? [jsxAttr('style', stylesExpr)] : []
@@ -304,10 +303,6 @@ function convertZacsElement(path, declaration, state) {
     if (htmlElements.has(elementName)) {
       openingElement.attributes = webSafeAttributes(openingElement.attributes)
     }
-  } else if (platform === 'native') {
-    setUsesRN(state, elementName)
-  } else {
-    throw new Error('Unknown platform')
   }
 
   // add styling attributes
