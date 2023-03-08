@@ -16,14 +16,14 @@ export const ExportedStylable = props => <ZACS_RN_Text style={[style.text, props
 }].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
 export const ExportedStylable2 = props => <ZACS_RN_Text style={[style.text, props.isBold && style.bold, {
   color: props.color
-}, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
+}].concat(props.style || [])}>{props.children}</ZACS_RN_Text>;
 export const ExportedCombo = React.forwardRef((props, ref) => <Native.Combo style={[style.combo, props.isFoo && style.foo, props.isBar && style.bar, {
   color: props.color,
   height: props.height
 }].concat(props.style || [])} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</Native.Combo>);
 
 // regression test
-export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo, props.__zacs_style].concat(props.style || [])}>{props.children}</ZACS_RN_View>;
+export const ExporterZacsStyleInherit = props => <ZACS_RN_View style={[style.foo].concat(props.style || [])}>{props.children}</ZACS_RN_View>;
 
 // Make sure nothing breaks if I use created component in the same file
 

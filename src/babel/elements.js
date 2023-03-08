@@ -132,22 +132,37 @@ function resolveStyles(
     })
   }
 
+  // TODO: Validate inherited props value
+  const inheritFrom = (() => {
+    if (passthroughProps.includes('zacs:inherit')) {
+      return t.identifier('props')
+    }
+
+    const inheritedPropsAttr = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'inherit')
+    if (inheritedPropsAttr) {
+      return inheritedPropsAttr.value.expression
+    }
+
+    return null
+  })()
+
   // TODO: Validate zacs:style value
   // TODO: If the value is a simple object, we could merge them into literalStyles. OTOH, maybe another
   // optimizer Babel plugin can do it further down the line?
-  const zacsStyleAttribute = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'style')
-  const hasZacsStyleAttr = zacsStyleAttribute || passthroughProps.includes('zacs:style')
-  const zacsStyle = hasZacsStyleAttr
-    ? (zacsStyleAttribute && zacsStyleAttribute.value.expression) ||
-      t.memberExpression(t.identifier('props'), t.identifier('__zacs_style'))
-    : null
+  const zacsStyle = (() => {
+    // NOTE: In case of zacs components, zacs:style and zacs:inherit both get passed into style=""
+    // so we don't need to worry about both
+    if (passthroughProps.includes('zacs:style') && !inheritFrom) {
+      return t.memberExpression(t.identifier('props'), t.identifier('style'))
+    }
 
-  // TODO: Validate inherited props value
-  const inheritedPropsAttr = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'inherit')
-  const hasInheritedProps = inheritedPropsAttr || passthroughProps.includes('zacs:inherit')
-  const inheritFrom = hasInheritedProps
-    ? (inheritedPropsAttr && inheritedPropsAttr.value.expression) || t.identifier('props')
-    : null
+    const zacsStyleAttr = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'style')
+    if (zacsStyleAttr) {
+      return zacsStyleAttr.value.expression
+    }
+
+    return null
+  })()
 
   return [
     stylesets,
@@ -182,19 +197,19 @@ function webClassNameExpr(classNamesExpr, inheritFrom) {
   return classNamesExpr
 }
 
-function webStyleExpr(styles, zacsStyle, inheritFrom) {
+function webStyleExpr(literalStyles, zacsStyle, inheritFrom) {
   const inheritedStyles = inheritFrom
     ? t.memberExpression(inheritFrom, t.identifier('style'))
     : null
-  const allStyles = [styles, zacsStyle, inheritedStyles]
+  const allStyles = [literalStyles, zacsStyle, inheritedStyles]
 
   return mergeObjects(allStyles)
 }
 
-function webStyleAttributes([classNames, styles, zacsStyle, inheritFrom]) {
+function webStyleAttributes([stylesets, literalStyles, zacsStyle, inheritFrom]) {
   const attributes = []
 
-  const classNamesExpr = classNames.reduce((expr, [className, condition]) => {
+  const classNamesExpr = stylesets.reduce((expr, [className, condition]) => {
     const isFirstExpr = !expr
 
     const classNameSpace = isFirstExpr
@@ -213,7 +228,7 @@ function webStyleAttributes([classNames, styles, zacsStyle, inheritFrom]) {
     attributes.push(jsxAttr('className', classNamesValue))
   }
 
-  const stylesValue = webStyleExpr(styles, zacsStyle, inheritFrom)
+  const stylesValue = webStyleExpr(literalStyles, zacsStyle, inheritFrom)
   if (stylesValue) {
     attributes.push(jsxAttr('style', stylesValue))
   }
@@ -221,13 +236,13 @@ function webStyleAttributes([classNames, styles, zacsStyle, inheritFrom]) {
   return attributes
 }
 
-function nativeStyleAttributes([stylesets, literalStyleset, zacsStyle, inheritFrom]) {
+function nativeStyleAttributes([stylesets, literalStyles, zacsStyle, inheritFrom]) {
   const styles = stylesets.map(([styleName, condition]) =>
     condition ? t.logicalExpression('&&', condition, styleName) : styleName,
   )
 
-  if (literalStyleset) {
-    styles.push(literalStyleset)
+  if (literalStyles) {
+    styles.push(literalStyles)
   }
 
   if (zacsStyle) {
