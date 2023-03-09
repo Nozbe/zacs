@@ -80,9 +80,20 @@ function validateStyleset(styleset, nestedIn) {
     } else {
       const nestedInNative = nestedIn === 'native' || nestedIn === 'ios' || nestedIn === 'android'
       if (!isValueAllowed(key, value) && !nestedInNative) {
-        throw valuePath.buildCodeFrameError(
-          "ZACS Stylesheet's style values must be simple literal strings or numbers, e.g.: `backgroundColor: 'red'`, or `height: 100.`. Also allowed are margin/padding/inset shorthands (`margin: [5, 10, '20%']`) and border shorthand (`border: [1, 'solid', 'red']`). Compound expressions, references, and other syntaxes are not allowed.",
-        )
+        throw valuePath.buildCodeFrameError(`Invalid ZACS Stylesheet style values. Allowed values:
+
+Literal strings or numbers:
+  backgroundColor: 'red'
+  width: 100
+
+Margin/padding/inset shorthands:
+  margin: [5, 10]
+  padding: ['10%', 20]
+
+Border shorthand:
+  border: [1, 'solid', 'red']
+
+Compound expressions, references, and other syntaxes are not allowed (except when nested within \`native: {}\` or \`ios\`/\`android\` blocks)`)
       }
     }
   })
