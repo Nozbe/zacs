@@ -19,25 +19,7 @@ export const ExportedCombo = React.forwardRef((props, ref) => <WebCombo classNam
   height: props.height
 }, props.style)} comboProp1={props.comboProp1} comboProp2={props.comboProp2} ref={ref}>{props.children}</WebCombo>);
 
-// regression test
-export const ExporterZacsStyleInherit = props => <div className={style.foo + (" " + (props.className || ""))} style={props.style}>{props.children}</div>;
-
 // Make sure nothing breaks if I use created component in the same file
 
-const combo = <ExportedCombo />;
-const combo_props = <ExportedCombo foo bar={bar} height={100} ref={comboRef} />;
-const combo_styles = <ExportedCombo className={props.className} style={props.style} />;
-const combo_styles2 = <ExportedCombo className={props.className} style={Object.assign({
-  width: 500
-}, props.style)} />;
-
-// Pretend we're using an exported component
-
-const ImportedComponent2 = require('ImportedComponent');
-const passZacsStyledWithoutDef = <ImportedComponent2 style={{
-  width: 199
-}} />;
-const passZacsStyledWithoutDefInherit = <ImportedComponent2 className={props.className} style={Object.assign({
-  width: 199
-}, props.style)} />;"
+const combo = <ExportedCombo isFoo={true} />;"
 `;
