@@ -49,7 +49,6 @@ describe('zacs', () => {
     'declaration_literalStyleSpec',
     'zacs:style,inherit_builtin',
     'zacs:style,inherit_onDeclaration',
-    'zacs:style',
     'declaration_manyStyleSources',
     'zacs:inherit',
     'zacs.styled(builtin)',
