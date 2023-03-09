@@ -91,6 +91,7 @@ Margin/padding/inset shorthands:
   padding: ['10%', 20]
 
 Border shorthand:
+  border: [1, 'red']
   border: [1, 'solid', 'red']
 
 Compound expressions, references, and other syntaxes are not allowed (except when nested within \`native: {}\` or \`ios\`/\`android\` blocks)`)

@@ -51,7 +51,7 @@ function isAllowedShorthand(key, node) {
     case 'borderRight':
     case 'borderBottom':
     case 'borderLeft':
-      return length === 3
+      return length === 2 || length === 3
     default:
       return false
   }

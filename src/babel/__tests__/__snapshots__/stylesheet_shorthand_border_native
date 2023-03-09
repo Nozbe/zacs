@@ -7,7 +7,9 @@ const styles = ZACS_RN_StyleSheet.create({
   border: {
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: 'red',
+    borderColor: 'red'
+  },
+  borderSides: {
     borderTopWidth: 2,
     borderTopStyle: 'solid',
     borderTopColor: 'green',
@@ -20,6 +22,11 @@ const styles = ZACS_RN_StyleSheet.create({
     borderLeftWidth: 5,
     borderLeftStyle: 'solid',
     borderLeftColor: 'black'
+  },
+  borderShorter: {
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: 'red'
   }
 });"
 `;

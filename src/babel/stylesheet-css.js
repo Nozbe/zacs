@@ -60,6 +60,13 @@ function resolveShorthands(key, node) {
   if (node.type !== 'ArrayExpression') {
     return null
   }
+
+  // special case, border: [size, color]
+  if (key === 'border' && node.elements.length === 2) {
+    const [size, color] = node.elements
+    return { border: [size, 'solid', color].map((el) => encodeCSSValue('', el)).join(' ') }
+  }
+
   return {
     [key]: node.elements.map((el) => encodeCSSValue('', el)).join(' '),
   }

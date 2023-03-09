@@ -27,7 +27,10 @@ function resolveShorthands(key, node) {
     case 'borderRight':
     case 'borderBottom':
     case 'borderLeft': {
-      const [width, style, color] = node.elements
+      const [width, style, color] =
+        node.elements.length === 3
+          ? node.elements
+          : [node.elements[0], t.stringLiteral('solid'), node.elements[1]]
       return {
         [`${key}Width`]: width,
         [`${key}Style`]: style,
@@ -55,7 +58,7 @@ function resolveShorthands(key, node) {
           [horizontalProp]: horizontal,
         }
       }
-      const [top, right, bottom, left] = resolveInsetsShorthand(node)
+      const [top, right, bottom, left] = node.elements
       const [topProp, rightProp, bottomProp, leftProp] = insetsPropNames[key].all
       return {
         [topProp]: top,
