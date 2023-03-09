@@ -138,6 +138,7 @@ describe('zacs stylesheets', () => {
     'stylesheet_shorthand_scoped',
     'stylesheet_merge',
     'stylesheet_comments',
+    'stylesheet_webOnly',
   ]
   const webIosAndroidExamples = [
     //
@@ -184,7 +185,7 @@ describe('zacs stylesheets', () => {
     bad('[]', 'single Object')
     bad('styles', 'single Object')
 
-    bad('{"foo":{}}', 'name: {}')
+    bad('{"foo":{}}', 'only allowed for CSS selectors')
     bad('{[name]:{}}', 'name: {}')
     bad('{foo}', 'name: {}')
     bad('{foo(){}}', 'name: {}')

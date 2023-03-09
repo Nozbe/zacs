@@ -211,7 +211,10 @@ function resolveStylesetProperties(target, originalProperties) {
 
 function resolveRNStylesheet(target, stylesheet) {
   stylesheet.properties = stylesheet.properties
-    .filter((styleset) => styleset.key.name !== 'css')
+    .filter((styleset) => {
+      // NOTE: styleset.key could be a StringLiteral, but that's web-only
+      return styleset.key.name && styleset.key.name !== 'css'
+    })
     .map((styleset) => {
       const objExpr = styleset.value
       const resolvedProperties = resolveStylesetProperties(target, objExpr.properties)

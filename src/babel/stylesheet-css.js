@@ -106,14 +106,22 @@ function encodeCSSStyles(styleset, spaces = '  ') {
     .join('\n')
 }
 
-function encodeCSSStyleset(styleset) {
-  const { name } = styleset.key
+function encodeCSSSelector(key) {
+  if (key.name) {
+    return `.${key.name}`
+  } else if (key.value) {
+    return key.value
+  }
 
-  if (name === 'css') {
+  throw new Error(`Unknown styleset type`)
+}
+
+function encodeCSSStyleset(styleset) {
+  if (styleset.key.name === 'css') {
     return leadingComments(styleset) + strval(styleset.value) + trailingComments(styleset)
   }
 
-  return `${leadingComments(styleset)}.${name} {\n${encodeCSSStyles(
+  return `${leadingComments(styleset)}${encodeCSSSelector(styleset.key)} {\n${encodeCSSStyles(
     styleset.value,
   )}\n}${trailingComments(styleset)}`
 }

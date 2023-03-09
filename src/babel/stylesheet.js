@@ -88,6 +88,24 @@ function validateStyleset(styleset, nestedIn) {
   })
 }
 
+const plainStringRegex = /^\w+$/i
+
+function validateStylesetProperty(stylesetPath) {
+  const { node } = stylesetPath
+
+  if (!isPlainObjectProperty(node, true)) {
+    throw stylesetPath.buildCodeFrameError(
+      'ZACS Stylesheet stylesets must be defined as `name: {}` (or web-only `".selector": {}`). Other syntaxes, like `[name]:`, `...styles` are not allowed',
+    )
+  }
+
+  if (t.isStringLiteral(node.key) && plainStringRegex.test(node.key.value)) {
+    throw stylesetPath.buildCodeFrameError(
+      `ZACS Stylesheet \`"name": {}\` syntax is only allowed for CSS selectors, e.g. \`".foo, .bar"\`. Did you mean \`${node.key.value}: {}\`?`,
+    )
+  }
+}
+
 function validateStylesheet(path) {
   const args = path.get('init.arguments')
   const stylesheet = args[0]
@@ -96,11 +114,8 @@ function validateStylesheet(path) {
   }
 
   stylesheet.get('properties').forEach((styleset) => {
-    if (!isPlainObjectProperty(styleset.node)) {
-      throw styleset.buildCodeFrameError(
-        'ZACS Stylesheet stylesets must be defined as `name: {}`. Other syntaxes, like `[name]:`, `"name": `, `...styles` are not allowed',
-      )
-    }
+    validateStylesetProperty(styleset)
+
     const stylesetName = styleset.node.key.name
     if (stylesetName === 'css') {
       const cssValue = styleset.get('value')
