@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: zacs:style,inherit_builtin, native 1`] = `
+"const someStyles = {
+  with: 100
+};
+const components = [<>
+    <span style={someStyles} />
+    <span style={{
+    color: 'red'
+  }} />
+    <span style={INHERIT.style} />
+    <span style={[someStyles].concat(INHERIT.style || [])} />
+    <span style={[{
+    color: 'white'
+  }].concat(INHERIT.style || [])} />
+  </>];"
+`;
