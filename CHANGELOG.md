@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - You can now use `zacs:style` on all elements, not just ZACS-styled elements.
 - `'.foo, .bar': {}` CSS-only stylesets are now allowed
 - `__zacs_original_name` debug attribute is now placed at the beginning of output elements
+- `className={}` is now consistently placed before `style={}`
 - stylesheets: overriden properties are stripped on native to save space and silence Hermes warnings
 - stylesheets: try to preserve comments in output
 - Fix `zacs.styled('UppercaseBuiltin')`, e.g. `'RCTText'`

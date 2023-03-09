@@ -30,5 +30,5 @@ export const StylableButton = props => {
 
 // second-order stylable component (no zacs definition)
 const ImportedComponent = require('ImportedComponent');
-const stylable2nd = <ImportedComponent style={props.style} className={props.className} />;"
+const stylable2nd = <ImportedComponent className={props.className} style={props.style} />;"
 `;

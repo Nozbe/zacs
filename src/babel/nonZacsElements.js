@@ -46,9 +46,8 @@ function transformZacsAttributesOnNonZacsElement(platform, path) {
     zacsStyleExpr,
     zacsInheritExpr && t.memberExpression(zacsInheritExpr, t.identifier('style')),
   )
-  // console.log(resolvedStyleExpr)
 
-  addedAttrs.unshift(jsxAttr('style', resolvedStyleExpr))
+  addedAttrs.push(jsxAttr('style', resolvedStyleExpr))
 
   openingElement.attributes = openingElement.attributes
     .filter((attr) => attr !== zacsInheritAttr && attr !== zacsStyleAttr)
