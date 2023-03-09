@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: zacs:style,inherit_onDeclaration, native 1`] = `
+"const zacsReactNative = require('react-native');
+const ZACS_RN_View = zacsReactNative.View;
+const someStyles = {
+  with: 100
+};
+const components = [<>
+    <ZACS_RN_View __zacs_original_name="View" style={[style.root, someStyles]} />
+    <ZACS_RN_View __zacs_original_name="View" style={[style.root, {
+    color: 'red'
+  }]} />
+    <ZACS_RN_View __zacs_original_name="View" style={[style.root].concat(INHERIT.style || [])} />
+    <ZACS_RN_View __zacs_original_name="View" style={[style.root, someStyles].concat(INHERIT.style || [])} />
+    <ZACS_RN_View __zacs_original_name="View" style={[style.root, {
+    color: 'white'
+  }].concat(INHERIT.style || [])} />
+  </>];"
+`;

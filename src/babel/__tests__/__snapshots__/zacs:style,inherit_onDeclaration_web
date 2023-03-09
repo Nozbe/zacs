@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: zacs:style,inherit_onDeclaration, web 1`] = `
+"const someStyles = {
+  with: 100
+};
+const components = [<>
+    <div __zacs_original_name="View" className={style.root} style={someStyles} />
+    <div __zacs_original_name="View" className={style.root} style={{
+    color: 'red'
+  }} />
+    <div __zacs_original_name="View" className={style.root + (" " + (INHERIT.className || ""))} style={INHERIT.style} />
+    <div __zacs_original_name="View" className={style.root + (" " + (INHERIT.className || ""))} style={Object.assign({}, someStyles, INHERIT.style)} />
+    <div __zacs_original_name="View" className={style.root + (" " + (INHERIT.className || ""))} style={Object.assign({
+    color: 'white'
+  }, INHERIT.style)} />
+  </>];"
+`;
