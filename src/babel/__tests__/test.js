@@ -56,6 +56,7 @@ describe('zacs', () => {
     'zacs.styled(Namespaced.Component)',
     'zacs.styled(platforms)',
     'zacs.createX',
+    'zacs.createX_zacs:style,inherit',
   ]
   const examplesWithJSXCheck = new Set(['zacs.styled(builtin)', 'zacs.styled(platforms)'])
   examples.forEach((exampleName) => {
