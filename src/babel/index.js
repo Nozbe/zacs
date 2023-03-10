@@ -1,6 +1,6 @@
 exports.__esModule = true
 
-// const { types: t } = require('@babel/core')
+const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
 const { transformStylesheet } = require('./stylesheet')
 const { isZacsCssTaggedTemplate } = require('./stylesheet-utils')
@@ -12,6 +12,7 @@ const {
 } = require('./declarations')
 const { convertZacsElement } = require('./elements')
 const { createZacsComponent } = require('./components')
+const { handleResolve } = require('./resolveStyle')
 const { handleImportDeclaration, injectNativeImportsIfNeeded } = require('./imports')
 const { transformZacsAttributesOnNonZacsElement } = require('./nonZacsElements')
 
@@ -31,7 +32,7 @@ exports.default = function () {
           const { init } = node
           const zacsMethod = init.callee.property.name
 
-          if (zacsMethod === 'stylesheet') {
+          if (zacsMethod === 'stylesheet' || zacsMethod === '_experimental_resolve') {
             // do nothing, will process on exit
             // eslint-disable-next-line no-useless-return
             return
@@ -73,6 +74,16 @@ exports.default = function () {
         exit(path, state) {
           injectNativeImportsIfNeeded(path, state)
         },
+      },
+      CallExpression(path, state) {
+        const { node } = path
+        if (
+          t.isMemberExpression(node.callee) &&
+          t.isIdentifier(node.callee.object, { name: 'zacs' }) &&
+          t.isIdentifier(node.callee.property, { name: '_experimental_resolve' })
+        ) {
+          handleResolve(path, state)
+        }
       },
       ImportDeclaration(path, state) {
         handleImportDeclaration(path, state)

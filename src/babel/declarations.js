@@ -35,16 +35,23 @@ function validateZacsDeclaration(path) {
 
   // Validate declaration
   if (
-    !['text', 'view', 'styled', 'createText', 'createView', 'createStyled', 'stylesheet'].includes(
-      zacsMethod,
-    )
+    ![
+      'text',
+      'view',
+      'styled',
+      'createText',
+      'createView',
+      'createStyled',
+      'stylesheet',
+      '_experimental_resolve',
+    ].includes(zacsMethod)
   ) {
     throw path.buildCodeFrameError(
       `zacs.${init.callee.property.name} is not a valid zacs declaration`,
     )
   }
 
-  if (zacsMethod === 'stylesheet') {
+  if (zacsMethod === 'stylesheet' || zacsMethod === '_experimental_resolve') {
     return
   }
 
