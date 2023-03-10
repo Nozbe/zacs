@@ -1,6 +1,7 @@
 const { types: t } = require('@babel/core')
 const { getTarget } = require('./state')
 const { isZacsStylesheetLiteral, resolveInsetsShorthand } = require('./stylesheet-utils')
+const { preserveComments, deduplicatedProperties } = require('./astUtils')
 
 const insetsPropNames = {
   margin: {
@@ -70,75 +71,6 @@ function resolveShorthands(key, node) {
     default:
       return null
   }
-}
-
-function deduplicatedProperties(input) {
-  // Note: we're doing double-reverse instead of adding to map because we want to preserve order
-  // of the LAST property, not the first one
-  const output = []
-  const seen = new Set()
-  input.reverse().forEach((node) => {
-    if (node.key) {
-      // looks property-ish
-      const { name } = node.key
-      if (seen.has(name)) {
-        return
-      }
-      seen.add(name)
-      output.push(node)
-    } else {
-      // looks comment-ish
-      output.push(node)
-    }
-  })
-  return output.reverse()
-}
-
-const unshiftComments = (node, type, comments) => {
-  const key = `${type}Comments`
-  if (!node[key]) {
-    node[key] = []
-  }
-  node[key].unshift(...comments)
-  return node
-}
-
-// NOTE: Adding comments in Babel is a bit tricky (they should be put into leading/trailing/innerComments,
-// depending on where they are in relation to other AST nodes), so when trying to preserve comments
-// of deleted nodes, we just add comment nodes to an array incorrectly and here we're trying to recreate the
-// proper placement
-function preserveComments(parent, childNodes) {
-  const output = []
-  let pendingComments = []
-  childNodes.forEach((node) => {
-    if (node.type.startsWith('Comment')) {
-      pendingComments.push(node)
-      return
-    }
-
-    // Add any pending comments to the following node as leading comments
-    if (pendingComments.length) {
-      unshiftComments(node, 'leading', pendingComments)
-      pendingComments = []
-    }
-
-    output.push(node)
-  })
-
-  if (!pendingComments) {
-    return output
-  }
-
-  // Add any pending comments to the last node as trailing comments if possible
-  const lastNode = output[output.length - 1]
-  if (lastNode) {
-    unshiftComments(lastNode, 'trailing', pendingComments)
-    return output
-  }
-
-  // Otherwise add them as inner comments to the parent node
-  unshiftComments(parent, 'inner', pendingComments)
-  return output
 }
 
 function resolveStylesetProperties(target, originalProperties) {
