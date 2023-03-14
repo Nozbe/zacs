@@ -17,6 +17,8 @@
   "files": [
     "src/index.js",
     "src/index.js.flow",
+    "src/ZACS_RN_View.js",
+    "src/ZACS_RN_Text.js",
     "src/babel/*.js",
     "babel.js",
     "src/webpack/loader.js",

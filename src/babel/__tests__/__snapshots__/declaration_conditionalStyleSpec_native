@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_conditionalStyleSpec, native 1`] = `
-"const zacsReactNative = require('react-native');
-const ZACS_RN_View = zacsReactNative.View;
+"const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
 const cond1_root = <ZACS_RN_View __zacs_original_name="Conditional1" style={style.root} />;
 const cond1_one = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, foo && style.rootFoo]} />;
 const cond1_two = <ZACS_RN_View __zacs_original_name="Conditional1" style={[style.root, foo && style.rootFoo, barCount > 0 && style.rootBar]} />;

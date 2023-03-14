@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 - Overriden properties are now stripped on native to save space and silence Hermes warnings
 - `StyleSheet.create()` is now stripped in production (it doesn't really do anything in modern RN)
+- More efficient React Native imports of Text and View
 
 **Bug fixes**
 

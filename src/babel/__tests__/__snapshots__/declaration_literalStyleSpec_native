@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_literalStyleSpec, native 1`] = `
-"const zacsReactNative = require('react-native');
-const ZACS_RN_View = zacsReactNative.View;
+"const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
 const added1_none = <ZACS_RN_View __zacs_original_name="AddedStyles1" />;
 const added1_one = <ZACS_RN_View __zacs_original_name="AddedStyles1" style={{
   width: width
