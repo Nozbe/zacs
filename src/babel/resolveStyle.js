@@ -112,7 +112,16 @@ function handleResolve(path, state) {
   resolveInlineStyleset(path.get('arguments.0'), state)
 }
 
+function resolveZacsStyleAttr(path, state) {
+  const exprPath = path.get('value.expression')
+  if (t.isObjectExpression(exprPath.node)) {
+    resolveInlineStyleset(exprPath, state)
+  }
+  return exprPath.node
+}
+
 module.exports = {
   handleResolve,
   resolveInlineStyleset,
+  resolveZacsStyleAttr,
 }

@@ -2,7 +2,7 @@ const { types: t } = require('@babel/core')
 const { getPlatform } = require('./state')
 const { jsxAttr, jsxFindNamespacedAttrPath } = require('./jsxUtils')
 const { mergeObjects, concatArraysOfObjects } = require('./astUtils')
-const { resolveInlineStyleset } = require('./resolveStyle')
+const { resolveZacsStyleAttr } = require('./resolveStyle')
 
 function mergeStyles(platform, maybeZacsStyleExpr, maybeZacsInheritStyleExpr) {
   // NOTE: zacs:style comes before zacs:inherit
@@ -39,12 +39,7 @@ function transformZacsAttributesOnNonZacsElement(path, state) {
       return null
     }
 
-    const zacsStyleExprPath = zacsStyleAttrPath.get('value.expression')
-    if (t.isObjectExpression(zacsStyleExprPath.node)) {
-      resolveInlineStyleset(zacsStyleExprPath, state)
-    }
-
-    return zacsStyleExprPath.node
+    return resolveZacsStyleAttr(zacsStyleAttrPath, state)
   })()
   const zacsInheritExpr = zacsInheritAttr && zacsInheritAttr.value.expression
 

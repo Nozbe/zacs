@@ -11,7 +11,7 @@ const {
   jsxFindNamespacedAttrPath,
 } = require('./jsxUtils')
 const { mergeObjects, concatArraysOfObjects, objectExpressionFromPairs } = require('./astUtils')
-const { resolveInlineStyleset } = require('./resolveStyle')
+const { resolveZacsStyleAttr } = require('./resolveStyle')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -162,12 +162,7 @@ function resolveStyles(
 
     const zacsStyleAttrPath = jsxAttrPaths && jsxFindNamespacedAttrPath(jsxAttrPaths, 'style')
     if (zacsStyleAttrPath) {
-      const zacsStyleExprPath = zacsStyleAttrPath.get('value.expression')
-      if (t.isObjectExpression(zacsStyleExprPath.node)) {
-        resolveInlineStyleset(zacsStyleExprPath, state)
-      }
-
-      return zacsStyleExprPath.node
+      return resolveZacsStyleAttr(zacsStyleAttrPath, state)
     }
 
     return null
