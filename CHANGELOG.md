@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - NEW: You can now use `zacs:style` on all elements
 - NEW: `'.foo, .bar': {}` CSS-only stylesets
 - NEW: `border: [1, 'red']` shorthand
+- NEW: You can now use shorthands and `web/native: {}` scopes inside `zacs:style={}` attribute. Note that this only works if an object literal is passed. You can transform any such style object with `zacs._experimental_resolve({ ... })`
 - `__zacs_original_name` debug attribute is now placed at the beginning of output elements
 - `className={}` is now consistently placed before `style={}`
 - stylesheets: overriden properties are stripped on native to save space and silence Hermes warnings
