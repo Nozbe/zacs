@@ -8,8 +8,10 @@ const {
   jsxInferAttrTruthiness,
   jsxHasAttrNamed,
   jsxFindNamespacedAttr,
+  jsxFindNamespacedAttrPath,
 } = require('./jsxUtils')
 const { mergeObjects, concatArraysOfObjects, objectExpressionFromPairs } = require('./astUtils')
+const { resolveInlineStyleset } = require('./resolveStyle')
 
 function isAttributeWebSafe(attr) {
   return (
@@ -66,15 +68,17 @@ function withoutStylingProps(attributes, condStyles, literalStyleSpec) {
 }
 
 function resolveStyles(
+  state,
   // ZACS declaration
   { uncondStyles, condStyles, literalStyleSpec },
   // IF zacs element:
-  jsxAttributes,
+  jsxAttrPaths,
   // IF zacs component:
   passthroughProps,
 ) {
   const stylesets = []
   const literalStyles = []
+  const jsxAttributes = jsxAttrPaths ? jsxAttrPaths.map((path) => path.node) : null
 
   if (uncondStyles && !t.isNullLiteral(uncondStyles)) {
     if (t.isArrayExpression(uncondStyles)) {
@@ -156,9 +160,14 @@ function resolveStyles(
       return t.memberExpression(t.identifier('props'), t.identifier('style'))
     }
 
-    const zacsStyleAttr = jsxAttributes && jsxFindNamespacedAttr(jsxAttributes, 'style')
-    if (zacsStyleAttr) {
-      return zacsStyleAttr.value.expression
+    const zacsStyleAttrPath = jsxAttrPaths && jsxFindNamespacedAttrPath(jsxAttrPaths, 'style')
+    if (zacsStyleAttrPath) {
+      const zacsStyleExprPath = zacsStyleAttrPath.get('value.expression')
+      if (t.isObjectExpression(zacsStyleExprPath.node)) {
+        resolveInlineStyleset(zacsStyleExprPath, state)
+      }
+
+      return zacsStyleExprPath.node
     }
 
     return null
@@ -262,9 +271,9 @@ function nativeStyleAttributes([stylesets, literalStyles, zacsStyle, inheritFrom
   return stylesExpr ? [jsxAttr('style', stylesExpr)] : []
 }
 
-function styleAttributes(platform, declaration, jsxAttributes, passedProps = []) {
-  const resolvedStyles = resolveStyles(declaration, jsxAttributes, passedProps)
-  switch (platform) {
+function styleAttributes(state, declaration, jsxAttributes, passedProps = []) {
+  const resolvedStyles = resolveStyles(state, declaration, jsxAttributes, passedProps)
+  switch (getPlatform(state)) {
     case 'web':
       return webStyleAttributes(resolvedStyles)
     case 'native':
@@ -300,7 +309,7 @@ function convertZacsElement(path, declaration, state) {
   const { elementName, originalName, isBuiltin, uncondStyles, condStyles, literalStyleSpec } =
     declaration
 
-  const jsxAttributes = openingElement.attributes
+  const jsxAttributes = path.get('openingElement.attributes')
 
   // filter out styling props
   // TODO: Combine this and web safe attributes into one step
@@ -322,7 +331,7 @@ function convertZacsElement(path, declaration, state) {
 
   // add styling attributes
   openingElement.attributes.unshift(
-    ...styleAttributes(platform, { uncondStyles, condStyles, literalStyleSpec }, jsxAttributes),
+    ...styleAttributes(state, { uncondStyles, condStyles, literalStyleSpec }, jsxAttributes),
   )
 
   // add debug info
