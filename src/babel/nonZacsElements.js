@@ -1,6 +1,8 @@
 const { types: t } = require('@babel/core')
-const { jsxAttr, jsxFindNamespacedAttr } = require('./jsxUtils')
+const { getPlatform } = require('./state')
+const { jsxAttr, jsxFindNamespacedAttrPath } = require('./jsxUtils')
 const { mergeObjects, concatArraysOfObjects } = require('./astUtils')
+const { resolveInlineStyleset } = require('./resolveStyle')
 
 function mergeStyles(platform, maybeZacsStyleExpr, maybeZacsInheritStyleExpr) {
   // NOTE: zacs:style comes before zacs:inherit
@@ -15,21 +17,35 @@ function mergeStyles(platform, maybeZacsStyleExpr, maybeZacsInheritStyleExpr) {
   throw new Error('Unknown platform')
 }
 
-function transformZacsAttributesOnNonZacsElement(platform, path) {
+function transformZacsAttributesOnNonZacsElement(path, state) {
+  const platform = getPlatform(state)
+
   // this is called on a JSXElement that doesn't (directly) reference a zacs declaration
   // we need to spread zacs:inherit and zacs:style into separate props or it won't work
   const { node } = path
   const { openingElement } = node
 
-  const zacsInheritAttr = jsxFindNamespacedAttr(openingElement.attributes, 'inherit')
-  const zacsStyleAttr = jsxFindNamespacedAttr(openingElement.attributes, 'style')
-  if (!zacsInheritAttr && !zacsStyleAttr) {
+  const attrPaths = path.get('openingElement.attributes')
+  const zacsInheritAttr = jsxFindNamespacedAttrPath(attrPaths, 'inherit')?.node
+  const zacsStyleAttrPath = jsxFindNamespacedAttrPath(attrPaths, 'style')
+  if (!zacsInheritAttr && !zacsStyleAttrPath) {
     return
   }
 
   const addedAttrs = []
 
-  const zacsStyleExpr = zacsStyleAttr && zacsStyleAttr.value.expression
+  const zacsStyleExpr = (() => {
+    if (!zacsStyleAttrPath) {
+      return null
+    }
+
+    const zacsStyleExprPath = zacsStyleAttrPath.get('value.expression')
+    if (t.isObjectExpression(zacsStyleExprPath.node)) {
+      resolveInlineStyleset(zacsStyleExprPath, state)
+    }
+
+    return zacsStyleExprPath.node
+  })()
   const zacsInheritExpr = zacsInheritAttr && zacsInheritAttr.value.expression
 
   if (zacsInheritExpr && platform === 'web') {
@@ -50,7 +66,7 @@ function transformZacsAttributesOnNonZacsElement(platform, path) {
   addedAttrs.push(jsxAttr('style', resolvedStyleExpr))
 
   openingElement.attributes = openingElement.attributes
-    .filter((attr) => attr !== zacsInheritAttr && attr !== zacsStyleAttr)
+    .filter((attr) => attr !== zacsInheritAttr && attr !== zacsStyleAttrPath.node)
     .concat(addedAttrs)
 }
 

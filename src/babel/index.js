@@ -61,13 +61,12 @@ exports.default = function () {
         const { node } = path
         const { openingElement } = node
         const { name } = openingElement.name
-        const platform = getPlatform(state)
 
         const declaration = getDeclaration(path, state, name)
         if (declaration) {
           convertZacsElement(path, declaration, state)
         } else {
-          transformZacsAttributesOnNonZacsElement(platform, path)
+          transformZacsAttributesOnNonZacsElement(path, state)
         }
       },
       Program: {

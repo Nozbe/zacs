@@ -29,7 +29,7 @@ function resolveShorthands(key, node, state) {
 // In this context, we have RN-like behavior on both web and native, i.e. things are computable
 // at runtime (we can have expressions as values) and names are camelCase. Still, we should have
 // as much code reuse as possible
-function resolveStyle(path, state) {
+function resolveInlineStyleset(path, state) {
   const { node } = path
   const platform = getPlatform(state)
   const target = getTarget(state)
@@ -109,10 +109,10 @@ function handleResolve(path, state) {
     )
   }
 
-  resolveStyle(path.get('arguments.0'), state)
+  resolveInlineStyleset(path.get('arguments.0'), state)
 }
 
 module.exports = {
   handleResolve,
-  resolveStyle,
+  resolveInlineStyleset,
 }
