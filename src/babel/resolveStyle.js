@@ -1,5 +1,8 @@
 const { types: t } = require('@babel/core')
 const { getPlatform, getTarget } = require('./state')
+const { resolveShorthandsCSS } = require('./stylesheet-css')
+const { resolveShorthandsRN } = require('./stylesheet-rn')
+const { isZacsStylesheetLiteral } = require('./stylesheet-utils')
 
 // TODO: Deduplicate
 function isPlainObjectProperty(node, allowStringLiterals) {
@@ -8,6 +11,18 @@ function isPlainObjectProperty(node, allowStringLiterals) {
   return (
     t.isObjectProperty(node) && isAllowedKey && !node.shorthand && !node.computed && !node.method
   )
+}
+
+function resolveShorthands(key, node, state) {
+  const platform = getPlatform(state)
+
+  if (platform === 'web') {
+    return resolveShorthandsCSS(key, node)
+  } else if (platform === 'native') {
+    return resolveShorthandsRN(key, node)
+  }
+
+  throw new Error('Unknown platform')
 }
 
 // NOTE: This is somewhat similar to stylesheet-rn, but different.
@@ -21,8 +36,32 @@ function resolveStyle(path, state) {
 
   const resolvedProperties = []
 
-  const pushPropOrShorthands = (property) => {
+  const pushProp = (property) => {
+    if (isZacsStylesheetLiteral(property.value)) {
+      // strip ZACS_STYLESHEET_LITERAL(x)
+      const [wrappedValue] = property.value.arguments
+      property.value = wrappedValue
+    }
     resolvedProperties.push(property)
+  }
+  const pushFromObject = (object) => {
+    Object.entries(object).forEach(([key, value]) => {
+      pushProp(
+        t.objectProperty(
+          t.identifier(key),
+          typeof value === 'string' ? t.stringLiteral(value) : value,
+        ),
+      )
+    })
+  }
+
+  const pushPropOrShorthands = (property) => {
+    const shorthandLines = resolveShorthands(property.key.name, property.value, state)
+    if (shorthandLines) {
+      pushFromObject(shorthandLines)
+    } else {
+      pushProp(property)
+    }
   }
   const pushFromProperty = (nestedScope) => {
     // TODO: validate
@@ -32,7 +71,9 @@ function resolveStyle(path, state) {
     })
   }
 
-  node.properties.forEach((property) => {
+  path.get('properties').forEach((propertyPath) => {
+    const property = propertyPath.node
+
     // TODO: Can we allow non-standard properties in this context?
     if (!isPlainObjectProperty(property)) {
       resolvedProperties.push(property)
@@ -40,8 +81,8 @@ function resolveStyle(path, state) {
     }
 
     const key = property.key.name
-    if (key === 'css') {
-      throw path.buildCodeFrameError(`'css' is not a valid style property`)
+    if (key === 'css' || key === '_mixin') {
+      throw propertyPath.buildCodeFrameError(`'${key}' is not a valid style property`)
     } else if (key === 'native' || key === 'web') {
       if (key === platform) {
         pushFromProperty(property)

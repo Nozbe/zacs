@@ -56,7 +56,7 @@ function encodeCSSLines(spaces, object) {
     .join('\n')
 }
 
-function resolveShorthands(key, node) {
+function resolveShorthandsCSS(key, node) {
   if (node.type !== 'ArrayExpression') {
     return null
   }
@@ -93,7 +93,7 @@ function encodeCSSStyle(property, spaces) {
     return encodeCSSStyles(value)
   }
 
-  const shorthandLines = resolveShorthands(key, value)
+  const shorthandLines = resolveShorthandsCSS(key, value)
   if (shorthandLines) {
     return encodeCSSLines(spaces, shorthandLines)
   }
@@ -163,4 +163,4 @@ function transformStylesheetCSS(path, stylesheet) {
   t.addComment(path.parent, 'trailing', ' ZACS-generated CSS stylesheet ends above ')
 }
 
-module.exports = { transformStylesheetCSS }
+module.exports = { transformStylesheetCSS, resolveShorthandsCSS }

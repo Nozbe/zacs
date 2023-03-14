@@ -14,7 +14,7 @@ const insetsPropNames = {
   },
 }
 
-function resolveShorthands(key, node) {
+function resolveShorthandsRN(key, node) {
   if (!(node.type === 'ArrayExpression' || key === 'inset')) {
     return null
   }
@@ -96,7 +96,7 @@ function resolveStylesetProperties(target, originalProperties) {
   }
   const pushPropOrShorthands = (property) => {
     const key = property.key.name
-    const shorthandLines = resolveShorthands(key, property.value)
+    const shorthandLines = resolveShorthandsRN(key, property.value)
     if (shorthandLines) {
       pushFromObject(shorthandLines)
     } else {
@@ -174,4 +174,4 @@ function transformStylesheetRN(path, stylesheet, state) {
   path.get('init').replaceWith(rnStylesheet)
 }
 
-module.exports = { transformStylesheetRN, isZacsStylesheetLiteral }
+module.exports = { transformStylesheetRN, isZacsStylesheetLiteral, resolveShorthandsRN }
