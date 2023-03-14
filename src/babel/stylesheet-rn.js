@@ -1,5 +1,5 @@
 const { types: t } = require('@babel/core')
-const { getTarget } = require('./state')
+const { getTarget, isProduction } = require('./state')
 const { isZacsStylesheetLiteral, resolveInsetsShorthand } = require('./stylesheet-utils')
 const { preserveComments, deduplicatedProperties } = require('./astUtils')
 
@@ -161,17 +161,28 @@ function resolveRNStylesheet(target, stylesheet) {
 }
 
 function transformStylesheetRN(path, stylesheet, state) {
-  state.set(`uses_rn`, true)
-  state.set(`uses_rn_stylesheet`, true)
-
+  const production = isProduction(state)
   const target = getTarget(state)
 
   const resolvedRules = resolveRNStylesheet(target, stylesheet)
-  const rnStylesheet = t.callExpression(
-    t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
-    [resolvedRules],
-  )
-  path.get('init').replaceWith(rnStylesheet)
+
+  if (production) {
+    path.get('init').replaceWith(resolvedRules)
+    t.addComment(
+      path.parent,
+      'leading',
+      ' StyleSheet.create() was stripped for production (no-op in modern React Native) ',
+    )
+  } else {
+    state.set(`uses_rn`, true)
+    state.set(`uses_rn_stylesheet`, true)
+
+    const rnStylesheet = t.callExpression(
+      t.memberExpression(t.identifier('ZACS_RN_StyleSheet'), t.identifier('create')),
+      [resolvedRules],
+    )
+    path.get('init').replaceWith(rnStylesheet)
+  }
 }
 
 module.exports = { transformStylesheetRN, isZacsStylesheetLiteral, resolveShorthandsRN }

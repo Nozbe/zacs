@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets strips StyleSheet.create in production 1`] = `
+"/* StyleSheet.create() was stripped for production (no-op in modern React Native) */
+const styles = {
+  root: {
+    // strings
+    backgroundColor: 'red',
+    // unitless quantities
+    opacity: 0.5,
+    // pixels
+    width: 100,
+    // units
+    height: '100%',
+    // arrays
+    transform: [{
+      translateY: 4
+    }]
+  }
+};"
+`;

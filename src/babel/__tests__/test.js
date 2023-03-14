@@ -179,6 +179,11 @@ describe('zacs stylesheets', () => {
       transform(example('ZACS_STYLESHEET_LITERAL'), 'native', { target: 'ios' }),
     ).toMatchSpecificSnapshot(snapshot('ZACS_STYLESHEET_LITERAL_ios'))
   })
+  it(`strips StyleSheet.create in production`, () => {
+    expect(
+      transform(example('stylesheet_properties'), 'native', { production: true }),
+    ).toMatchSpecificSnapshot(snapshot('stylesheet_properties_production'))
+  })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>
       expect(() => transform(`const _ = zacs.stylesheet(${syntax})`, 'web')).toThrow(error)
