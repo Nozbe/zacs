@@ -1,7 +1,6 @@
 exports.__esModule = true
 
 const { types: t } = require('@babel/core')
-const { getPlatform } = require('./state')
 const { transformStylesheet } = require('./stylesheet')
 const { isZacsCssTaggedTemplate } = require('./stylesheet-utils')
 const {
