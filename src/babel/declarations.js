@@ -1,5 +1,5 @@
 const { types: t } = require('@babel/core')
-const { getPlatform } = require('./state')
+const { getPlatform, isProduction } = require('./state')
 const { setUsesRN } = require('./imports')
 
 // is ANY kind of zacs declaration (zacs.text, zacs.createX, zacs.stylesheet)
@@ -218,7 +218,7 @@ function registerDeclaration(path, state) {
     setUsesRN(state, declaration.elementName)
   }
 
-  if (!state.opts.keepDeclarations) {
+  if (isProduction(state)) {
     path.remove()
   }
 }

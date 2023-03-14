@@ -1,7 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_literalStyleSpec, web 1`] = `
-"const added1_none = <div __zacs_original_name="AddedStyles1" />;
+"import * as zacs from '@nozbe/zacs';
+const AddedStyles1 = zacs.view(null, null, {
+  width: 'width',
+  color: 'backgroundColor',
+  background: '--background',
+  one: 1
+});
+const added1_none = <div __zacs_original_name="AddedStyles1" />;
 const added1_one = <div __zacs_original_name="AddedStyles1" style={{
   width: width
 }} />;

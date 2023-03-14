@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs stylesheets example: stylesheet_shorthand_box, web 1`] = `
-"/*
+"import * as zacs from '@nozbe/zacs';
+/*
 ZACS-generated CSS stylesheet begins below.
 PRO TIP: If you get a ReferenceError on the line below, it means that your Webpack ZACS support is not configured properly.
 If you only see this comment and the one below in generated code, this is normal, nothing to worry about!

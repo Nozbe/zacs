@@ -1,8 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(Component), web 1`] = `
-"const box = <Box __zacs_original_name="StyledBox" isFoo />;
+"import * as zacs from '@nozbe/zacs';
+const StyledBox = zacs.styled(Box);
+const box = <Box __zacs_original_name="StyledBox" isFoo />;
 const box_ref = <Box __zacs_original_name="StyledBox" ref={boxRef} />;
+const StyledLink = zacs.styled(Link, styles.link, {
+  isVisited: style.visitedLink
+}, {
+  color: 'color'
+});
 const link = <Link __zacs_original_name="StyledLink" className={styles.link} />;
 const link_visited = <Link __zacs_original_name="StyledLink" className={styles.link + (" " + style.visitedLink)} />;
 const link_colored = <Link __zacs_original_name="StyledLink" className={styles.link + (visited ? " " + style.visitedLink : "")} style={{

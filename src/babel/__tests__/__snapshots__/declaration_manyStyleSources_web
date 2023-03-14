@@ -1,7 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_manyStyleSources, web 1`] = `
-"const mix1_none = <div __zacs_original_name="Mix1" className={styles.box} />;
+"import * as zacs from '@nozbe/zacs';
+const Mix1 = zacs.view(styles.box, {
+  isFoo: style.mixFoo,
+  isBar: style.mixBar
+}, {
+  width: 'width'
+});
+const mix1_none = <div __zacs_original_name="Mix1" className={styles.box} />;
 const mix1_add = <div __zacs_original_name="Mix1" className={styles.box} style={{
   width: 500
 }} />;

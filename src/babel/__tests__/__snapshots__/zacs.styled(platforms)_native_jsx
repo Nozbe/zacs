@@ -2,6 +2,11 @@
 
 exports[`zacs example: zacs.styled(platforms), native 1`] = `
 "const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text');
+import * as zacs from '@nozbe/zacs';
+const PlatformBox = zacs.styled({
+  web: WebBox,
+  native: NativeBox
+}, style.box);
 const platbox = /*#__PURE__*/React.createElement(NativeBox, {
   __zacs_original_name: "PlatformBox",
   style: style.box
@@ -13,6 +18,10 @@ const platbox_attrs = /*#__PURE__*/React.createElement(NativeBox, {
   bar: true,
   title: "hello"
 });
+const PlatformParagraph = zacs.styled({
+  web: 'p',
+  native: 'RCTText'
+}, style.p);
 const p = /*#__PURE__*/React.createElement("RCTText", {
   __zacs_original_name: "PlatformParagraph",
   style: style.p
@@ -23,8 +32,16 @@ const p_attrs = /*#__PURE__*/React.createElement("RCTText", {
   foo: foo,
   title: "DOM attr"
 });
+const PlatformZacsBuiltin = zacs.styled({
+  web: 'article',
+  native: zacs.text
+});
 const platform_zacs = /*#__PURE__*/React.createElement(ZACS_RN_Text, {
   __zacs_original_name: "PlatformZacsBuiltin"
+});
+const PlatformZacsBuiltin2 = zacs.styled({
+  web: zacs.view,
+  native: NativeBox
 });
 const platform_zacs2 = /*#__PURE__*/React.createElement(NativeBox, {
   __zacs_original_name: "PlatformZacsBuiltin2"

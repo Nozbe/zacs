@@ -3,7 +3,14 @@
 exports[`zacs example: zacs:inherit, native 1`] = `
 "const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text');
 const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+import * as zacs from '@nozbe/zacs';
+const StylableBlank = zacs.view();
 const stylableBlank = <ZACS_RN_View __zacs_original_name="StylableBlank" style={props.style} />;
+const StylableMain = zacs.text(style.main, {
+  isHighlighted: style.highlighted
+}, {
+  color: 'color'
+});
 const stylableMain = <ZACS_RN_Text __zacs_original_name="StylableMain" style={[style.main].concat(props.style || [])} />;
 const stylableMain_highlighted = <ZACS_RN_Text __zacs_original_name="StylableMain" style={[style.main, style.highlighted].concat(props.style || [])} />;
 const stylableMain_color = <ZACS_RN_Text __zacs_original_name="StylableMain" style={[style.main, {

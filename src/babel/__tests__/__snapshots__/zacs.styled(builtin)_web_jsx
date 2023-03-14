@@ -1,15 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(builtin), web 1`] = `
-"// web builtins
+"import * as zacs from '@nozbe/zacs';
 
+// web builtins
+const StyledLi = zacs.styled('li');
 const li = /*#__PURE__*/React.createElement("li", {
   __zacs_original_name: "StyledLi",
   title: "hello"
 });
 
 // react-native builtins
-
+const StyledRCTText = zacs.styled('RCTText');
 const text = /*#__PURE__*/React.createElement("RCTText", {
   __zacs_original_name: "StyledRCTText",
   foo: foo,

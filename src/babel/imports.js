@@ -1,5 +1,5 @@
 const { types: t, template } = require('@babel/core')
-const { getPlatform } = require('./state')
+const { getPlatform, isProduction } = require('./state')
 
 function validateZacsImport(path) {
   const { node } = path
@@ -42,7 +42,7 @@ function handleImportDeclaration(path, state) {
 
   validateZacsImport(path)
 
-  if (!state.opts.keepDeclarations) {
+  if (isProduction(state)) {
     path.remove()
   }
 }

@@ -1,8 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_null, web 1`] = `
-"const view0 = <div __zacs_original_name="View0" />;
+"import * as zacs from '@nozbe/zacs';
+const View0 = zacs.view();
+const view0 = <div __zacs_original_name="View0" />;
+const View1 = zacs.view(null);
 const view1 = <div __zacs_original_name="View1" />;
+const View2 = zacs.view(null, null);
 const view2 = <div __zacs_original_name="View2" />;
+const View3 = zacs.view(null, null, null);
 const view3 = <div __zacs_original_name="View3" />;"
 `;

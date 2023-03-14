@@ -2,6 +2,7 @@
 
 exports[`zacs example: zacs.createX_zacs:style,inherit, native 1`] = `
 "const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+import * as zacs from '@nozbe/zacs';
 const component1 = props => <ZACS_RN_View>{props.children}</ZACS_RN_View>;
 const component2 = props => <ZACS_RN_View style={props.style}>{props.children}</ZACS_RN_View>;
 const component3 = props => <ZACS_RN_View style={props.style}>{props.children}</ZACS_RN_View>;

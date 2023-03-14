@@ -1,7 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(platforms), web 1`] = `
-"const platbox = /*#__PURE__*/React.createElement(WebBox, {
+"import * as zacs from '@nozbe/zacs';
+const PlatformBox = zacs.styled({
+  web: WebBox,
+  native: NativeBox
+}, style.box);
+const platbox = /*#__PURE__*/React.createElement(WebBox, {
   __zacs_original_name: "PlatformBox",
   className: style.box
 });
@@ -12,6 +17,10 @@ const platbox_attrs = /*#__PURE__*/React.createElement(WebBox, {
   bar: true,
   title: "hello"
 });
+const PlatformParagraph = zacs.styled({
+  web: 'p',
+  native: 'RCTText'
+}, style.p);
 const p = /*#__PURE__*/React.createElement("p", {
   __zacs_original_name: "PlatformParagraph",
   className: style.p
@@ -21,8 +30,16 @@ const p_attrs = /*#__PURE__*/React.createElement("p", {
   className: style.p,
   title: "DOM attr"
 });
+const PlatformZacsBuiltin = zacs.styled({
+  web: 'article',
+  native: zacs.text
+});
 const platform_zacs = /*#__PURE__*/React.createElement("article", {
   __zacs_original_name: "PlatformZacsBuiltin"
+});
+const PlatformZacsBuiltin2 = zacs.styled({
+  web: zacs.view,
+  native: NativeBox
 });
 const platform_zacs2 = /*#__PURE__*/React.createElement("div", {
   __zacs_original_name: "PlatformZacsBuiltin2"

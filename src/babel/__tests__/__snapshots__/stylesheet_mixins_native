@@ -3,6 +3,7 @@
 exports[`zacs stylesheets example: stylesheet_mixins, native 1`] = `
 "const zacsReactNative = require('react-native');
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+import * as zacs from '@nozbe/zacs';
 const styles = ZACS_RN_StyleSheet.create({
   root: {
     // TODO: check emulated mixins

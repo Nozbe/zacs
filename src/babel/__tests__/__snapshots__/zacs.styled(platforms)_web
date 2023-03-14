@@ -1,10 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.styled(platforms), web 1`] = `
-"const platbox = <WebBox __zacs_original_name="PlatformBox" className={style.box} />;
+"import * as zacs from '@nozbe/zacs';
+const PlatformBox = zacs.styled({
+  web: WebBox,
+  native: NativeBox
+}, style.box);
+const platbox = <WebBox __zacs_original_name="PlatformBox" className={style.box} />;
 const platbox_attrs = <WebBox __zacs_original_name="PlatformBox" className={style.box} foo={foo} bar title="hello" />;
+const PlatformParagraph = zacs.styled({
+  web: 'p',
+  native: 'RCTText'
+}, style.p);
 const p = <p __zacs_original_name="PlatformParagraph" className={style.p}>Hello</p>;
 const p_attrs = <p __zacs_original_name="PlatformParagraph" className={style.p} title="DOM attr" />;
+const PlatformZacsBuiltin = zacs.styled({
+  web: 'article',
+  native: zacs.text
+});
 const platform_zacs = <article __zacs_original_name="PlatformZacsBuiltin" />;
+const PlatformZacsBuiltin2 = zacs.styled({
+  web: zacs.view,
+  native: NativeBox
+});
 const platform_zacs2 = <div __zacs_original_name="PlatformZacsBuiltin2" />;"
 `;

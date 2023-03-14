@@ -1,7 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: webSafeAttributes, web 1`] = `
-"// custom props -- different JSX syntaxes (will be cut out on web)
+"import * as zacs from '@nozbe/zacs';
+const Root = zacs.view(style.root);
+
+// custom props -- different JSX syntaxes (will be cut out on web)
 const customProps = <div __zacs_original_name="Root" className={style.root} />;
 
 // DOM-safe attributes

@@ -1,7 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_unconditionalStyle, web 1`] = `
-"const view = <div __zacs_original_name="Root" className={style.root} />;
+"import * as zacs from '@nozbe/zacs';
+const Root = zacs.view(style.root);
+const Root2 = zacs.view(styles.root2);
+const Text = zacs.text(style.text);
+const view = <div __zacs_original_name="Root" className={style.root} />;
 const view2 = <div __zacs_original_name="Root2" className={styles.root2} />;
 const composition = <>
     <div __zacs_original_name="Root" className={style.root}>

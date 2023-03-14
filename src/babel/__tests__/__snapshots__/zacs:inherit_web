@@ -1,7 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs:inherit, web 1`] = `
-"const stylableBlank = <div __zacs_original_name="StylableBlank" className={props.className} style={props.style} />;
+"import * as zacs from '@nozbe/zacs';
+const StylableBlank = zacs.view();
+const stylableBlank = <div __zacs_original_name="StylableBlank" className={props.className} style={props.style} />;
+const StylableMain = zacs.text(style.main, {
+  isHighlighted: style.highlighted
+}, {
+  color: 'color'
+});
 const stylableMain = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={props.style} />;
 const stylableMain_highlighted = <span __zacs_original_name="StylableMain" className={style.main + (" " + style.highlighted) + (" " + (props.className || ""))} style={props.style} />;
 const stylableMain_color = <span __zacs_original_name="StylableMain" className={style.main + (" " + (props.className || ""))} style={Object.assign({

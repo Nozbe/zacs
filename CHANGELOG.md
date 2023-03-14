@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 
 **Other**
 
+- `keepDeclarations` option is removed. Now, declarations are always kept in dev mode (to aid debuggability and to fix React Refresh by default), and always stripped in production mode.
 - `__zacs_original_name` debug attribute is now placed at the beginning of output elements
 - `className={}` is now consistently placed before `style={}`
 - stylesheets: try to preserve comments in output

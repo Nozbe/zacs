@@ -2,10 +2,27 @@
 
 exports[`zacs example: zacs.styled(platforms), native 1`] = `
 "const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text');
+import * as zacs from '@nozbe/zacs';
+const PlatformBox = zacs.styled({
+  web: WebBox,
+  native: NativeBox
+}, style.box);
 const platbox = <NativeBox __zacs_original_name="PlatformBox" style={style.box} />;
 const platbox_attrs = <NativeBox __zacs_original_name="PlatformBox" style={style.box} foo={foo} bar title="hello" />;
+const PlatformParagraph = zacs.styled({
+  web: 'p',
+  native: 'RCTText'
+}, style.p);
 const p = <"RCTText" __zacs_original_name="PlatformParagraph" style={style.p}>Hello</"RCTText">;
 const p_attrs = <"RCTText" __zacs_original_name="PlatformParagraph" style={style.p} foo={foo} title="DOM attr" />;
+const PlatformZacsBuiltin = zacs.styled({
+  web: 'article',
+  native: zacs.text
+});
 const platform_zacs = <ZACS_RN_Text __zacs_original_name="PlatformZacsBuiltin" />;
+const PlatformZacsBuiltin2 = zacs.styled({
+  web: zacs.view,
+  native: NativeBox
+});
 const platform_zacs2 = <NativeBox __zacs_original_name="PlatformZacsBuiltin2" />;"
 `;

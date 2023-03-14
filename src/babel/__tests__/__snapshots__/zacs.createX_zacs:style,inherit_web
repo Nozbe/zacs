@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.createX_zacs:style,inherit, web 1`] = `
-"const component1 = props => <div>{props.children}</div>;
+"import * as zacs from '@nozbe/zacs';
+const component1 = props => <div>{props.children}</div>;
 const component2 = props => <div style={props.style}>{props.children}</div>;
 const component3 = props => <div className={props.className} style={props.style}>{props.children}</div>;
 const component4 = props => <div className={props.className} style={props.style}>{props.children}</div>;

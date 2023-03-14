@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs:style,inherit_builtin, web 1`] = `
-"const someStyles = {
+"import * as zacs from '@nozbe/zacs';
+const someStyles = {
   with: 100
 };
 const components = [<>

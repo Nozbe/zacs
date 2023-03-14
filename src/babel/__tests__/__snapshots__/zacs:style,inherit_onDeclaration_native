@@ -2,6 +2,8 @@
 
 exports[`zacs example: zacs:style,inherit_onDeclaration, native 1`] = `
 "const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+import * as zacs from '@nozbe/zacs';
+const View = zacs.view(style.root);
 const someStyles = {
   with: 100
 };

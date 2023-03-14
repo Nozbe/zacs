@@ -3,6 +3,7 @@
 exports[`zacs stylesheets example: stylesheet_css, native 1`] = `
 "const zacsReactNative = require('react-native');
 const ZACS_RN_StyleSheet = zacsReactNative.StyleSheet;
+import * as zacs from '@nozbe/zacs';
 const styles = ZACS_RN_StyleSheet.create({
   with_css: {}
 });"

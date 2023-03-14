@@ -2,8 +2,13 @@
 
 exports[`zacs example: declaration_null, native 1`] = `
 "const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+import * as zacs from '@nozbe/zacs';
+const View0 = zacs.view();
 const view0 = <ZACS_RN_View __zacs_original_name="View0" />;
+const View1 = zacs.view(null);
 const view1 = <ZACS_RN_View __zacs_original_name="View1" />;
+const View2 = zacs.view(null, null);
 const view2 = <ZACS_RN_View __zacs_original_name="View2" />;
+const View3 = zacs.view(null, null, null);
 const view3 = <ZACS_RN_View __zacs_original_name="View3" />;"
 `;

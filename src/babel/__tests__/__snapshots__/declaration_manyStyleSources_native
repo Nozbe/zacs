@@ -2,6 +2,13 @@
 
 exports[`zacs example: declaration_manyStyleSources, native 1`] = `
 "const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+import * as zacs from '@nozbe/zacs';
+const Mix1 = zacs.view(styles.box, {
+  isFoo: style.mixFoo,
+  isBar: style.mixBar
+}, {
+  width: 'width'
+});
 const mix1_none = <ZACS_RN_View __zacs_original_name="Mix1" style={styles.box} />;
 const mix1_add = <ZACS_RN_View __zacs_original_name="Mix1" style={[styles.box, {
   width: 500

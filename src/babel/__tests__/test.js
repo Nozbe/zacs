@@ -95,11 +95,6 @@ describe('zacs', () => {
       snapshot('production'),
     )
   })
-  it(`preserves declarations if requested`, () => {
-    expect(
-      transform(example('production'), 'web', { production: true, keepDeclarations: true }),
-    ).toMatchSpecificSnapshot(snapshot('production_keepDeclarations'))
-  })
   it(`exporting declarations not alowed`, () => {
     expect(() => transform(example('exportingDeclarationsNotAllowed'), 'web')).toThrow(
       'not allowed to export zacs declarations',

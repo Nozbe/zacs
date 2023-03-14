@@ -2,6 +2,9 @@
 
 exports[`zacs example: webSafeAttributes, native 1`] = `
 "const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+import * as zacs from '@nozbe/zacs';
+const Root = zacs.view(style.root);
+
 // custom props -- different JSX syntaxes (will be cut out on web)
 const customProps = <ZACS_RN_View __zacs_original_name="Root" style={style.root} foo={foo} isHighlighted={true} isBlocked bar="bar" Component={<Hello />} />;
 
