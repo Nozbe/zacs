@@ -4,17 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-- NEW: You can now use `zacs:style` on all elements
-- NEW: `'.foo, .bar': {}` CSS-only stylesets
-- NEW: `border: [1, 'red']` shorthand
-- NEW: You can now use shorthands and `web/native: {}` scopes inside `zacs:style={}` attribute. Note that this only works if an object literal is passed. You can transform any such style object with `zacs._experimental_resolve({ ... })`
-- `__zacs_original_name` debug attribute is now placed at the beginning of output elements
-- `className={}` is now consistently placed before `style={}`
-- stylesheets: overriden properties are stripped on native to save space and silence Hermes warnings
-- stylesheets: try to preserve comments in output
+**New features**
+
+- You can now use `zacs:style` on all elements
+- `'.foo, .bar': {}` CSS-only stylesets
+- `border: [1, 'red']` shorthand
+- You can now use shorthands and `web/native: {}` scopes inside `zacs:style={}` attribute. Note that this only works if an object literal is passed. You can transform any such style object with `zacs._experimental_resolve({ ... })`
+
+**Performance**
+
+- Overriden properties are now stripped on native to save space and silence Hermes warnings
+- `StyleSheet.create()` is now stripped in production (it doesn't really do anything in modern RN)
+
+**Bug fixes**
+
 - Fix `zacs.styled('UppercaseBuiltin')`, e.g. `'RCTText'`
 - Fix unnecessary `require('react-native')` insertions
 - Fix broken `zacs.styled({ web: ..., native: zacs.text })`
+
+**Other**
+
+- `__zacs_original_name` debug attribute is now placed at the beginning of output elements
+- `className={}` is now consistently placed before `style={}`
+- stylesheets: try to preserve comments in output
 
 ## 2.0.0 (2023-02-20)
 
