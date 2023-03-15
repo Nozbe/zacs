@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: anonymousElements, web 1`] = `
+"import * as zacs from '@nozbe/zacs';
+const a = <div __zacs_original_name="zacs.view" />;
+const b = <span __zacs_original_name="zacs.text" style={{
+  width: 100
+}} />;"
+`;

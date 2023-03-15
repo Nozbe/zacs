@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs example: anonymousElements, native 1`] = `
+"const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text');
+const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+import * as zacs from '@nozbe/zacs';
+const a = <ZACS_RN_View __zacs_original_name="zacs.view" />;
+const b = <ZACS_RN_Text __zacs_original_name="zacs.text" style={{
+  width: 100
+}} />;"
+`;

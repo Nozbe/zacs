@@ -13,7 +13,10 @@ const { convertZacsElement } = require('./elements')
 const { createZacsComponent } = require('./components')
 const { handleResolve } = require('./resolveStyle')
 const { handleImportDeclaration, injectNativeImportsIfNeeded } = require('./imports')
-const { transformZacsAttributesOnNonZacsElement } = require('./nonZacsElements')
+const {
+  transformAnonymousZacsElement,
+  transformZacsAttributesOnNonZacsElement,
+} = require('./nonZacsElements')
 
 exports.default = function () {
   return {
@@ -65,6 +68,7 @@ exports.default = function () {
         if (declaration) {
           convertZacsElement(path, declaration, state)
         } else {
+          transformAnonymousZacsElement(path, state)
           transformZacsAttributesOnNonZacsElement(path, state)
         }
       },
