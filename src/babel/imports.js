@@ -67,12 +67,12 @@ function injectNativeImportsIfNeeded(path, state) {
   // After minification, these requires are going to be a bit smaller and denser than RN require
 
   if (state.get('uses_rn_view')) {
-    const makeZacsElement = template(`const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View')`)
+    const makeZacsElement = template(`const ZACS_RN_View = require('@nozbe/zacs/src/ZACS_RN_View')`)
     path.get('body')[0].insertBefore(makeZacsElement())
   }
 
   if (state.get('uses_rn_text')) {
-    const makeZacsElement = template(`const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text')`)
+    const makeZacsElement = template(`const ZACS_RN_Text = require('@nozbe/zacs/src/ZACS_RN_Text')`)
     path.get('body')[0].insertBefore(makeZacsElement())
   }
 }

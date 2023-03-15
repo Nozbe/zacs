@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: declaration_unconditionalStyle, native 1`] = `
-"const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text');
-const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+"const ZACS_RN_Text = require('@nozbe/zacs/src/ZACS_RN_Text');
+const ZACS_RN_View = require('@nozbe/zacs/src/ZACS_RN_View');
 import * as zacs from '@nozbe/zacs';
 const Root = zacs.view(style.root);
 const Root2 = zacs.view(styles.root2);

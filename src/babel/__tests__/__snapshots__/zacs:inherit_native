@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs:inherit, native 1`] = `
-"const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text');
-const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+"const ZACS_RN_Text = require('@nozbe/zacs/src/ZACS_RN_Text');
+const ZACS_RN_View = require('@nozbe/zacs/src/ZACS_RN_View');
 import * as zacs from '@nozbe/zacs';
 const StylableBlank = zacs.view();
 const stylableBlank = <ZACS_RN_View __zacs_original_name="StylableBlank" style={props.style} />;

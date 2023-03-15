@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`zacs example: zacs.createX, native 1`] = `
-"const ZACS_RN_Text = require('@nozbe/zacs/ZACS_RN_Text');
-const ZACS_RN_View = require('@nozbe/zacs/ZACS_RN_View');
+"const ZACS_RN_Text = require('@nozbe/zacs/src/ZACS_RN_Text');
+const ZACS_RN_View = require('@nozbe/zacs/src/ZACS_RN_View');
 import * as zacs from '@nozbe/zacs';
 export const ExportedView = props => <ZACS_RN_View>{props.children}</ZACS_RN_View>;
 export const ExportedText = props => <ZACS_RN_Text style={style.text}>{props.children}</ZACS_RN_Text>;
