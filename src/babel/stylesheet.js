@@ -44,8 +44,17 @@ function preprocessStylesheet(path) {
     return
   }
 
-  stylesheet.get('properties').forEach((styleset) => {
-    preprocessStyleset(styleset.get('value'))
+  stylesheet.get('properties').forEach((stylesetProp) => {
+    // FIXME: Duplicate validation, but we need to error out on illegal spread during preprocessing, before
+    // it can be replaced into Object.assign() by another Babel plugin
+    if (t.isSpreadElement(stylesetProp.node)) {
+      throw stylesetProp.buildCodeFrameError(
+        'ZACS Stylesheet stylesets must be defined as `name: {}` (or web-only `".selector": {}`). Other syntaxes, like `[name]:`, `...styles` are not allowed',
+      )
+    }
+
+    const styleset = stylesetProp.get('value')
+    preprocessStyleset(styleset)
   })
 }
 

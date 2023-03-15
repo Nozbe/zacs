@@ -25,6 +25,7 @@ function transform(input, platform, extra = {}, extraPlugins = []) {
     plugins: [
       '@babel/plugin-syntax-jsx',
       [plugin, { platform, ...extra }],
+      ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
       testBabelPlugin,
       ...extraPlugins,
     ],

@@ -10,7 +10,11 @@ const isNative = process.argv.includes('--native')
 function transform(input, platform, extra = {}) {
   const { code } = babel.transform(input, {
     configFile: false,
-    plugins: ['@babel/plugin-syntax-jsx', [plugin, { platform, ...extra }]],
+    plugins: [
+      '@babel/plugin-syntax-jsx',
+      [plugin, { platform, ...extra }],
+      ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
+    ],
   })
   return code
 }
