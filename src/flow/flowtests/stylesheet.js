@@ -11,6 +11,7 @@ const centered = {
 
 const stylesheet = zacs.stylesheet({
   root: {
+    ...centered,
     _mixin: centered,
     margin: 0,
     // $FlowExpectedError[incompatible-call]
@@ -18,6 +19,7 @@ const stylesheet = zacs.stylesheet({
     // $FlowExpectedError[incompatible-call]
     fake_attribute: 'this_does_not_exist',
     web: {
+      ...centered,
       _mixin: centered,
       display: 'inline-block',
       // $FlowExpectedError[incompatible-call]
@@ -38,6 +40,7 @@ const stylesheet = zacs.stylesheet({
       css: 123,
     },
     native: {
+      ...centered,
       _mixin: centered,
       transform: [],
       // $FlowExpectedError[incompatible-call]
@@ -46,6 +49,7 @@ const stylesheet = zacs.stylesheet({
       fake_attribute: 'this_does_not_exist',
     },
     ios: {
+      ...centered,
       _mixin: centered,
       tintColor: 'red',
       // $FlowExpectedError[incompatible-call]
@@ -54,6 +58,7 @@ const stylesheet = zacs.stylesheet({
       fake_attribute: 'this_does_not_exist',
     },
     android: {
+      ...centered,
       _mixin: centered,
       elevation: 4,
       // $FlowExpectedError[incompatible-call]
@@ -69,11 +74,18 @@ const stylesheet = zacs.stylesheet({
     padding: [5, 10],
     inset: [5, '10%', 15],
     margin: [5, 10, 15, 20],
+    // border(3)
     border: [1, 'solid', 'red'],
     borderTop: [2, 'solid', 'green'],
     borderRight: [3, 'solid', 'yellow'],
     borderBottom: [4, 'solid', 'blue'],
     borderLeft: [5, 'solid', 'black'],
+    // border(2)
+    border: [1, 'red'],
+    borderTop: [2, 'green'],
+    borderRight: [3, 'yellow'],
+    borderBottom: [4, 'blue'],
+    borderLeft: [5, 'black'],
     // $FlowExpectedError[incompatible-call]
     border: [2],
     // $FlowExpectedError[incompatible-call]
@@ -85,6 +97,7 @@ const stylesheet = zacs.stylesheet({
     native: {
       inset: [5, '10%', 15],
       border: [1, 'solid', 'red'],
+      borderLeft: [1, 'red'],
     },
   },
   css: zacs.css`
