@@ -19,6 +19,9 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
   height: 100%; \\n\\
   /* prefixed names */ \\n\\
   -webkit-padding-start: 20px; \\n\\
+  -moz-transition-duration: 0.5s; \\n\\
+  -ms-grid-columns: 1fr 2fr; \\n\\
+  -o-text-overflow: ellipsis; \\n\\
   /* postcss syntax */ \\n\\
   background-color: @theme(onSurface1); \\n\\
 } \\n\\

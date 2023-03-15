@@ -24,7 +24,9 @@ const strval = (stringLiteralOrPlainTemplateLiteral) =>
 const capitalRegex = /([A-Z])/g
 const cssCaseReplacer = (match, letter) => `-${letter.toLowerCase()}`
 function encodeCSSProperty(property) {
-  return property.replace(capitalRegex, cssCaseReplacer)
+  const encodedProperty = property.replace(capitalRegex, cssCaseReplacer)
+  // Special case, `-ms-` prefixed properties are `msFoo` in CSSOM, not `MsFoo`
+  return encodedProperty.startsWith('ms-') ? `-${encodedProperty}` : encodedProperty
 }
 
 function normalizeVal(node) {

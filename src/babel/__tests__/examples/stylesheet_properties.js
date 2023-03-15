@@ -13,6 +13,9 @@ const styles = zacs.stylesheet({
     web: {
       // prefixed names
       WebkitPaddingStart: 20,
+      MozTransitionDuration: '0.5s',
+      msGridColumns: '1fr 2fr',
+      OTextOverflow: 'ellipsis',
       // postcss syntax
       backgroundColor: '@theme(onSurface1)',
     },
