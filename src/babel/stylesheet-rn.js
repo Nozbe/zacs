@@ -120,11 +120,6 @@ function resolveStylesetProperties(target, originalProperties) {
     pushComments(node, 'trailing')
   }
   originalProperties.forEach((property) => {
-    // if (property.type === 'SpreadElement') {
-    //   pushFromInner(property.argument)
-    //   return
-    // }
-
     const key = property.key.name
     if (key === 'web' || key === 'css') {
       // do nothing

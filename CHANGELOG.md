@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - `border: [1, 'red']` shorthand
 - You can now use shorthands and `web/native: {}` scopes inside `zacs:style={}` attribute. Note that this only works if an object literal is passed. You can transform any such style object with `zacs._experimental_resolve({ ... })`
 - `<zacs.view />` and `<zacs.text />` anonymous ZACS elements
+- You can now use `...mixin` syntax in stylesheets instead of `_mixin: mixin`
 
 **Performance**
 

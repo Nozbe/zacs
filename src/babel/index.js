@@ -1,7 +1,7 @@
 exports.__esModule = true
 
 const { types: t } = require('@babel/core')
-const { transformStylesheet } = require('./stylesheet')
+const { preprocessStylesheet, transformStylesheet } = require('./stylesheet')
 const { isZacsCssTaggedTemplate } = require('./stylesheet-utils')
 const {
   isZacsDeclaration,
@@ -34,10 +34,10 @@ exports.default = function () {
           const { init } = node
           const zacsMethod = init.callee.property.name
 
-          if (zacsMethod === 'stylesheet' || zacsMethod === '_experimental_resolve') {
-            // do nothing, will process on exit
-            // eslint-disable-next-line no-useless-return
-            return
+          if (zacsMethod === 'stylesheet') {
+            preprocessStylesheet(path)
+          } else if (zacsMethod === '_experimental_resolve') {
+            // will be processed on exit
           } else if (zacsMethod.startsWith('create')) {
             node.init = createZacsComponent(state, path)
           } else {

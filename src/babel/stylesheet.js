@@ -16,6 +16,39 @@ function isPlainTemplateLiteral(node) {
   return t.isTemplateLiteral(node) && !node.expressions.length && node.quasis.length === 1
 }
 
+function preprocessStyleset(path) {
+  if (!path || !t.isObjectExpression(path.node)) {
+    return
+  }
+
+  path.get('properties').forEach((property) => {
+    if (t.isSpreadElement(property.node)) {
+      const spreadArg = property.get('argument')
+      property.replaceWith(t.objectProperty(t.identifier('_mixin'), spreadArg.node))
+    }
+
+    if (isPlainObjectProperty(property.node, true)) {
+      preprocessStyleset(property.get('value'))
+    }
+  })
+}
+
+// We want to allow `...{literal-object}` syntax as a natural way to do mixins, but
+// most setups use a Babel plugin that will transpile object spread syntax into a function call
+// before ZACS stylesheets be processed.
+// To fix this, we preprocess stylesheet on enter and replace spread elements with a _mixin property
+// (Rest of processing needs to be done at exit to allow constant replacement to take place)
+function preprocessStylesheet(path) {
+  const stylesheet = path.get('init.arguments.0')
+  if (!(stylesheet && t.isObjectExpression(stylesheet))) {
+    return
+  }
+
+  stylesheet.get('properties').forEach((styleset) => {
+    preprocessStyleset(styleset.get('value'))
+  })
+}
+
 function validateStyleset(styleset, nestedIn) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
@@ -25,22 +58,6 @@ function validateStyleset(styleset, nestedIn) {
 
   const properties = styleset.get('properties')
   properties.forEach((property) => {
-    // FIXME: We want to allow `...{literal-object}` syntax as a natural way to do mixins, but
-    // most setups use a Babel plugin that will transpile object spread syntax into a function call
-    // before ZACS stylesheets be processed. We can't do all processing earlier because that will
-    // break constant-replacement and other plugins that turn dynamic syntax into compile-time constants
-    // I think the way to fix it is to preprocess at the beginning, traverse object literal tree and
-    // replace `...`s, but that might still turn out to be buggy...
-
-    // if (t.isSpreadElement(property.node)) {
-    //   const spreadArg = property.get('argument')
-    //   if (!t.isObjectExpression(spreadArg.node)) {
-    //     throw spreadArg.buildCodeFrameError("Spread element in a ZACS Stylesheet must be a simple object literal, like so: `{ height: 100, ...{ width: 200 } }`. Other syntaxes, like `...styles` are not allowed.")
-    //   }
-    //   validateStyleset( spreadArg, nestedIn)
-    //   return
-    // }
-
     if (!isPlainObjectProperty(property.node, true)) {
       throw property.buildCodeFrameError(
         "ZACS Stylesheets style attributes must be simple strings, like so: `{ backgroundColor: 'red', height: 100 }`. Other syntaxes, like `[propName]:` are not allowed.",
@@ -157,4 +174,4 @@ function transformStylesheet(state, path) {
   }
 }
 
-module.exports = { transformStylesheet }
+module.exports = { preprocessStylesheet, transformStylesheet }

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`zacs stylesheets example: stylesheet_mixins, web 1`] = `
+exports[`zacs stylesheets example: stylesheet_mixins_spread, web 1`] = `
 "import * as zacs from '@nozbe/zacs';
 /*
 ZACS-generated CSS stylesheet begins below.
@@ -12,15 +12,22 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
   /* _mixin syntax */ \\n\\
   flex: 1; \\n\\
   z-index: -1000; \\n\\
+ \\n\\
   /* second mixin with override */ \\n\\
   z-index: -2; \\n\\
+ \\n\\
   /* nested mixins */ \\n\\
+ \\n\\
   flex-direction: row; \\n\\
+ \\n\\
   align-items: center; \\n\\
+ \\n\\
   /* mixins in nested scoped */ \\n\\
  \\n\\
   & > div { \\n\\
+ \\n\\
   background-color: web; \\n\\
+ \\n\\
   } \\n\\
 } \\n\\
 ZACS_MAGIC_CSS_STYLESHEET_MARKER_END");

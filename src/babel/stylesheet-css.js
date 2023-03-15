@@ -73,10 +73,6 @@ function resolveShorthandsCSS(key, node) {
 }
 
 function encodeCSSStyle(property, spaces) {
-  if (property.type === 'SpreadElement') {
-    return encodeCSSStyles(property.argument, spaces)
-  }
-
   const { value } = property
 
   if (property.key.value) {
