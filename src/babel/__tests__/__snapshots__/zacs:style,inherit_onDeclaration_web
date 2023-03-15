@@ -16,5 +16,7 @@ const components = [<>
     <div __zacs_original_name="View" className={style.root + (" " + (INHERIT.className || ""))} style={Object.assign({
     color: 'white'
   }, INHERIT.style)} />
+    // regression test
+    <div __zacs_original_name="View" className={style.root + (" " + (INHERIT.className || ""))} style={INHERIT.style} title="hello" />
   </>];"
 `;

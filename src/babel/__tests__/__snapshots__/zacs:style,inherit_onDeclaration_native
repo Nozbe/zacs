@@ -17,5 +17,7 @@ const components = [<>
     <ZACS_RN_View __zacs_original_name="View" style={[style.root, {
     color: 'white'
   }].concat(INHERIT.style || [])} />
+    // regression test
+    <ZACS_RN_View __zacs_original_name="View" style={[style.root].concat(INHERIT.style || [])} title="hello" />
   </>];"
 `;

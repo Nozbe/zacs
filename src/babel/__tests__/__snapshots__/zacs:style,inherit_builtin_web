@@ -15,5 +15,7 @@ const components = [<>
     <span className={INHERIT.className} style={Object.assign({
     color: 'white'
   }, INHERIT.style)} />
+    // regression test
+    <span title="hello" className={INHERIT.className} style={INHERIT.style} />
   </>];"
 `;

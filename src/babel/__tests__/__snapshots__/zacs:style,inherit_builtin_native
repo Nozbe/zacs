@@ -15,5 +15,7 @@ const components = [<>
     <span style={[{
     color: 'white'
   }].concat(INHERIT.style || [])} />
+    // regression test
+    <span title="hello" style={INHERIT.style} />
   </>];"
 `;

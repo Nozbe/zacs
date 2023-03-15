@@ -9,5 +9,7 @@ const components = [
     <span zacs:inherit={INHERIT} />
     <span zacs:inherit={INHERIT} zacs:style={someStyles} />
     <span zacs:inherit={INHERIT} zacs:style={{ color: 'white' }} />
+    // regression test
+    <span title="hello" zacs:inherit={INHERIT} />
   </>,
 ]

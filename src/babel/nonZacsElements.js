@@ -109,7 +109,7 @@ function transformZacsAttributesOnNonZacsElement(path, state) {
   addedAttrs.push(jsxAttr('style', resolvedStyleExpr))
 
   openingElement.attributes = openingElement.attributes
-    .filter((attr) => attr !== zacsInheritAttr && attr !== zacsStyleAttrPath.node)
+    .filter((attr) => attr !== zacsInheritAttr && attr !== zacsStyleAttrPath?.node)
     .concat(addedAttrs)
 }
 

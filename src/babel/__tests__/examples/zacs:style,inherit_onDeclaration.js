@@ -10,5 +10,7 @@ const components = [
     <View zacs:inherit={INHERIT} />
     <View zacs:inherit={INHERIT} zacs:style={someStyles} />
     <View zacs:inherit={INHERIT} zacs:style={{ color: 'white' }} />
+    // regression test
+    <View title="hello" zacs:inherit={INHERIT} />
   </>,
 ]
