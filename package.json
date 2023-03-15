@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@babel/generator": "7.21.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/plugin-transform-react-jsx": "^7.21.0",
     "@babel/types": "^7.21.2",
     "ajv-errors": "^1.0.1",

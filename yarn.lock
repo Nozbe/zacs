@@ -233,6 +233,17 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.21.2.tgz#dacafadfc6d7654c3051a66d6fe55b6cb2f2a0b3"
   integrity sha512-URpaIJQwEkEC2T9Kn+Ai6Xe/02iNaVCuT/PtoRz3GPVJVDpPd7mLo+VddTbhCRU9TXqW5mSrQfXZyi8kDKOVpQ==
 
+"@babel/plugin-proposal-object-rest-spread@^7.20.7":
+  version "7.20.7"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.20.7.tgz#aa662940ef425779c75534a5c41e9d936edc390a"
+  integrity sha512-d2S98yCiLxDVmBmE8UjGcfPvNEUbA1U5q5WxaWFUGRzJSVAZqm5W6MbPct0jxnegUZ0niLeNX+IOzEs7wYg9Dg==
+  dependencies:
+    "@babel/compat-data" "^7.20.5"
+    "@babel/helper-compilation-targets" "^7.20.7"
+    "@babel/helper-plugin-utils" "^7.20.2"
+    "@babel/plugin-syntax-object-rest-spread" "^7.8.3"
+    "@babel/plugin-transform-parameters" "^7.20.7"
+
 "@babel/plugin-syntax-async-generators@^7.8.4":
   version "7.8.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-async-generators/-/plugin-syntax-async-generators-7.8.4.tgz#a983fb1aeb2ec3f6ed042a210f640e90e786fe0d"
@@ -330,6 +341,13 @@
   integrity sha512-rd9TkG+u1CExzS4SM1BlMEhMXwFLKVjOAFFCDx9PbX5ycJWDoWMcwdJH9RhkPu1dOgn5TrxLot/Gx6lWFuAUNQ==
   dependencies:
     "@babel/helper-plugin-utils" "^7.19.0"
+
+"@babel/plugin-transform-parameters@^7.20.7":
+  version "7.21.3"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-parameters/-/plugin-transform-parameters-7.21.3.tgz#18fc4e797cf6d6d972cb8c411dbe8a809fa157db"
+  integrity sha512-Wxc+TvppQG9xWFYatvCGPvZ6+SIUxQ2ZdiBP+PHYMIjnPXD+uThCshaz4NZOnODAtBjjcVQQ/3OKs9LW28purQ==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.20.2"
 
 "@babel/plugin-transform-react-jsx@^7.21.0":
   version "7.21.0"
