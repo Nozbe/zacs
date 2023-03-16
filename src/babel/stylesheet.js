@@ -186,7 +186,7 @@ function transformStylesheet(state, path) {
   const platform = getPlatform(state)
 
   if (platform === 'web') {
-    transformStylesheetCSS(path, stylesheet)
+    transformStylesheetCSS(path, stylesheet, state)
   } else if (platform === 'native') {
     transformStylesheetRN(path, stylesheet, state)
   } else {

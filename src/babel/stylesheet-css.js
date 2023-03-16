@@ -121,23 +121,32 @@ function encodeCSSSelector(key) {
   throw new Error(`Unknown styleset type`)
 }
 
-function encodeCSSStyleset(styleset) {
+function encodeCSSStyleset(styleset, state) {
   if (styleset.key.name === 'css') {
     return leadingComments(styleset) + strval(styleset.value) + trailingComments(styleset)
   }
 
-  return `${leadingComments(styleset)}${encodeCSSSelector(styleset.key)} {\n${encodeCSSStyles(
-    styleset.value,
-  )}\n}${trailingComments(styleset)}`
+  const encodedSelector = encodeCSSSelector(styleset.key)
+  const encodedStyles = encodeCSSStyles(styleset.value)
+
+  if (state.opts.experimentalStripEmpty && !encodedStyles.trim().length) {
+    return `/* ${encodedSelector} - stripped (empty) */`
+  }
+
+  return `${leadingComments(styleset)}${encodedSelector} {\n${encodedStyles}\n}${trailingComments(
+    styleset,
+  )}`
 }
 
-function encodeCSSStylesheet(stylesheet) {
-  const stylesets = stylesheet.properties.map(encodeCSSStyleset).join('\n\n')
+function encodeCSSStylesheet(stylesheet, state) {
+  const stylesets = stylesheet.properties
+    .map((styleset) => encodeCSSStyleset(styleset, state))
+    .join('\n\n')
   return `${stylesets}\n`
 }
 
-function transformStylesheetCSS(path, stylesheet) {
-  const css = encodeCSSStylesheet(stylesheet)
+function transformStylesheetCSS(path, stylesheet, state) {
+  const css = encodeCSSStylesheet(stylesheet, state)
   const preparedCss = `\n${css}ZACS_MAGIC_CSS_STYLESHEET_MARKER_END`
   const formattedCss = t.stringLiteral(preparedCss)
   // NOTE: We can't use a template literal, because most people use a Babel transform for it, and it

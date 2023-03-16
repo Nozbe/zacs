@@ -146,7 +146,9 @@ function resolveStylesetProperties(target, originalProperties) {
   return deduplicatedProperties(resolvedProperties)
 }
 
-function resolveRNStylesheet(target, stylesheet) {
+function resolveRNStylesheet(stylesheet, state) {
+  const target = getTarget(state)
+
   stylesheet.properties = stylesheet.properties
     .filter((styleset) => {
       // NOTE: styleset.key could be a StringLiteral, but that's web-only
@@ -156,17 +158,22 @@ function resolveRNStylesheet(target, stylesheet) {
       const objExpr = styleset.value
       const resolvedProperties = resolveStylesetProperties(target, objExpr.properties)
       objExpr.properties = preserveComments(objExpr, resolvedProperties)
+
+      if (state.opts.experimentalStripEmpty && !objExpr.properties.length) {
+        return null
+      }
+
       return styleset
     })
+    .filter(Boolean)
 
   return stylesheet
 }
 
 function transformStylesheetRN(path, stylesheet, state) {
   const production = isProduction(state)
-  const target = getTarget(state)
 
-  const resolvedRules = resolveRNStylesheet(target, stylesheet)
+  const resolvedRules = resolveRNStylesheet(stylesheet, state)
 
   if (production) {
     path.get('init').replaceWith(resolvedRules)

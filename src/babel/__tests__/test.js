@@ -139,19 +139,22 @@ describe('zacs stylesheets', () => {
     'stylesheet_merge',
     'stylesheet_comments',
     'stylesheet_webOnly',
+    ['stylesheet_empty', { extra: { experimentalStripEmpty: true } }],
   ]
   const webIosAndroidExamples = [
     //
     'stylesheet_nesting',
     'stylesheet_nativeExpressions',
   ]
-  webNativeExamples.forEach((exampleName) => {
+  webNativeExamples.forEach((input) => {
+    const [exampleName, configInput] = Array.isArray(input) ? input : [input, {}]
+    const { extra = {}, extraPlugins = [] } = configInput
     const platforms = ['web', 'native']
     platforms.forEach((platform) => {
       it(`example: ${exampleName}, ${platform}`, () => {
-        expect(transform(example(exampleName), platform)).toMatchSpecificSnapshot(
-          snapshot(`${exampleName}_${platform}`),
-        )
+        expect(
+          transform(example(exampleName), platform, extra, extraPlugins),
+        ).toMatchSpecificSnapshot(snapshot(`${exampleName}_${platform}`))
       })
     })
   })
