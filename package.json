@@ -94,6 +94,7 @@
   "dependencies": {
     "@babel/core": "^7.10",
     "@babel/plugin-syntax-jsx": "^7.10",
+    "@react-native/normalize-colors": "^0.72.0",
     "loader-utils": "^2.0.0",
     "mkdirp": "^1.0.4",
     "normalize-path": "^3.0.0"
