@@ -58,7 +58,7 @@ function preprocessStylesheet(path) {
   })
 }
 
-function validateStyleset(styleset, nestedIn) {
+function validateStyleset(platform, styleset, nestedIn) {
   if (!t.isObjectExpression(styleset.node)) {
     throw styleset.buildCodeFrameError(
       "ZACS Stylesheets must be simple object literals, like so: `text: { backgroundColor: 'red', height: 100 }`. Other syntaxes, like `foo ? {xxx} : {yyy}` or `...styles` are not allowed.",
@@ -81,7 +81,7 @@ function validateStyleset(styleset, nestedIn) {
           'ZACS Stylesheets style attributes must be simple strings, like so: `{ backgroundColor: \'red\', height: 100 }`. Quoted keys are only allowed for web inner styles, e.g. `{ "& > span": { opacity: 0.5 } }`',
         )
       }
-      validateStyleset(valuePath, 'web')
+      validateStyleset(platform, valuePath, 'web')
       return
     }
 
@@ -94,7 +94,17 @@ function validateStyleset(styleset, nestedIn) {
         )
       }
     } else if (key === '_mixin') {
-      validateStyleset(valuePath, nestedIn)
+      if (t.isObjectExpression(valuePath.node)) {
+        validateStyleset(platform, valuePath, nestedIn)
+      } else if (platform === 'native') {
+        // on native, mixin can be an arbitrary expression. We can only validate static
+        // object expressions, so we must assume that other expressions will correctly be resolved
+        // at runtime
+      } else {
+        throw valuePath.buildCodeFrameError(
+          "ZACS: Can't evaluate this mixin expression. On web, ZACS must be able to determine contents of this mixin to generate CSS.",
+        )
+      }
     } else if (key === 'web' || key === 'native' || key === 'ios' || key === 'android') {
       if (nestedIn) {
         throw property.buildCodeFrameError(
@@ -102,7 +112,7 @@ function validateStyleset(styleset, nestedIn) {
         )
       }
 
-      validateStyleset(valuePath, key)
+      validateStyleset(platform, valuePath, key)
     } else {
       const nestedInNative = nestedIn === 'native' || nestedIn === 'ios' || nestedIn === 'android'
       if (!isValueAllowed(key, value) && !nestedInNative) {
@@ -144,7 +154,8 @@ function validateStylesetProperty(stylesetPath) {
   }
 }
 
-function validateStylesheet(path) {
+function validateStylesheet(path, state) {
+  const platform = getPlatform(state)
   const args = path.get('init.arguments')
   const stylesheet = args[0]
   if (!(args.length === 1 && t.isObjectExpression(stylesheet.node))) {
@@ -163,13 +174,13 @@ function validateStylesheet(path) {
         )
       }
     } else {
-      validateStyleset(styleset.get('value'), null)
+      validateStyleset(platform, styleset.get('value'), null)
     }
   })
 }
 
 function transformStylesheet(state, path) {
-  validateStylesheet(path)
+  validateStylesheet(path, state)
 
   const stylesheet = path.node.init.arguments[0]
   const platform = getPlatform(state)

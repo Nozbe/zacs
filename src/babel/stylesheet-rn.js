@@ -125,8 +125,15 @@ function resolveStylesetProperties(target, originalProperties) {
       // do nothing
     } else if (property.key.value) {
       // css inner selector - do nothing
-    } else if (key === 'native' || key === '_mixin') {
+    } else if (key === 'native') {
       pushFromProperty(property)
+    } else if (key === '_mixin') {
+      if (t.isObjectExpression(property.value)) {
+        pushFromProperty(property)
+      } else {
+        // TODO: Change this spread to an Object.assign() unless nativeSpreads:true
+        pushProp(t.spreadElement(property.value))
+      }
     } else if (key === 'ios' || key === 'android') {
       if (target === key) {
         pushFromProperty(property)
