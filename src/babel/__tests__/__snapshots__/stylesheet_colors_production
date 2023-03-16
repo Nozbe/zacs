@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`zacs stylesheets optimizes React Native colors in production 1`] = `
+"/* StyleSheet.create() was stripped for production (no-op in modern React Native) */
+/* eslint-disable */
+const styles = {
+  standardColors: {
+    backgroundColor: 0xff00ffff /* #f0f */,
+    borderBottomColor: 0xff00ffff /* #ff00ff */,
+    borderLeftColor: 0xff00ff00 /* #ff00ff00 */,
+    borderRightColor: 0xff00ffff /* rgb(255, 0, 255) */,
+    color: 0xff00ffff /* rgba(255, 0, 255, 1.0) */,
+    borderColor: 0xdeb887ff /* burlywood */
+  },
+  unusualColors: {
+    borderColor: 0xff00ffff /* #f0ff */,
+    borderTopColor: 0xff00ffff /* rgb(255 0 255) */,
+    overlayColor: 0xff00ffff /* rgba(255 0 255 / 1.0) */,
+    shadowColor: 0xffffffff /* hsl(360, 100%, 100%) */,
+    textDecorationColor: 0xffffffff /* hsl(360 100% 100%) */,
+    textShadowColor: 0xffffffff /* hsla(360, 100%, 100%, 1.0) */,
+    tintColor: 0xffffffff /* hsla(360 100% 100% / 1.0) */,
+    backgroundColor: 0x808080ff /* hwb(360, 100%, 100%) */,
+    borderBottomColor: 0xff00ff00
+  }
+};"
+`;

@@ -1,4 +1,5 @@
 const { types: t } = require('@babel/core')
+const normalizeColor = require('@react-native/normalize-colors')
 const { getTarget, isProduction } = require('./state')
 const { isZacsStylesheetLiteral, resolveInsetsShorthand } = require('./stylesheet-utils')
 const { preserveComments, deduplicatedProperties } = require('./astUtils')
@@ -73,13 +74,39 @@ function resolveShorthandsRN(key, node) {
   }
 }
 
-function resolveStylesetProperties(target, originalProperties) {
+function numToHex(number) {
+  return `0x${number.toString(16).padStart(8, '0')}`
+}
+
+function optimizeProperty(property) {
+  const { key, value } = property
+  if ((key.name === 'color' || key.name.endsWith('Color')) && t.isStringLiteral(value)) {
+    const normalizedColor = normalizeColor(value.value)
+    if (typeof normalizedColor !== 'number') {
+      throw new Error(`Unexpected normalized color ${normalizedColor} for ${value.value}`)
+    }
+    const colorExpr = t.numericLiteral(normalizedColor)
+    if (!colorExpr.extra) {
+      colorExpr.extra = { raw: numToHex(normalizedColor), rawValue: normalizedColor }
+    }
+    t.addComment(colorExpr, 'trailing', ` ${value.value} `)
+
+    property.value = colorExpr
+  }
+}
+
+function resolveStylesetProperties(state, originalProperties) {
+  const target = getTarget(state)
+
   const resolvedProperties = []
   const pushProp = (property) => {
     if (isZacsStylesheetLiteral(property.value)) {
       // strip ZACS_STYLESHEET_LITERAL(x)
       const [wrappedValue] = property.value.arguments
       property.value = wrappedValue
+    }
+    if (isProduction(state)) {
+      optimizeProperty(property)
     }
     resolvedProperties.push(property)
   }
@@ -147,8 +174,6 @@ function resolveStylesetProperties(target, originalProperties) {
 }
 
 function resolveRNStylesheet(stylesheet, state) {
-  const target = getTarget(state)
-
   stylesheet.properties = stylesheet.properties
     .filter((styleset) => {
       // NOTE: styleset.key could be a StringLiteral, but that's web-only
@@ -156,7 +181,7 @@ function resolveRNStylesheet(stylesheet, state) {
     })
     .map((styleset) => {
       const objExpr = styleset.value
-      const resolvedProperties = resolveStylesetProperties(target, objExpr.properties)
+      const resolvedProperties = resolveStylesetProperties(state, objExpr.properties)
       objExpr.properties = preserveComments(objExpr, resolvedProperties)
 
       if (state.opts.experimentalStripEmpty && !objExpr.properties.length) {

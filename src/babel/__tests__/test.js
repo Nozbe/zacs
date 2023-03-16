@@ -190,6 +190,11 @@ describe('zacs stylesheets', () => {
       transform(example('stylesheet_properties'), 'native', { production: true }),
     ).toMatchSpecificSnapshot(snapshot('stylesheet_properties_production'))
   })
+  it(`optimizes React Native colors in production`, () => {
+    expect(
+      transform(example('stylesheet_colors'), 'native', { production: true }),
+    ).toMatchSpecificSnapshot(snapshot('stylesheet_colors_production'))
+  })
   it(`throw an error on illegal stylesheets`, () => {
     const bad = (syntax, error) =>
       expect(() => transform(`const _ = zacs.stylesheet(${syntax})`, 'web')).toThrow(error)

@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - `StyleSheet.create()` is now stripped in production (it doesn't really do anything in modern RN)
 - More efficient React Native imports of Text and View
 - New `{experimentalStripEmpty: true}` setting - if set, stylesets that are empty won't be emitted at all
+- Optimizes colors in React Native in production
 
 **Bug fixes**
 
