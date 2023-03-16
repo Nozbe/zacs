@@ -107,17 +107,22 @@ function resolveStylesetProperties(target, originalProperties) {
     pushComments(node, 'leading')
     const objectExpr = node.value
     objectExpr.properties.forEach((property) => {
-      if (
-        property.type === 'ObjectProperty' &&
-        property.key.name === '_mixin' &&
-        property.value.type === 'ObjectExpression'
-      ) {
-        pushFromProperty(property)
+      if (property.type === 'ObjectProperty' && property.key.name === '_mixin') {
+        // eslint-disable-next-line no-use-before-define
+        pushFromMixin(property)
       } else {
         pushPropOrShorthands(property)
       }
     })
     pushComments(node, 'trailing')
+  }
+  const pushFromMixin = (property) => {
+    if (t.isObjectExpression(property.value)) {
+      pushFromProperty(property)
+    } else {
+      // TODO: Change this spread to an Object.assign() unless nativeSpreads:true
+      pushProp(t.spreadElement(property.value))
+    }
   }
   originalProperties.forEach((property) => {
     const key = property.key.name
@@ -128,12 +133,7 @@ function resolveStylesetProperties(target, originalProperties) {
     } else if (key === 'native') {
       pushFromProperty(property)
     } else if (key === '_mixin') {
-      if (t.isObjectExpression(property.value)) {
-        pushFromProperty(property)
-      } else {
-        // TODO: Change this spread to an Object.assign() unless nativeSpreads:true
-        pushProp(t.spreadElement(property.value))
-      }
+      pushFromMixin(property)
     } else if (key === 'ios' || key === 'android') {
       if (target === key) {
         pushFromProperty(property)

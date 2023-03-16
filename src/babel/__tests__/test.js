@@ -177,6 +177,11 @@ describe('zacs stylesheets', () => {
       transform(example('ZACS_STYLESHEET_LITERAL'), 'native', { target: 'ios' }),
     ).toMatchSpecificSnapshot(snapshot('ZACS_STYLESHEET_LITERAL_ios'))
   })
+  it(`transforms dynamic mixins (native)`, () => {
+    expect(transform(example('stylesheet_mixins_dynamic'), 'native')).toMatchSpecificSnapshot(
+      snapshot('stylesheet_mixins_dynamic_native'),
+    )
+  })
   it(`strips StyleSheet.create in production`, () => {
     expect(
       transform(example('stylesheet_properties'), 'native', { production: true }),
