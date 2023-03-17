@@ -105,7 +105,10 @@ function resolveStylesetProperties(state, originalProperties) {
       const [wrappedValue] = property.value.arguments
       property.value = wrappedValue
     }
-    if (isProduction(state)) {
+    // NOTE: Strangely, this makes HBC output larger, not smaller, even though numberic
+    // colors are an i32 - but they're neither inlined nor deduplicated (and strings are deduplicated),
+    // so it ends up being larger. It should be faster at runtime, though.
+    if (isProduction(state) && state.opts.experimentalOptimizeValues) {
       optimizeProperty(property)
     }
     resolvedProperties.push(property)

@@ -192,7 +192,10 @@ describe('zacs stylesheets', () => {
   })
   it(`optimizes React Native colors in production`, () => {
     expect(
-      transform(example('stylesheet_colors'), 'native', { production: true }),
+      transform(example('stylesheet_colors'), 'native', {
+        production: true,
+        experimentalOptimizeValues: true,
+      }),
     ).toMatchSpecificSnapshot(snapshot('stylesheet_colors_production'))
   })
   it(`throw an error on illegal stylesheets`, () => {

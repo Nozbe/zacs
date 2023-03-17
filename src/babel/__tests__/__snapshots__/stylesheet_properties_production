@@ -5,7 +5,7 @@ exports[`zacs stylesheets strips StyleSheet.create in production 1`] = `
 const styles = {
   root: {
     // strings
-    backgroundColor: 0xff0000ff /* red */,
+    backgroundColor: 'red',
     // unitless quantities
     opacity: 0.5,
     // pixels
