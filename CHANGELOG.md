@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## 2.1.0 (2023-06-07)
+
 **New features**
 
 - You can now use `zacs:style` on all elements
