@@ -10,6 +10,8 @@ const styles = ZACS_RN_StyleSheet.create({
     backgroundColor: 'red',
     // unitless quantities
     opacity: 0.5,
+    aspectRatio: 0.5,
+    // regression test
     // pixels
     width: 100,
     // units

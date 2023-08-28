@@ -22,6 +22,7 @@ const stylesheet = zacs.stylesheet({
       ...centered,
       _mixin: centered,
       display: 'inline-block',
+      aspectRatio: 0.5,
       // $FlowExpectedError[incompatible-call]
       fontKerning: null,
       // $FlowExpectedError[incompatible-call]
@@ -43,6 +44,7 @@ const stylesheet = zacs.stylesheet({
       ...centered,
       _mixin: centered,
       transform: [],
+      aspectRatio: 0.5,
       // $FlowExpectedError[incompatible-call]
       alignContent: 'bad_align',
       // $FlowExpectedError[incompatible-call]

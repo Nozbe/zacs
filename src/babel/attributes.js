@@ -330,4 +330,6 @@ exports.unitlessCssAttributes = new Set([
   'strokeMiterlimit',
   'strokeOpacity',
   'strokeWidth',
+  // OVERRIDES
+  'aspectRatio',
 ])

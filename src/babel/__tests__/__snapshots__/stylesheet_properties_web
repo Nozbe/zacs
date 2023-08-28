@@ -13,6 +13,8 @@ const styles = ZACS_MAGIC_CSS_STYLESHEET_MARKER_START(" \\n\\
   background-color: red; \\n\\
   /* unitless quantities */ \\n\\
   opacity: 0.5; \\n\\
+  aspect-ratio: 0.5; \\n\\
+  /* regression test */ \\n\\
   /* pixels */ \\n\\
   width: 100px; \\n\\
   /* units */ \\n\\

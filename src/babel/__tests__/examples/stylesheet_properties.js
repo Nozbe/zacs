@@ -6,6 +6,7 @@ const styles = zacs.stylesheet({
     backgroundColor: 'red',
     // unitless quantities
     opacity: 0.5,
+    aspectRatio: 0.5, // regression test
     // pixels
     width: 100,
     // units

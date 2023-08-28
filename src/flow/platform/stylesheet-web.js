@@ -632,5 +632,7 @@ export type CSSBasicStylesheet = $Exact<{
   WebkitTextEmphasis?: string | number,
   WebkitTextStroke?: string | number,
   WebkitTransition?: string | number,
+  // OVERRIDES
+  aspectRatio?: number,
   ...ZacsStylesheetShorthandExtensions,
 }>
