@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## 2.1.1 (2023-08-28)
+
+**Bug fixes**
+
+- `aspectRatio: <number>` no longer incorrectly transpiles to `<number>px` in CSS
+- `aspectRatio: <number>` is no longer a Flow error
+
 ## 2.1.0 (2023-06-07)
 
 **New features**
